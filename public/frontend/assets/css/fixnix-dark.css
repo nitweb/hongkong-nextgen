@@ -1,0 +1,55 @@
+body,
+body.boxed-wrapper .page-wrapper,
+.testimonial-one,
+.about-one,
+.why-choose-one__single,
+.services-one {
+    background-color: #0b0b0b;
+}
+
+.why-choose-one .section-title__title,
+.why-choose-one__bottom-text,
+.skill-one .section-title__title,
+.blog-one .section-title__title,
+.blog-one__meta li a,
+.blog-one__title a,
+.testimonial-one__text,
+.testimonial-one .section-title__title,
+.about-one .section-title__title,
+.about-one__points-title a,
+.why-choose-one__title a,
+.services-one .section-title__title,
+.services-one__title a {
+    color: var(--fixnix-white);
+}
+
+.why-choose-one__bottom a:hover {
+    color: var(--fixnix-white);
+}
+
+.why-choose-one__bottom a:hover:before {
+    background-color: var(--fixnix-white);
+}
+
+.newsletter-one {
+    background-color: var(--fixnix-black);
+}
+
+.blog-one__single,
+.testimonial-one__client-img-box,
+.skill-one,
+.about-one__points li,
+.why-choose-one,
+.services-one__single {
+    background-color: #0c0d0e;
+}
+
+.testimonial-one__client-img {
+    mix-blend-mode: luminosity;
+}
+
+.about-one__bg {
+    display: none;
+}
+
+/*  */
