@@ -48,16 +48,12 @@
     <!-- template styles -->
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/fixnix.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/fixnix-responsive.css') }}" />
+
+    {{-- Custom CSS --}}
+    <link rel="stylesheet" href="{{ asset('frontend/assets/css/custom.css') }}" />
 </head>
 
 <body class="custom-cursor">
-
-    <div class="custom-cursor__cursor"></div>
-    <div class="custom-cursor__cursor-two"></div>
-
-    {{-- <div class="preloader">
-        <div class="preloader__image"></div>
-    </div> --}}
 
     <div class="page-wrapper">
 

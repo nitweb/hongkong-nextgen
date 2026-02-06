@@ -7,7 +7,7 @@
 
                     <div class="main-menu-two__left">
                         <div class="main-menu-two__logo">
-                            <a href="index.html"><img src="{{ asset('frontend/assets/images/resources/logo-2.png') }}" alt=""></a>
+                            <a href="{{ route('index') }}"><img src="{{ asset('frontend/assets/images/resources/logo-2.png') }}" alt=""></a>
                         </div>
                     </div>
 

@@ -10,7 +10,10 @@
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0 font-size-18">Slider Add</h4>
                         <div class="page-title-right">
-                            <a href="javascript:history.back()" class="btn btn-outline-dark waves-effect waves-light">
+                            <a href="{{ route('backend.slider.list') }}" class="btn btn-sm btn-outline-primary waves-effect waves-light">
+                                <i class="bx bx-list-ul font-size-16 align-middle me-2"></i> Slider List
+                            </a>
+                            <a href="javascript:history.back()" class="btn btn-sm btn-outline-dark waves-effect waves-light">
                                 <i class="bx bx-undo font-size-16 align-middle me-2"></i> Back
                             </a>
                         </div>
@@ -34,13 +37,13 @@
                                 @csrf
 
                                 <div class="col-md-8">
-                                    <label for="example-text-input" class="form-label">Image [1600px by 600px]</label>
+                                    <label for="example-text-input" class="form-label">Image [1920px by 800px]</label>
                                     <input type="file" class="form-control" name="slider_image" id="image" required>
                                     <img id="showImage" src="{{ asset('upload/no_image.jpg') }}" alt="Slider Image" class="p-1 bg-primary mt-3" style="width: 110px; height: 110px; object-fit: cover; border-radius: 8px;">
                                 </div>
 
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary">Create</button>
+                                    <button type="submit" class="btn btn-sm  btn-outline-primary">Create Slider</button>
                                 </div>
 
                             </form>

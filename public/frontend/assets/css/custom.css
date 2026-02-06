@@ -1,0 +1,7 @@
+.swiper-wrapper {
+    height: 80vh;
+}
+
+.main-slider-two .swiper-slide {
+    background: rgba(0, 0, 0, 0.25);
+}
