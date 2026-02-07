@@ -5,6 +5,9 @@
     {{-- Slider Area --}}
     @include('frontend.home.01_slider')
 
+    {{-- Brand Area --}}
+    @include('frontend.home.02_brand')
+
     <!--Experience One Start-->
     <section class="experience-one experience-two">
         <div class="experience-two-shape-1 float-bob-y" style="background-image: url(assets/images/shapes/experience-two-shape-1.jpg);"></div>

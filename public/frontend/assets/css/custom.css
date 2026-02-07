@@ -3,5 +3,9 @@
 }
 
 .main-slider-two .swiper-slide {
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, .25);
+}
+
+.services-three__img:before {
+    background: rgba(23, 26, 29, .10);
 }

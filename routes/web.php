@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\BulkOrderController;
 use App\Http\Controllers\Backend\ContactFormController;
 use App\Http\Controllers\Backend\MissionVisionController;
+use App\Http\Controllers\Backend\ProductBrandController;
 use App\Http\Controllers\Backend\ProductCategoryController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\ProductReviewController;
@@ -100,6 +101,14 @@ Route::middleware('admin')->group(function () {
     Route::get('/backend/slider/edit/{id}', [SliderController::class, 'SliderEdit'])->name('backend.slider.edit');
     Route::post('/backend/slider/update', [SliderController::class, 'SliderUpdate'])->name('backend.slider.update');
     Route::get('/backend/slider/delete/{id}', [SliderController::class, 'SliderDelete'])->name('backend.slider.delete');
+
+    // Product Brand
+    Route::get('/backend/product-brand/list', [ProductBrandController::class, 'ProductBrandList'])->name('backend.product_brand.list');
+    Route::get('/backend/product-brand/add', [ProductBrandController::class, 'ProductBrandAdd'])->name('backend.product_brand.add');
+    Route::post('/backend/product-brand/store', [ProductBrandController::class, 'ProductBrandStore'])->name('backend.product_brand.store');
+    Route::get('/backend/product-brand/edit/{id}', [ProductBrandController::class, 'ProductBrandEdit'])->name('backend.product_brand.edit');
+    Route::post('/backend/product-brand/update', [ProductBrandController::class, 'ProductBrandUpdate'])->name('backend.product_brand.update');
+    Route::get('/backend/product-brand/delete/{id}', [ProductBrandController::class, 'ProductBrandDelete'])->name('backend.product_brand.delete');
 
     // Product Categories
     Route::get('/backend/product-categories/list', [ProductCategoryController::class, 'ProductCategoriesList'])->name('backend.product_categories.list');

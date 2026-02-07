@@ -12,6 +12,7 @@ use App\Models\HeroSection;
 use App\Models\MissionVision;
 use App\Models\CareerForm;
 use App\Models\Product;
+use App\Models\ProductBrand;
 use App\Models\ProductCategory;
 use App\Models\ProductReview;
 use App\Models\ProductSubCategory;
@@ -31,6 +32,8 @@ class FrontendController extends Controller
     {
         $slider_data = Slider::where('slider_status', 'active')->latest()->get();
 
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->latest()->take(8)->get();
+
         // Get all active categories with their latest products
         $categories = ProductCategory::with([
             'products' => function ($query) {
@@ -42,7 +45,7 @@ class FrontendController extends Controller
             ->latest()
             ->get();
 
-        return view('frontend.index', compact('slider_data', 'categories'));
+        return view('frontend.index', compact('slider_data', 'product_brand_data', 'categories'));
     }
 
     public function Shop()

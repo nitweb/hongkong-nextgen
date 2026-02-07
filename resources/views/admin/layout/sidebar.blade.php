@@ -52,6 +52,7 @@
                         <span>Product Manage</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('backend.product_brand.list') }}"><span>Brand List</span></a></li>
                         <li><a href="{{ route('backend.product_categories.list') }}"><span>Category List</span></a></li>
                         <li><a href="{{ route('backend.product_subcategories.list') }}"><span>SubCategory List</span></a></li>
                         <li><a href="{{ route('age_group.list') }}"><span>Age Group List</span></a></li>
