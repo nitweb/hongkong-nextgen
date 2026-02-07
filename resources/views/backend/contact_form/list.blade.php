@@ -12,12 +12,12 @@
                             {{-- Bulk Delete Button --}}
                             <form id="bulkDeleteForm" action="{{ route('backend.contact_form.bulk_delete') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="btn btn-outline-danger waves-effect waves-light" onclick="return confirm('Are you sure you want to delete the selected contact forms?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger waves-effect waves-light" onclick="return confirm('Are you sure you want to delete the selected contact forms?')">
                                     <i class="bx bx-trash me-1"></i> Delete Selected
                                 </button>
                             </form>
 
-                            <a href="javascript:history.back()" class="btn btn-outline-dark waves-effect waves-light">
+                            <a href="javascript:history.back()" class="btn btn-sm btn-outline-dark waves-effect waves-light">
                                 <i class="bx bx-undo font-size-16 align-middle me-2"></i> Back
                             </a>
                         </div>
@@ -57,12 +57,12 @@
                                                     <td>{{ $item->contact_form_phone }}</td>
                                                     <td>
                                                         {{-- View btn --}}
-                                                        <a href="#" class="btn btn-outline-warning waves-effect waves-light mb-2" data-bs-toggle="modal" data-bs-target="#contactFormModal{{ $item->id }}">
+                                                        <a href="#" class="btn btn-sm btn-outline-warning waves-effect waves-light mb-2" data-bs-toggle="modal" data-bs-target="#contactFormModal{{ $item->id }}">
                                                             <i class="bx bx-show font-size-16 align-middle"></i>
                                                         </a>
 
                                                         {{-- Delete btn --}}
-                                                        <a href="{{ route('backend.contact_form.delete', $item->id) }}" onclick="return confirm('Are you sure you want to delete this contact form?');" class="btn btn-outline-danger waves-effect waves-light mb-2">
+                                                        <a href="{{ route('backend.contact_form.delete', $item->id) }}" onclick="return confirm('Are you sure you want to delete this contact form?');" class="btn btn-sm btn-outline-danger waves-effect waves-light mb-2">
                                                             <i class="bx bxs-trash font-size-16 align-middle"></i>
                                                         </a>
                                                     </td>
@@ -86,7 +86,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
                                                             </div>
                                                         </div>
                                                     </div>

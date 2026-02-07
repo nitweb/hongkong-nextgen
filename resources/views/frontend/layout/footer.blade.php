@@ -3,42 +3,48 @@
     <div class="site-footer-shape-1 float-bob-y-2" style="background-image: url({{ asset('frontend/assets/images/shapes/site-footer-shape-1.png') }});"></div>
 
     <div class="site-footer__top">
+
         <div class="container">
+
             <div class="row">
+
                 <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="100ms">
                     <div class="footer-widget__column footer-widget__about">
                         <div class="footer-widget__logo">
-                            <a href="{{ route('index') }}"><img src="{{ asset('frontend/assets/images/resources/footer-logo-2.png') }}" alt=""></a>
+                            <a href="{{ route('index') }}"><img src="{{ asset(GlobalSiteSettings()->site_footer_logo) }}" alt=""></a>
                         </div>
                         <div class="footer-widget__about-text-box">
-                            <p class="footer-widget__about-text">Duis aute irure dolor in reprehenderit in
-                                voluptate velit esse cillum dolore fugiat nulla pariatur.</p>
+                            <p class="footer-widget__about-text">
+                                {{ GlobalSiteSettings()->site_description ?? '' }}
+                            </p>
                         </div>
                         <div class="footer-widget__social-box">
                             <h4 class="footer-widget__social-title">Stay Connected</h4>
                             <div class="site-footer__social">
-                                <a href="#"><i class="fab fa-twitter"></i></a>
-                                <a href="#"><i class="fab fa-facebook"></i></a>
-                                <a href="#"><i class="fab fa-pinterest-p"></i></a>
-                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#!"><i class="fab fa-twitter"></i></a>
+                                <a href="#!"><i class="fab fa-facebook"></i></a>
+                                <a href="#!"><i class="fab fa-pinterest-p"></i></a>
+                                <a href="#!"><i class="fab fa-instagram"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-xl-2 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="200ms">
                     <div class="footer-widget__column footer-widget__links">
                         <div class="footer-widget__title-box">
                             <h3 class="footer-widget__title">Quick Links</h3>
                         </div>
                         <ul class="footer-widget__Explore-list list-unstyled">
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about.html">About Us</a></li>
-                            <li><a href="services.html">Services</a></li>
-                            <li><a href="blog-v-1.html">Blog</a></li>
-                            <li><a href="contact.html">Contact Us</a></li>
+                            <li><a href="{{ route('index') }}">Home</a></li>
+                            <li><a href="{{ route('about') }}">About Us</a></li>
+                            <li><a href="#!">Services</a></li>
+                            <li><a href="{{ route('blog') }}">Blog</a></li>
+                            <li><a href="{{ route('contact') }}">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
+
                 <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="300ms">
                     <div class="footer-widget__column footer-widget__services">
                         <div class="footer-widget__title-box">
@@ -53,6 +59,7 @@
                         </ul>
                     </div>
                 </div>
+
                 <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="400ms">
                     <div class="footer-widget__column footer-widget__subscribe">
                         <div class="footer-widget__title-box">
@@ -69,8 +76,11 @@
                             newsletter.</p>
                     </div>
                 </div>
+
             </div>
+
         </div>
+        
     </div>
 
     <div class="site-footer__bottom">

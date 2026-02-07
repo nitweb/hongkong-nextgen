@@ -9,10 +9,10 @@
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0 font-size-18">Slider List</h4>
                         <div class="page-title-right">
-                            <a href="{{ route('backend.slider.add') }}" class="btn btn-outline-primary waves-effect waves-light">
+                            <a href="{{ route('backend.slider.add') }}" class="btn btn-sm btn-outline-primary waves-effect waves-light">
                                 <i class="bx bx-plus font-size-16 align-middle me-2"></i> Add Slider
                             </a>
-                            <a href="javascript:history.back()" class="btn btn-outline-dark waves-effect waves-light">
+                            <a href="javascript:history.back()" class="btn btn-sm btn-outline-dark waves-effect waves-light">
                                 <i class="bx bx-undo font-size-16 align-middle me-2"></i> Back
                             </a>
                         </div>
@@ -50,14 +50,14 @@
                                                     <img src="{{ !empty($item->slider_image) ? url('upload/slider_image/' . $item->slider_image) : url('upload/no_image.jpg') }}" alt="Slider Image" class="img-fluid d-block" style="width: 150px;">
                                                 </td>
                                                 <td>
-                                                    <span class="badge custom_status_badge {{ $item->slider_status == 'active' ? 'text-bg-success' : 'text-bg-danger' }}" data-id="{{ $item->id }}" data-model="{{ \App\Models\Slider::class }}">
+                                                    <span class="badge {{ $item->slider_status == 'active' ? 'text-bg-success' : 'text-bg-danger' }}" data-id="{{ $item->id }}" data-model="{{ \App\Models\Slider::class }}">
                                                         {{ ucfirst($item->slider_status) }}
                                                     </span>
                                                 </td>
                                                 <td>
                                                     {{-- Status Update --}}
                                                     <div class="btn-group" role="group" style="margin-top: -8px;">
-                                                        <button type="button" class="btn btn-outline-secondary waves-effect waves-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary waves-effect waves-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                                             Status <i class="mdi mdi-chevron-down"></i>
                                                         </button>
                                                         <ul class="dropdown-menu">
@@ -66,11 +66,11 @@
                                                         </ul>
                                                     </div>
                                                     {{-- Edit btn --}}
-                                                    <a href="{{ route('backend.slider.edit', $item->id) }}" class="btn btn-outline-info waves-effect waves-light mb-2">
+                                                    <a href="{{ route('backend.slider.edit', $item->id) }}" class="btn btn-sm btn-outline-info waves-effect waves-light mb-2">
                                                         <i class="bx bx-edit font-size-16 align-middle"></i>
                                                     </a>
                                                     {{-- Delete btn --}}
-                                                    <a href="{{ route('backend.slider.delete', $item->id) }}" class="btn btn-outline-danger waves-effect waves-light mb-2" onclick="return confirm('Are you sure?')">
+                                                    <a href="{{ route('backend.slider.delete', $item->id) }}" class="btn btn-sm btn-outline-danger waves-effect waves-light mb-2" onclick="return confirm('Are you sure?')">
                                                         <i class="bx bxs-trash font-size-16 align-middle"></i>
                                                     </a>
                                                 </td>
