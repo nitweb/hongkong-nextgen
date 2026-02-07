@@ -104,6 +104,9 @@
 
     <!-- template js -->
     <script src="{{ asset('frontend/assets/js/fixnix.js') }}"></script>
+
+    {{-- Custom JS --}}
+    @include('frontend.layout.custom_scripts')
 </body>
 
 </html>
