@@ -1,0 +1,63 @@
+.swiper-wrapper {
+    height: 80vh;
+}
+
+.main-slider-two .swiper-slide {
+    background: rgba(0, 0, 0, .25);
+}
+
+.services-three__img:before {
+    background: rgba(23, 26, 29, .10);
+}
+
+.thm-breadcrumb {
+    position: inherit;
+    bottom: -15px;
+}
+
+.page-header {
+    padding: 50px 0 60px;
+    background: rgba(0, 0, 0, .35);
+}
+
+.thm-breadcrumb li:hover a {
+    color: var(--fixnix-base);
+    opacity: 1;
+}
+
+.google-map iframe {
+    width: 100%;
+}
+
+.contact-page__form-input-box textarea {
+    height: 110px;
+}
+
+.contact-page__form-input-box.text-message-box {
+    height: 130px;
+}
+
+.contact-page__points-list li .text p {
+    font-size: 20px;
+}
+
+.contact-page__points-list li .text p a {
+    font-size: 20px;
+}
+
+.contact-page__points-list li .icon span {
+    font-size: 20px;
+}
+
+.contact-page__form-input-box input[type="text"],
+.contact-page__form-input-box input[type="email"] {
+    height: 45px;
+}
+
+.error-text {
+    color: red;
+}
+
+button.thm-btn.contact-page__btn {
+    border: none;
+}

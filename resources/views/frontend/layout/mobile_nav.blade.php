@@ -8,7 +8,7 @@
 
         <div class="logo-box">
             <a href="{{ route('index') }}" aria-label="logo image">
-                <img src="{{ asset('frontend/assets/images/resources/logo-1.png') }}" width="143" alt="" />
+                <img src="{{ asset(GlobalSiteSettings()->site_footer_logo) }}" width="143" alt="" />
             </a>
         </div>
 
@@ -17,11 +17,11 @@
         <ul class="mobile-nav__contact list-unstyled">
             <li>
                 <i class="fa fa-envelope"></i>
-                <a href="mailto:needhelp@packageName__.com">needhelp@fixnix.com</a>
+                <a href="mailto:{{ GlobalSiteSettings()->site_email }}">{{ GlobalSiteSettings()->site_email }}</a>
             </li>
             <li>
                 <i class="fa fa-phone-alt"></i>
-                <a href="tel:666-888-0000">666 888 0000</a>
+                <a href="tel:{{ GlobalSiteSettings()->site_phone }}">{{ GlobalSiteSettings()->site_phone }}</a>
             </li>
         </ul>
 

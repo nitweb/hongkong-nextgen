@@ -39,10 +39,10 @@
             display: none;
         }
 
-        .custom_status_badge {
+        /* .custom_status_badge {
             font-size: 15px;
             padding: 10px 15px;
-        }
+        } */
     </style>
 
 </head>

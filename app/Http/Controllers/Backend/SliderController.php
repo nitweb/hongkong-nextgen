@@ -50,7 +50,7 @@ class SliderController extends Controller
                 $manager = new ImageManager(new Driver());
                 $file_name = uniqid('slider_', true) . '.' . $file->getClientOriginalExtension();
                 $img = $manager->read($file->getRealPath());
-                $img->resize(1600, 600);
+                $img->resize(1920, 800);
                 $img->save(public_path('upload/slider_image/') . $file_name);
                 $slider_data->slider_image = $file_name;
             }
@@ -118,7 +118,7 @@ class SliderController extends Controller
                 $manager = new ImageManager(new Driver());
                 $file_name = uniqid('team_', true) . '.' . $file->getClientOriginalExtension();
                 $img = $manager->read($file->getRealPath());
-                $img->resize(1600, 600);
+                $img->resize(1920, 800);
                 $img->save(public_path('upload/slider_image/') . $file_name);
                 $slider_data->slider_image = $file_name;
             }
