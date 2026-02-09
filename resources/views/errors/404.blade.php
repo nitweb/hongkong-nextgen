@@ -4,7 +4,7 @@
 
     <section class="error-page">
 
-        <div class="error-page__bg" style="background-image: url({{ asset('frontend/assets/images/backgrounds/404-bg-img.jpg') }});"></div>
+        <div class="error-page__bg" style="background-image: url({{ asset('frontend/assets/static_images/404.jpg') }});"></div>
 
         <div class="container">
             <div class="row">
