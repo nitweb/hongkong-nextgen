@@ -63,5 +63,28 @@ button.thm-btn.contact-page__btn {
 }
 
 .error-page {
-     background-color: rgba(0, 0, 0, .7);
+    background-color: rgba(0, 0, 0, .7);
+}
+
+.old__price {
+    color: var(--fixnix-gray) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    text-decoration: line-through;
+}
+
+.product-details__title span {
+    margin: 0;
+}
+
+.product-details__reveiw span {
+    margin-left: 0;
+}
+
+.product-details__buttons-2 {
+    margin-left: 0;
+}
+
+.product-details__buttons-2 .thm-btn {
+    border: none;
 }

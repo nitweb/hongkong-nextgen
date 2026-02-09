@@ -11,7 +11,7 @@
                         <img src="{{ asset('backend/assets/images/favicon.png') }}" alt="" height="24">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset(GlobalSiteSettings()->site_footer_logo) }}" alt="" class="img-fluid" width="180px">
+                        <img src="{{ asset(GlobalSiteSettings()->site_header_logo) }}" alt="" class="img-fluid" width="180px">
                     </span>
                 </a>
 
@@ -20,7 +20,7 @@
                         <img src="{{ asset('backend/assets/images/favicon.png') }}" alt="" height="24">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset(GlobalSiteSettings()->site_footer_logo) }}" alt="" class="img-fluid" width="180px">
+                        <img src="{{ asset(GlobalSiteSettings()->site_header_logo) }}" alt="" class="img-fluid" width="180px">
                     </span>
                 </a>
             </div>

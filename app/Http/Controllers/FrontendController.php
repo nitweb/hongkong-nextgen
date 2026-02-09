@@ -34,6 +34,8 @@ class FrontendController extends Controller
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')->latest()->take(8)->get();
 
+        $product_data = Product::where('product_status', 'active')->latest()->get();
+
         // Get all active categories with their latest products
         $categories = ProductCategory::with([
             'products' => function ($query) {
@@ -45,7 +47,7 @@ class FrontendController extends Controller
             ->latest()
             ->get();
 
-        return view('frontend.index', compact('slider_data', 'product_brand_data', 'categories'));
+        return view('frontend.index', compact('slider_data', 'product_brand_data', 'product_data', 'categories'));
     }
 
     public function Shop()
