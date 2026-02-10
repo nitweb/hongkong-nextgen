@@ -46,11 +46,11 @@
     <link rel="stylesheet" href="{{ asset('frontend/assets/vendors/nice-select/nice-select.css') }}" />
 
     <!-- template styles -->
-    <link rel="stylesheet" href="{{ asset('frontend/assets/css/fixnix.css') }}" />
+    <link rel="stylesheet" href="{{ asset('frontend/assets/css/fixnix.css') }}?v={{ time() }}" />
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/fixnix-responsive.css') }}" />
 
     {{-- Custom CSS --}}
-    <link rel="stylesheet" href="{{ asset('frontend/assets/css/custom.css') }}" />
+    <link rel="stylesheet" href="{{ asset('frontend/assets/css/custom.css') }}?v={{ time() }}" />
 </head>
 
 <body class="custom-cursor">
@@ -103,7 +103,7 @@
     <script src="{{ asset('frontend/assets/vendors/nice-select/jquery.nice-select.min.js') }}"></script>
 
     <!-- template js -->
-    <script src="{{ asset('frontend/assets/js/fixnix.js') }}"></script>
+    <script src="{{ asset('frontend/assets/js/fixnix.js') }}?v={{ time() }}"></script>
 
     {{-- Custom JS --}}
     @include('frontend.layout.custom_scripts')

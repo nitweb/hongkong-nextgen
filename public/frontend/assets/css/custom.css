@@ -68,7 +68,7 @@ button.thm-btn.contact-page__btn {
 
 .old__price {
     color: var(--fixnix-gray) !important;
-    font-size: 0.875rem !important;
+    font-size: 17px !important;
     font-weight: 500 !important;
     text-decoration: line-through;
 }
@@ -87,4 +87,37 @@ button.thm-btn.contact-page__btn {
 
 .product-details__buttons-2 .thm-btn {
     border: none;
+}
+
+.product-details__title span {
+    font-size: 23px;
+}
+
+.product-details__reveiw {
+    margin-top: 8px;
+    padding-bottom: 10px;
+}
+
+.product-details__top {
+    margin-top: 0;
+}
+
+.product-spec-table table tbody tr td.col_one {
+    width: 180px;
+    background: #f7f7f7;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-bottom: 1px solid #eaeaea;
+    font-size: 13px;
+}
+
+.product-spec-table table tbody tr td.col_two {
+    padding: 2px 7px;
+    border-bottom: 1px solid #eaeaea;
+    font-size: 13px;
+}
+
+.pg-pagination li.active a {
+    background-color: var(--fixnix-black);
+    color: #fff;
 }

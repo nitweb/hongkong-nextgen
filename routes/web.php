@@ -26,7 +26,7 @@ Route::middleware('web')->group(function () {
     Route::get('/', [FrontendController::class, 'Index'])->name('index');
 
     // Shop
-    Route::get('/shop', [FrontendController::class, 'Shop'])->name('shop');
+    Route::get('/products', [FrontendController::class, 'Products'])->name('products');
 
     // Cart
     Route::get('/cart', [FrontendController::class, 'Cart'])->name('cart');

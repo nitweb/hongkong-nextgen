@@ -33,18 +33,20 @@
                     <div class="product-details__top">
                         <h3 class="product-details__title">
                             {{ $product->product_name }}
-                            <br>
-                            <span>${{ number_format($product->product_price - ($product->discount_price ?? 0), 2) }}</span>
-                            @if ($product->discount_price > 0)
-                                <span class="old__price">
-                                    ${{ number_format($product->product_price, 2) }}
-                                </span>
-                            @endif
+                            {{-- <br> --}}
+                            <div style="margin-top: -15px;">
+                                <span>${{ number_format($product->product_price - ($product->discount_price ?? 0), 2) }}</span>
+                                @if ($product->discount_price > 0)
+                                    <span class="old__price">
+                                        ${{ number_format($product->product_price, 2) }}
+                                    </span>
+                                @endif
+                            </div>
                         </h3>
                     </div>
 
                     <div class="product-details__reveiw">
-                        <p class="details__brand">Category:
+                        <p class="details__brand"><strong>Category:</strong>
                             <span>
                                 <a href="{{ route('product.by.category', $product->category->product_category_slug ?? '#') }}">
                                     {{ $product->category->product_category_name ?? 'N/A' }}
@@ -54,35 +56,56 @@
                     </div>
 
                     <div class="product-details__content">
-                        <div class="product-details__content-text1" style="text-align: justify;">
+                        {{-- <div class="product-details__content-text1" style="text-align: justify;">
                             {{ $product->product_short_description }}
-                        </div>
+                        </div> --}}
 
                         {{-- <p class="product-details__content-text2">REF. 4231/406 <br>
                             Available in store</p> --}}
+
+                        @if ($product->specifications && $product->specifications->count() > 0)
+                            <div class="product-spec-table" style="margin-top:20px;">
+                                <h4 style="margin-bottom:12px;">Specifications</h4>
+
+                                <div style="border:1px solid #e5e5e5; border-radius:8px; overflow:hidden;">
+                                    <table style="width:100%; border-collapse:collapse;">
+                                        <tbody>
+                                            <tr>
+                                                <td class="col_one">Product Part Number</td>
+                                                <td class="col_two">{{ $product->product_part_number }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col_one">Brand Name</td>
+                                                <td class="col_two">{{ $product->brand_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col_one">Package</td>
+                                                <td class="col_two">{{ $product->package }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col_one">Date Code</td>
+                                                <td class="col_two">{{ $product->date_code }}</td>
+                                            </tr>
+                                            @foreach ($product->specifications as $spec)
+                                                <tr>
+                                                    <td class="col_one">{{ $spec->spec_key }}</td>
+                                                    <td class="col_two">{{ $spec->spec_value }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
 
                     <div class="product-details__buttons">
                         {{-- ✅ Bulk Order Button (Bootstrap modal open) --}}
                         <div class="product-details__buttons-2">
-                            <button type="button"
-                                    class="thm-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#bulkOrderModal">
+                            <button type="button" class="thm-btn" data-bs-toggle="modal" data-bs-target="#bulkOrderModal">
                                 Bulk Order
                             </button>
-                        </div>
-                    </div>
-
-                    <div class="product-details__social">
-                        <div class="title">
-                            <h3>Share with friends</h3>
-                        </div>
-                        <div class="product-details__social-link">
-                            <a href="#"><span class="fab fa-twitter"></span></a>
-                            <a href="#"><span class="fab fa-facebook"></span></a>
-                            <a href="#"><span class="fab fa-pinterest-p"></span></a>
-                            <a href="#"><span class="fab fa-instagram"></span></a>
                         </div>
                     </div>
 
@@ -164,7 +187,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             // ✅ Toastr options
             toastr.options = {
@@ -175,11 +198,11 @@
             };
 
             // ✅ AJAX submit (Bootstrap modal)
-            $('#bulkOrderForm').submit(function (e) {
+            $('#bulkOrderForm').submit(function(e) {
                 e.preventDefault();
 
                 const $form = $(this);
-                const $btn  = $('#bulkSubmitBtn');
+                const $btn = $('#bulkSubmitBtn');
 
                 $btn.prop('disabled', true).text('Submitting...');
 
@@ -187,17 +210,17 @@
                     url: $form.attr('action'),
                     method: 'POST',
                     data: $form.serialize(),
-                    success: function (response) {
+                    success: function(response) {
                         toastr.success(response.message || 'Bulk order submitted successfully!');
 
                         // close modal (Bootstrap 5)
                         const modalEl = document.getElementById('bulkOrderModal');
-                        const modal   = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
                         modal.hide();
 
                         $form[0].reset();
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         if (xhr.status === 422) {
                             let errors = xhr.responseJSON.errors;
                             for (let key in errors) {
@@ -207,7 +230,7 @@
                             toastr.error('Something went wrong. Please try again.');
                         }
                     },
-                    complete: function () {
+                    complete: function() {
                         $btn.prop('disabled', false).text('Submit');
                     }
                 });
