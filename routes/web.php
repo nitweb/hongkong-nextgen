@@ -26,7 +26,7 @@ Route::middleware('web')->group(function () {
     Route::get('/', [FrontendController::class, 'Index'])->name('index');
 
     // Shop
-    Route::get('/shop', [FrontendController::class, 'Shop'])->name('shop');
+    Route::get('/products', [FrontendController::class, 'Products'])->name('products');
 
     // Cart
     Route::get('/cart', [FrontendController::class, 'Cart'])->name('cart');
@@ -198,6 +198,11 @@ Route::middleware('admin')->group(function () {
 
     // Status Update
     Route::post('/backend/status-update', [GlobalController::class, 'StatusUpdate'])->name('backend.status.update');
+
+    // ✅ Admin custom 404
+    Route::fallback(function () {
+        return response()->view('admin.errors.404', [], 404);
+    });
 });
 
 Route::get('/admin/login', [AdminController::class, 'AdminLogin'])->name('admin.login');
@@ -237,4 +242,14 @@ Route::middleware('customer')->group(function () {
 
     Route::post('/user/profile/update', [CustomerAuthController::class, 'profileUpdate'])->name('customer.profile.update');
     Route::post('/user/change/password', [CustomerAuthController::class, 'changePassword'])->name('customer.password.change');
+});
+
+// ✅ ADMIN 404 for any /admin/* (must be before global fallback)
+Route::get('/admin/{any}', function () {
+    return response()->view('admin.errors.404', [], 404);
+})->where('any', '.*');
+
+// ✅ Frontend custom 404 (must be last)
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
 });

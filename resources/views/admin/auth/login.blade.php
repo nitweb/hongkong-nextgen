@@ -62,7 +62,7 @@
 
                                         <div class="m-3 m-md-4 text-center">
                                             <a href="{{ route('index') }}" class="d-block auth-logo" target="_blank">
-                                                <img src="{{ asset(GlobalSiteSettings()->site_footer_logo) }}" alt="" class="img-fluid" width="180px">
+                                                <img src="{{ asset(GlobalSiteSettings()->site_header_logo) }}" alt="" class="img-fluid" width="180px">
                                             </a>
                                         </div>
 

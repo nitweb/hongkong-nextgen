@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\AgeGroup;
 use App\Models\Product;
+use App\Models\ProductBrand;
 use App\Models\ProductCategory;
 use App\Models\ProductGallery;
+use App\Models\ProductSpecification;
 use App\Models\ProductSubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -34,8 +36,9 @@ class ProductController extends Controller
         $categories = ProductCategory::where('product_category_status', 'active')->get();
         $subcategories = ProductSubCategory::where('product_sub_category_status', 'active')->get();
         $ageGroups = AgeGroup::orderBy('id', 'asc')->get();
+        $brands = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name', 'asc')->get();
 
-        return view('backend.products.add', compact('categories', 'subcategories', 'ageGroups'));
+        return view('backend.products.add', compact('categories', 'subcategories', 'ageGroups', 'brands'));
     }
 
     // ========== Store ==========
@@ -56,6 +59,14 @@ class ProductController extends Controller
                 'test_report_astm' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
                 'test_report_en71' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
                 'stock_status' => 'required|in:in_stock,out_of_stock',
+                'product_part_number' => 'nullable|string|max:255',
+                'brand_name' => 'nullable|string|max:255',
+                'package' => 'nullable|string|max:255',
+                'date_code' => 'nullable|string|max:255',
+
+                // ✅ NEW: specs validation
+                'spec_key.*' => 'nullable|string|max:255',
+                'spec_value.*' => 'nullable|string|max:2000',
             ],
             [
                 'product_name.required' => 'Product name is required',
@@ -86,7 +97,15 @@ class ProductController extends Controller
             $product->discount_price = $request->discount_price;
             $product->product_short_description = $request->product_short_description;
             $product->product_description = $request->product_description;
+
+            $product->product_part_number = $request->product_part_number;
+            $product->brand_name = $request->brand_name;
+            $product->package = $request->package;
+            $product->date_code = $request->date_code;
+
+            // legacy HTML textarea (optional)
             $product->product_specifications = $request->product_specifications;
+
             $product->is_wholesale = $request->has('is_wholesale');
             $product->is_free_delivery = $request->has('is_free_delivery');
             $product->stock_status = $request->stock_status ?? 'in_stock';
@@ -135,6 +154,25 @@ class ProductController extends Controller
                 }
             }
 
+            // ✅ NEW: Save Specification Rows (key/value)
+            $specKeys = $request->spec_key ?? [];
+            $specValues = $request->spec_value ?? [];
+
+            foreach ($specKeys as $index => $key) {
+                $key = is_string($key) ? trim($key) : '';
+                $value = $specValues[$index] ?? null;
+                $value = is_string($value) ? trim($value) : $value;
+
+                if ($key !== '' && $value !== null && $value !== '') {
+                    ProductSpecification::create([
+                        'product_id' => $product->id,
+                        'spec_key' => $key,
+                        'spec_value' => $value,
+                        'sort_order' => $index,
+                    ]);
+                }
+            }
+
             DB::commit();
 
             return redirect()
@@ -143,6 +181,7 @@ class ProductController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Product Create Error: ' . $e->getMessage());
+
             return redirect()
                 ->back()
                 ->withInput()
@@ -158,8 +197,9 @@ class ProductController extends Controller
         $categories = ProductCategory::where('product_category_status', 'active')->get();
         $subcategories = ProductSubCategory::where('product_sub_category_status', 'active')->get();
         $ageGroups = AgeGroup::orderBy('id', 'asc')->get();
+        $brands = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name', 'asc')->get();
 
-        return view('backend.products.edit', compact('product_info', 'categories', 'subcategories', 'ageGroups'));
+        return view('backend.products.edit', compact('product_info', 'categories', 'subcategories', 'ageGroups', 'brands'));
     }
 
     // ========== Update ==========
@@ -175,10 +215,20 @@ class ProductController extends Controller
                 'product_price' => 'required|numeric|min:0',
                 'discount_price' => 'nullable|numeric|min:0',
                 'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+                'product_gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // ✅ optional new gallery uploads
                 'age_group_id' => 'required|exists:age_groups,id',
                 'test_report_astm' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
                 'test_report_en71' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
                 'stock_status' => 'required|in:in_stock,out_of_stock',
+
+                // ✅ NEW: specs validation
+                'spec_key.*' => 'nullable|string|max:255',
+                'spec_value.*' => 'nullable|string|max:2000',
+
+                'product_part_number' => 'nullable|string|max:255',
+                'brand_name' => 'nullable|string|max:255',
+                'package' => 'nullable|string|max:255',
+                'date_code' => 'nullable|string|max:255',
             ],
             [
                 'product_name.required' => 'Product name is required',
@@ -207,7 +257,15 @@ class ProductController extends Controller
             $product->discount_price = $request->discount_price;
             $product->product_short_description = $request->product_short_description;
             $product->product_description = $request->product_description;
+
+            $product->product_part_number = $request->product_part_number;
+            $product->brand_name = $request->brand_name;
+            $product->package = $request->package;
+            $product->date_code = $request->date_code;
+
+            // legacy HTML textarea (optional)
             $product->product_specifications = $request->product_specifications;
+
             $product->is_wholesale = $request->has('is_wholesale');
             $product->is_free_delivery = $request->has('is_free_delivery');
             $product->stock_status = $request->stock_status ?? 'in_stock';
@@ -243,6 +301,7 @@ class ProductController extends Controller
                 $product->test_report_en71 = $fileName;
             }
 
+            // Update Main Image
             if ($request->hasFile('product_image')) {
                 $oldImage = public_path('upload/product_image/' . $product->product_image);
                 if ($product->product_image && file_exists($oldImage)) {
@@ -252,13 +311,53 @@ class ProductController extends Controller
                 $file = $request->file('product_image');
                 $manager = new ImageManager(new Driver());
                 $file_name = uniqid('product_', true) . '.' . $file->getClientOriginalExtension();
+
                 $img = $manager->read($file->getRealPath());
-                $img->resize(440, 440);
+                $img->resize(583, 583); // ✅ same as store
                 $img->save(public_path('upload/product_image/') . $file_name);
+
                 $product->product_image = $file_name;
             }
 
             $product->save();
+
+            // ✅ OPTIONAL: New Gallery Images add from edit page input (product_gallery_images[])
+            if ($request->hasFile('product_gallery_images')) {
+                $manager = new ImageManager(new Driver());
+
+                foreach ($request->file('product_gallery_images') as $file) {
+                    $file_name = uniqid('gallery_', true) . '.' . $file->getClientOriginalExtension();
+                    $img = $manager->read($file->getRealPath());
+                    $img->resize(583, 583);
+                    $img->save(public_path('upload/product_gallery/') . $file_name);
+
+                    ProductGallery::create([
+                        'product_id' => $product->id,
+                        'product_gallery_image' => $file_name,
+                    ]);
+                }
+            }
+
+            // ✅ NEW: Update Specification Rows (replace all)
+            ProductSpecification::where('product_id', $product->id)->delete();
+
+            $specKeys = $request->spec_key ?? [];
+            $specValues = $request->spec_value ?? [];
+
+            foreach ($specKeys as $index => $key) {
+                $key = is_string($key) ? trim($key) : '';
+                $value = $specValues[$index] ?? null;
+                $value = is_string($value) ? trim($value) : $value;
+
+                if ($key !== '' && $value !== null && $value !== '') {
+                    ProductSpecification::create([
+                        'product_id' => $product->id,
+                        'spec_key' => $key,
+                        'spec_value' => $value,
+                        'sort_order' => $index,
+                    ]);
+                }
+            }
 
             DB::commit();
 
@@ -271,6 +370,7 @@ class ProductController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Product Update Error: ' . $e->getMessage());
+
             return redirect()
                 ->back()
                 ->withInput()
