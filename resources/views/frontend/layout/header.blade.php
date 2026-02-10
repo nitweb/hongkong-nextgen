@@ -25,7 +25,7 @@
                                 <li><a href="{{ route('index') }}">Home</a></li>
 
                                 <li class="dropdown">
-                                    <a href="#">Products</a>
+                                    <a href="{{ route('products') }}">Products</a>
                                     <ul class="shadow-box">
                                         <li><a href="#!">Category</a></li>
                                         <li><a href="#!">Category</a></li>

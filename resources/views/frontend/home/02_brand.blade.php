@@ -1,4 +1,6 @@
-<section3 class="services-three">
+<section class="services-three">
+
+    <div class="about-one__bg float-bob-y" style="background-image: url({{ asset('frontend/assets/images/backgrounds/about-one-bg-img-1.jpg') }});"></div>
 
     <div class="container">
 
@@ -28,4 +30,4 @@
 
     </div>
 
-</section3
+</section>

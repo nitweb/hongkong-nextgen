@@ -42,4 +42,9 @@ class Product extends Model
     {
         return $query->where('stock_status', 'in_stock');
     }
+
+    public function specifications()
+    {
+        return $this->hasMany(ProductSpecification::class)->orderBy('sort_order');
+    }
 }

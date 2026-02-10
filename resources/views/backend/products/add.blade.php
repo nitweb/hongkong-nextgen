@@ -61,7 +61,6 @@
                                     </select>
                                 </div>
 
-
                                 {{-- Main Product Image --}}
                                 <div class="col-md-8">
                                     <label class="form-label">Main Image [583px × 583px]</label>
@@ -75,7 +74,6 @@
                                     <input type="file" class="form-control" name="product_gallery_images[]" id="gallery_images" multiple>
                                     <div id="galleryPreview" class="mt-3 d-flex flex-wrap gap-2"></div>
                                 </div>
-
 
                                 {{-- Product Name --}}
                                 <div class="col-md-8">
@@ -113,9 +111,93 @@
                                     <textarea class="form-control summernote" name="product_description">{{ old('product_description') }}</textarea>
                                 </div>
 
-                                {{-- Product Specifications --}}
+                                {{-- ✅ Product Specification Table (Required) --}}
                                 <div class="col-12">
-                                    <label class="form-label">Product Specifications</label>
+
+                                    <label class="form-label">Product Specification Table (Required)</label>
+
+                                    <div class="row g-2">
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Product Part Number</label>
+                                            <input type="text" name="product_part_number" class="form-control" value="{{ old('product_part_number') }}" placeholder="e.g. XC4052XL-1HQ304C">
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Brand Name</label>
+                                            <select name="brand_name" class="form-select">
+                                                <option value="" selected disabled>Select Brand</option>
+                                                @foreach ($brands as $brand)
+                                                    <option value="{{ $brand->product_brand_name }}" {{ old('brand_name') == $brand->product_brand_name ? 'selected' : '' }}>
+                                                        {{ $brand->product_brand_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Package</label>
+                                            <input type="text" name="package" class="form-control" value="{{ old('package') }}" placeholder="e.g. 304-BFQFP Exposed Pad">
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Date Code</label>
+                                            <input type="text" name="date_code" class="form-control" value="{{ old('date_code') }}" placeholder="e.g. 2407 / 2024-07 / any format">
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                {{-- ✅ NEW: Product Specification Table (Multiple) --}}
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label mb-0">Product Specification Table (Multiple)</label>
+                                        <button type="button" id="addSpecBtn" class="btn btn-sm btn-primary">
+                                            + Add More
+                                        </button>
+                                    </div>
+
+                                    <div id="specWrapper" class="mt-3">
+                                        @php
+                                            $oldKeys = old('spec_key', []);
+                                            $oldVals = old('spec_value', []);
+                                        @endphp
+
+                                        @if (count($oldKeys) > 0)
+                                            @foreach ($oldKeys as $i => $k)
+                                                <div class="row specRow mb-2">
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="spec_key[]" class="form-control" value="{{ $k }}" placeholder="Key (e.g. PartNo)">
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <input type="text" name="spec_value[]" class="form-control" value="{{ $oldVals[$i] ?? '' }}" placeholder="Value (e.g. XC4052XL-1HQ304C)">
+                                                    </div>
+                                                    <div class="col-md-1 d-grid">
+                                                        <button type="button" class="btn btn-danger removeSpec">X</button>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <div class="row specRow mb-2">
+                                                <div class="col-md-4">
+                                                    <input type="text" name="spec_key[]" class="form-control" placeholder="Key (e.g. PartNo)">
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <input type="text" name="spec_value[]" class="form-control" placeholder="Value (e.g. XC4052XL-1HQ304C)">
+                                                </div>
+                                                <div class="col-md-1 d-grid">
+                                                    <button type="button" class="btn btn-danger removeSpec">X</button>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- (Optional) old textarea keep --}}
+                                <div class="col-12">
+                                    <label class="form-label">Product Specifications (HTML - Optional)</label>
                                     <textarea class="form-control summernote" name="product_specifications">{{ old('product_specifications') }}</textarea>
                                 </div>
 
@@ -129,23 +211,9 @@
                                     <input type="file" name="test_report_en71" class="form-control" accept=".pdf,.doc,.docx">
                                 </div>
 
-                                {{-- Edit page preview --}}
-                                @if (!empty($product_info->test_report_astm))
-                                    <a href="{{ asset('upload/product_reports/' . $product_info->test_report_astm) }}" target="_blank" class="badge bg-info">
-                                        View ASTM Report
-                                    </a>
-                                @endif
-
-                                @if (!empty($product_info->test_report_en71))
-                                    <a href="{{ asset('upload/product_reports/' . $product_info->test_report_en71) }}" target="_blank" class="badge bg-success">
-                                        View EN71 Report
-                                    </a>
-                                @endif
-
-
                                 <div>Do you want this product to be available for wholesale?</div>
                                 <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="is_wholesale" value="1" id="is_wholesale" {{ old('is_wholesale', $product_info->is_wholesale ?? false) ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="checkbox" name="is_wholesale" value="1" id="is_wholesale" {{ old('is_wholesale') ? 'checked' : '' }}>
                                     <label class="form-check-label" for="is_wholesale">
                                         Wholesale Product
                                     </label>
@@ -207,7 +275,7 @@
 
             // Gallery Images preview
             $('#gallery_images').on('change', function() {
-                $('#galleryPreview').html(''); // Clear previous previews
+                $('#galleryPreview').html('');
                 let files = $(this)[0].files;
 
                 if (files.length > 0) {
@@ -247,9 +315,7 @@
                     data: {
                         category_id: category_id
                     },
-
                     success: function(res) {
-
                         if (res.length > 0) {
                             $('#subcategoryDiv').show();
                             let html = '<option value="">Select SubCategory</option>';
@@ -264,6 +330,29 @@
                         }
                     }
                 });
+            });
+
+            // ✅ Spec Row Add
+            $('#addSpecBtn').on('click', function() {
+                let row = `
+                    <div class="row specRow mb-2">
+                        <div class="col-md-4">
+                            <input type="text" name="spec_key[]" class="form-control" placeholder="Key (e.g. Voltage)">
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" name="spec_value[]" class="form-control" placeholder="Value (e.g. 3V ~ 3.6V)">
+                        </div>
+                        <div class="col-md-1 d-grid">
+                            <button type="button" class="btn btn-danger removeSpec">X</button>
+                        </div>
+                    </div>
+                `;
+                $('#specWrapper').append(row);
+            });
+
+            // ✅ Spec Row Remove
+            $(document).on('click', '.removeSpec', function() {
+                $(this).closest('.specRow').remove();
             });
 
         });

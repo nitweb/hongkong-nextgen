@@ -34,6 +34,8 @@ class FrontendController extends Controller
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')->latest()->take(8)->get();
 
+        $product_data = Product::where('product_status', 'active')->latest()->get();
+
         // Get all active categories with their latest products
         $categories = ProductCategory::with([
             'products' => function ($query) {
@@ -45,19 +47,25 @@ class FrontendController extends Controller
             ->latest()
             ->get();
 
-        return view('frontend.index', compact('slider_data', 'product_brand_data', 'categories'));
+        return view('frontend.index', compact('slider_data', 'product_brand_data', 'product_data', 'categories'));
     }
 
-    public function Shop()
+    public function Products()
     {
-        // Fetch all active products with their category, subcategory, and galleries
-        $products = Product::with(['category', 'subcategory', 'galleries'])
+        $product_data = Product::with(['category', 'subcategory', 'galleries'])
             ->where('product_status', 'active')
             ->latest()
+            ->paginate(9); // per page 9
+
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')
+            ->latest()
+            ->take(8)
             ->get();
 
-        return view('frontend.pages.shop', compact('products'));
+        return view('frontend.pages.products', compact('product_data', 'product_brand_data'));
     }
+
+
 
     public function Cart()
     {
