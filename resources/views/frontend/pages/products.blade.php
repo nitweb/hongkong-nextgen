@@ -46,12 +46,15 @@
 
                         <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Categories</h3>
+
                             <ul class="list-unstyled">
-                                <li><a href="#">Beaches Vibes</a></li>
-                                <li class="active"><a href="#">Accessories</a></li>
-                                <li><a href="#">Clothing</a></li>
-                                <li><a href="#">Denim Collection</a></li>
-                                <li><a href="#">Summer Shorts</a></li>
+                                @foreach ($category_data as $cat)
+                                    <li class="{{ request()->route('slug') == $cat->product_category_slug ? 'active' : '' }}">
+                                        <a href="{{ route('product.by.category', $cat->product_category_slug) }}">
+                                            {{ $cat->product_category_name }}
+                                        </a>
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
 
@@ -59,7 +62,9 @@
                             <h3 class="product__sidebar-title">Brands</h3>
                             <ul class="list-unstyled">
                                 @foreach ($product_brand_data as $item)
-                                    <li><a href="#!">{{ $item->product_brand_name }}</a></li>
+                                    <li class="{{ request()->route('slug') == $item->product_brand_slug ? 'active' : '' }}">
+                                        <a href="{{ route('product.by.brand', $item->product_brand_slug) }}">{{ $item->product_brand_name }}</a>
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
@@ -173,7 +178,7 @@
                 </div>
 
             </div>
-            
+
         </div>
 
     </section>

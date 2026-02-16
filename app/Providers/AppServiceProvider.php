@@ -21,10 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Pass active categories to the header view automatically
+        // Header menu te active categories auto share
         View::composer('frontend.layout.header', function ($view) {
-            $categories = ProductCategory::where('product_category_status', 'active')->latest()->take(3)->get();
-            $view->with('categories', $categories);
+            $header_categories = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
+
+            $view->with('header_categories', $header_categories);
         });
     }
 }

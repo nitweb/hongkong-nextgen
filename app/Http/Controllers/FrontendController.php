@@ -57,15 +57,12 @@ class FrontendController extends Controller
             ->latest()
             ->paginate(9); // per page 9
 
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')
-            ->latest()
-            ->take(8)
-            ->get();
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
 
-        return view('frontend.pages.products', compact('product_data', 'product_brand_data'));
+        $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
+
+        return view('frontend.pages.products', compact('product_data', 'product_brand_data', 'category_data'));
     }
-
-
 
     public function Cart()
     {
@@ -119,17 +116,33 @@ class FrontendController extends Controller
         return back()->with('success', '✅ Thank you! Your order request has been submitted successfully.');
     }
 
+    public function ProductByBrand($slug)
+    {
+        $brand_info = ProductBrand::where('product_brand_slug', $slug)->firstOrFail();
+
+        $product_data = Product::where('brand_name', $brand_info->product_brand_name)->where('product_status', 'active')->with('category')->orderBy('created_at', 'desc')->paginate(9);
+
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
+
+        return view('frontend.pages.product_by_brand', compact('brand_info', 'product_data', 'product_brand_data'));
+    }
+
     public function ProductByCategory($slug)
     {
-        $category = ProductCategory::where('product_category_slug', $slug)
-            ->with([
-                'products' => function ($query) {
-                    $query->where('product_status', 'active')->orderBy('created_at', 'desc');
-                },
-            ])
-            ->firstOrFail();
+        // Category info
+        $category = ProductCategory::where('product_category_slug', $slug)->firstOrFail();
 
-        return view('frontend.pages.product_by_category', compact('category'));
+        // Products under this category
+        $product_data = Product::where('product_category_id', $category->id)
+            ->where('product_status', 'active')
+            ->with(['category'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
+
+        $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
+
+
+        return view('frontend.pages.product_by_category', compact('category', 'product_data', 'category_data'));
     }
 
     public function ProductBySubCategory($slug)

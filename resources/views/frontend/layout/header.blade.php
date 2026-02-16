@@ -24,15 +24,20 @@
 
                                 <li><a href="{{ route('index') }}">Home</a></li>
 
-                                <li class="dropdown">
+                                <li class="dropdown {{ request()->is('category/*') ? 'current' : '' }}">
                                     <a href="{{ route('products') }}">Products</a>
+
                                     <ul class="shadow-box">
-                                        <li><a href="#!">Category</a></li>
-                                        <li><a href="#!">Category</a></li>
-                                        <li><a href="#!">Category</a></li>
-                                        <li><a href="#!">Category</a></li>
+                                        @foreach ($header_categories as $cat)
+                                            <li class="{{ request()->route('slug') == $cat->product_category_slug ? 'active' : '' }}">
+                                                <a href="{{ route('product.by.category', $cat->product_category_slug) }}">
+                                                    {{ $cat->product_category_name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
                                     </ul>
                                 </li>
+
 
                                 <li><a href="#!">Gallery</a></li>
 
