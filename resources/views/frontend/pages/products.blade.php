@@ -97,7 +97,7 @@
 
                                             <a href="{{ route('product.details', $item->product_slug) }}">
                                                 <div class="product__all-img">
-                                                    <img src="{{ asset('upload/product_image/' . $item->product_image) }}" alt="">
+                                                    <img src="{{ asset($item->product_image) }}" alt="">
                                                 </div>
                                             </a>
 

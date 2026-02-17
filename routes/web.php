@@ -78,8 +78,11 @@ Route::middleware('web')->group(function () {
     // Child Development
     Route::get('/child-development', [FrontendController::class, 'ChildDevelopment'])->name('child.development');
 
-    // Wholesale
-    Route::get('/wholesale', [FrontendController::class, 'WholesaleProducts'])->name('wholesale');
+    // Flash Sale
+    Route::get('/flash-sale', [FrontendController::class, 'FlashSale'])->name('flash.sale');
+
+    // IT Product
+    Route::get('/it-product', [FrontendController::class, 'ItProduct'])->name('it.product');
 });
 
 // #################### End: Frontend Controller ####################

@@ -39,6 +39,10 @@
                                 </li>
 
 
+                                <li><a href="{{ route('flash.sale') }}">Flash Sale</a></li>
+
+                                <li><a href="{{ route('it.product') }}">IT Product</a></li>
+
                                 <li><a href="#!">Gallery</a></li>
 
                                 <li><a href="{{ route('blog') }}">Blog</a></li>

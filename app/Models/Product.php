@@ -8,9 +8,16 @@ class Product extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'is_flash_sale' => 'boolean',
+        'is_it_product' => 'boolean',
+        'product_price' => 'decimal:2',
+        'discount_price' => 'decimal:2',
+    ];
+
     public function brand()
     {
-        return $this->belongsTo(ProductBrand::class, 'product_brand_id');
+        return $this->belongsTo(ProductBrand::class, 'brand_id');
     }
 
     public function category()
@@ -18,38 +25,33 @@ class Product extends Model
         return $this->belongsTo(ProductCategory::class, 'product_category_id');
     }
 
-    public function subcategory()
-    {
-        return $this->belongsTo(ProductSubCategory::class, 'product_sub_category_id');
-    }
-
     public function galleries()
     {
-        return $this->hasMany(ProductGallery::class);
-    }
-
-    public function ageGroup()
-    {
-        return $this->belongsTo(AgeGroup::class);
+        return $this->hasMany(ProductGallery::class, 'product_id');
     }
 
     public function reviews()
     {
-        return $this->hasMany(ProductReview::class)->latest();
+        return $this->hasMany(ProductReview::class, 'product_id')->latest();
     }
 
-    public function scopeWholesale($query)
+    public function specifications()
     {
-        return $query->where('is_wholesale', true);
+        return $this->hasMany(ProductSpecification::class, 'product_id')->orderBy('sort_order');
+    }
+
+    public function scopeFlashSale($query)
+    {
+        return $query->where('is_flash_sale', true);
+    }
+
+    public function scopeItProduct($query)
+    {
+        return $query->where('is_it_product', true);
     }
 
     public function scopeInStock($query)
     {
         return $query->where('stock_status', 'in_stock');
-    }
-
-    public function specifications()
-    {
-        return $this->hasMany(ProductSpecification::class)->orderBy('sort_order');
     }
 }

@@ -34,12 +34,12 @@ class FrontendController extends Controller
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')->latest()->take(8)->get();
 
-        $product_data = Product::where('product_status', 'active')->latest()->get();
+        $product_data = Product::where('status', 'active')->latest()->take(20)->get();
 
         // Get all active categories with their latest products
         $categories = ProductCategory::with([
             'products' => function ($query) {
-                $query->where('product_status', 'active')->latest()->take(8); // adjust limit as needed
+                $query->where('status', 'active')->latest()->take(8); // adjust limit as needed
             },
         ])
             ->orderBy('product_category_name', 'asc')
@@ -52,10 +52,10 @@ class FrontendController extends Controller
 
     public function Products()
     {
-        $product_data = Product::with(['category', 'subcategory', 'galleries'])
-            ->where('product_status', 'active')
+        $product_data = Product::with(['category', 'brand', 'galleries'])
+            ->where('status', 'active')
             ->latest()
-            ->paginate(9); // per page 9
+            ->paginate(9); // per page 9 products
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
 
@@ -78,17 +78,25 @@ class FrontendController extends Controller
     {
         $product = Product::with([
             'category',
-            'subcategory',
+            'brand',
             'galleries',
+            'specifications',
             'reviews' => function ($query) {
-                $query->where('status', 'accept')->latest(); // Only accepted reviews
+                $query->where('status', 'accept')->latest();
             },
         ])
             ->where('product_slug', $slug)
-            ->where('product_status', 'active')
+            ->where('status', 'active')
             ->firstOrFail();
 
-        $related_products = Product::where('product_category_id', $product->product_category_id)->where('id', '!=', $product->id)->where('product_status', 'active')->latest()->take(10)->get();
+        $related_products = Product::with(['brand'])
+            ->where('product_category_id', $product->product_category_id)
+            ->where('id', '!=', $product->id)
+            ->where('status', 'active')
+            ->where('stock_status', 'in_stock')
+            ->latest()
+            ->take(10)
+            ->get();
 
         return view('frontend.details.product_details', compact('product', 'related_products'));
     }
@@ -118,10 +126,17 @@ class FrontendController extends Controller
 
     public function ProductByBrand($slug)
     {
+        // Brand info
         $brand_info = ProductBrand::where('product_brand_slug', $slug)->firstOrFail();
 
-        $product_data = Product::where('brand_name', $brand_info->product_brand_name)->where('product_status', 'active')->with('category')->orderBy('created_at', 'desc')->paginate(9);
+        // Products under this brand (active only)
+        $product_data = Product::where('brand_id', $brand_info->id)
+            ->where('status', 'active')
+            ->with('category', 'brand', 'galleries') // eager load
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
 
+        // All active brands (for sidebar/filter)
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
 
         return view('frontend.pages.product_by_brand', compact('brand_info', 'product_data', 'product_brand_data'));
@@ -134,13 +149,12 @@ class FrontendController extends Controller
 
         // Products under this category
         $product_data = Product::where('product_category_id', $category->id)
-            ->where('product_status', 'active')
+            ->where('status', 'active')
             ->with(['category'])
             ->orderBy('created_at', 'desc')
             ->paginate(9);
 
         $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
-
 
         return view('frontend.pages.product_by_category', compact('category', 'product_data', 'category_data'));
     }
@@ -151,7 +165,7 @@ class FrontendController extends Controller
         $subcategory = ProductSubCategory::with([
             'category',
             'products' => function ($query) {
-                $query->where('product_status', 'active')->orderBy('created_at', 'desc');
+                $query->where('status', 'active')->orderBy('created_at', 'desc');
             },
         ])
             ->where('product_sub_category_slug', $slug)
@@ -167,7 +181,7 @@ class FrontendController extends Controller
         $age_group = AgeGroup::where('slug', $slug)
             ->with([
                 'products' => function ($query) {
-                    $query->where('product_status', 'active')->orderBy('created_at', 'desc');
+                    $query->where('status', 'active')->orderBy('created_at', 'desc');
                 },
             ])
             ->firstOrFail();
@@ -190,7 +204,7 @@ class FrontendController extends Controller
     {
         $blog_details = Blog::where('blog_slug', $slug)->where('blog_status', 'active')->firstOrFail();
         $blog_list = Blog::where('blog_status', 'active')->latest()->take(5)->get();
-        $recent_products = Product::where('product_status', 'active')->take(5)->get();
+        $recent_products = Product::where('status', 'active')->take(5)->get();
         return view('frontend.details.blog_details', compact('blog_details', 'blog_list', 'recent_products'));
     } // End Method
 
@@ -276,14 +290,25 @@ class FrontendController extends Controller
         return view('frontend.pages.child_development');
     }
 
-    public function WholesaleProducts()
+    public function FlashSale()
     {
-        $products = Product::with(['category', 'subcategory', 'galleries'])
-            ->where('product_status', 'active')
-            ->where('is_wholesale', true) // 🔴 exclude wholesale
-            ->latest()
-            ->get();
+        $product_data = Product::where('is_flash_sale', true) // Flash Sale products
+            ->where('status', 'active')
+            ->with('category', 'brand', 'galleries') // eager load
+            ->orderBy('created_at', 'desc')
+            ->paginate(9); // 9 per page
 
-        return view('frontend.pages.wholesale', compact('products'));
+        return view('frontend.pages.flash_sale', compact('product_data'));
+    }
+
+    public function ItProduct()
+    {
+        $product_data = Product::where('is_it_product', true) // Flash Sale products
+            ->where('status', 'active')
+            ->with('category', 'brand', 'galleries') // eager load
+            ->orderBy('created_at', 'desc')
+            ->paginate(9); // 9 per page
+
+        return view('frontend.pages.it_product', compact('product_data'));
     }
 }
