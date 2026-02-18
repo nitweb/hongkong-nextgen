@@ -48,14 +48,13 @@
                 <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="300ms">
                     <div class="footer-widget__column footer-widget__services">
                         <div class="footer-widget__title-box">
-                            <h3 class="footer-widget__title">Our Services</h3>
+                            <h3 class="footer-widget__title">Our Brands</h3>
                         </div>
                         <ul class="footer-widget__services-list list-unstyled">
-                            <li><a href="services-details.html">Smartphone Repair</a></li>
-                            <li><a href="services-details.html">Laptop Repair</a></li>
-                            <li><a href="services-details.html">Desktop Repair</a></li>
-                            <li><a href="services-details.html">Tablet Repair</a></li>
-                            <li><a href="services-details.html">Smart Watch Repair</a></li>
+                            @foreach ($product_brands as $item)
+                                <li><a href="{{ route('product.by.brand', $item->product_brand_slug) }}">{{ $item->product_brand_name }}</a></li>
+                            @endforeach
+                            {{-- <li><a href="services-details.html">Smartphone Repair</a></li> --}}
                         </ul>
                     </div>
                 </div>

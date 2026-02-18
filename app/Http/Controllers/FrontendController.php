@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AboutCompany;
 use App\Models\AgeGroup;
 use App\Models\Blog;
+use App\Models\BlogCategories;
 use App\Models\BulkOrder;
 use App\Models\Careers;
 use App\Models\Clients;
@@ -207,16 +208,19 @@ class FrontendController extends Controller
 
     public function Blog()
     {
-        $blog_list = Blog::where('blog_status', 'active')->latest()->get();
+        $blog_list = Blog::where('blog_status', 'active')->latest()->paginate(9);
         return view('frontend.pages.blog', compact('blog_list'));
     } // End Method
 
     public function BlogDetails($slug)
     {
         $blog_details = Blog::where('blog_slug', $slug)->where('blog_status', 'active')->firstOrFail();
+
+        $blog_category = BlogCategories::latest()->get();
+
         $blog_list = Blog::where('blog_status', 'active')->latest()->take(5)->get();
-        $recent_products = Product::where('status', 'active')->take(5)->get();
-        return view('frontend.details.blog_details', compact('blog_details', 'blog_list', 'recent_products'));
+
+        return view('frontend.details.blog_details', compact('blog_details', 'blog_category', 'blog_list'));
     } // End Method
 
     public function PrivacyPolicy()

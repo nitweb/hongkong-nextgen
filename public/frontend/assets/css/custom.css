@@ -274,11 +274,53 @@ button.thm-btn.contact-page__btn {
     font-size: 13px;
     border: none;
     border-radius: 4px;
-    background: #e74399;
+    background: #d2232c;
     color: #fff;
     cursor: pointer;
 }
 
 .custom-price-filter__inputs button:hover {
-    background: #d63686;
+    background: #d2232c;
+}
+
+.blog-sidebar__img:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: inherit;
+    border-radius: 10px;
+    opacity: .30;
+}
+
+.blog-details-two__top-meta-list li {
+    justify-content: start;
+    gap: 30px;
+}
+
+.blog-details-two__top {
+    text-align: left;
+}
+
+.blog-details-two__top-title {
+    font-size: 40px;
+    margin-top: 30px;
+}
+
+.blog-details-two__top-meta-list {
+    margin-top: 10px;
+}
+
+.blog-sidebar__text-1 {
+    margin-top: 40px;
+}
+
+.blog-sidebar__text-1 img {
+    width: 100% !important;
+}
+
+.blog-details__tags {
+    border-bottom: none;
 }
