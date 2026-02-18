@@ -31,11 +31,17 @@
                 <div class="col-xl-3 col-lg-3">
                     <div class="product__sidebar">
 
-                        {{-- Search --}}
-                        <div class="shop-search product__sidebar-single">
-                            <form action="" method="GET">
-                                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products">
-                            </form>
+                        {{-- Search Product --}}
+                        <div class="shop-search product__sidebar-single product__price-ranger">
+
+                            <div class="custom-sidebar-search js-sidebar-search">
+
+                                <input type="text" class="custom-sidebar-search__input js-ajax-search-input" placeholder="Search products..." autocomplete="off">
+
+                                <div class="custom-sidebar-search__result js-ajax-search-result"></div>
+
+                            </div>
+
                         </div>
 
                         {{-- Price Filter (UI only) --}}

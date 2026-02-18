@@ -31,14 +31,20 @@
                 <div class="col-xl-3 col-lg-3">
                     <div class="product__sidebar">
 
-                        {{-- Search --}}
-                        <div class="shop-search product__sidebar-single">
-                            <form action="" method="GET">
-                                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products">
-                            </form>
+                        {{-- Search Product --}}
+                        <div class="shop-search product__sidebar-single product__price-ranger">
+
+                            <div class="custom-sidebar-search js-sidebar-search">
+
+                                <input type="text" class="custom-sidebar-search__input js-ajax-search-input" placeholder="Search products..." autocomplete="off">
+
+                                <div class="custom-sidebar-search__result js-ajax-search-result"></div>
+
+                            </div>
+
                         </div>
 
-                        <div class="shop-category product__sidebar-single">
+                        {{-- <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Categories</h3>
 
                             <ul class="list-unstyled">
@@ -47,6 +53,17 @@
                                         <a href="{{ route('product.by.category', $cat->product_category_slug) }}">
                                             {{ $cat->product_category_name }}
                                         </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div> --}}
+
+                        <div class="shop-category product__sidebar-single">
+                            <h3 class="product__sidebar-title">Brands</h3>
+                            <ul class="list-unstyled">
+                                @foreach ($product_brand_data as $item)
+                                    <li class="{{ request()->route('slug') == $item->product_brand_slug ? 'active' : '' }}">
+                                        <a href="{{ route('product.by.brand', $item->product_brand_slug) }}">{{ $item->product_brand_name }}</a>
                                     </li>
                                 @endforeach
                             </ul>

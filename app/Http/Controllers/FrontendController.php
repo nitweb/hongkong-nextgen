@@ -50,12 +50,16 @@ class FrontendController extends Controller
         return view('frontend.index', compact('slider_data', 'product_brand_data', 'product_data', 'categories'));
     }
 
-    public function Products()
+    public function Products(Request $request)
     {
-        $product_data = Product::with(['category', 'brand', 'galleries'])
-            ->where('status', 'active')
-            ->latest()
-            ->paginate(9); // per page 9 products
+        $query = Product::with(['category', 'brand', 'galleries'])->where('status', 'active');
+
+        // ✅ Price Range Filter
+        if ($request->filled('min_price') && $request->filled('max_price')) {
+            $query->whereBetween('product_price', [$request->min_price, $request->max_price]);
+        }
+
+        $product_data = $query->latest()->paginate(9)->withQueryString();
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
 
@@ -124,39 +128,46 @@ class FrontendController extends Controller
         return back()->with('success', '✅ Thank you! Your order request has been submitted successfully.');
     }
 
-    public function ProductByBrand($slug)
+    public function ProductByBrand(Request $request, $slug)
     {
-        // Brand info
         $brand_info = ProductBrand::where('product_brand_slug', $slug)->firstOrFail();
 
-        // Products under this brand (active only)
-        $product_data = Product::where('brand_id', $brand_info->id)
+        $query = Product::where('brand_id', $brand_info->id)
             ->where('status', 'active')
-            ->with('category', 'brand', 'galleries') // eager load
-            ->orderBy('created_at', 'desc')
-            ->paginate(9);
+            ->with(['category', 'brand', 'galleries']);
 
-        // All active brands (for sidebar/filter)
+        // ✅ Price Range Filter
+        if ($request->filled('min_price') && $request->filled('max_price')) {
+            $query->whereBetween('product_price', [$request->min_price, $request->max_price]);
+        }
+
+        $product_data = $query->latest()->paginate(9)->withQueryString();
+
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
 
         return view('frontend.pages.product_by_brand', compact('brand_info', 'product_data', 'product_brand_data'));
     }
 
-    public function ProductByCategory($slug)
+    public function ProductByCategory(Request $request, $slug)
     {
-        // Category info
         $category = ProductCategory::where('product_category_slug', $slug)->firstOrFail();
 
-        // Products under this category
-        $product_data = Product::where('product_category_id', $category->id)
+        $query = Product::where('product_category_id', $category->id)
             ->where('status', 'active')
-            ->with(['category'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(9);
+            ->with(['category']);
+
+        // ✅ Price Range Filter
+        if ($request->filled('min_price') && $request->filled('max_price')) {
+            $query->whereBetween('product_price', [$request->min_price, $request->max_price]);
+        }
+
+        $product_data = $query->latest()->paginate(9)->withQueryString();
+
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
 
         $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
 
-        return view('frontend.pages.product_by_category', compact('category', 'product_data', 'category_data'));
+        return view('frontend.pages.product_by_category', compact('category', 'product_data', 'product_brand_data', 'category_data'));
     }
 
     public function ProductBySubCategory($slug)
@@ -225,66 +236,6 @@ class FrontendController extends Controller
         return view('frontend.pages.about_us', compact('about_company', 'mission_vision'));
     } //End Method
 
-    public function ajaxSearch(Request $request)
-    {
-        $query = $request->get('query');
-
-        $products = Product::where('product_name', 'like', "%{$query}%")
-            ->orWhere('product_short_description', 'like', "%{$query}%")
-            ->limit(8)
-            ->get();
-
-        $html = '';
-
-        if ($products->count() > 0) {
-            foreach ($products as $product) {
-                $finalPrice = $product->product_price - ($product->discount_price ?? 0);
-                $html .=
-                    '
-                <a href="' .
-                    route('product.details', $product->product_slug) .
-                    '"
-                   style="display:flex; align-items:center; gap:10px; padding:8px 12px; border-bottom:1px solid #eee; text-decoration:none; color:#333;">
-                    <img src="' .
-                    asset('upload/product_image/' . $product->product_image) .
-                    '"
-                         alt="' .
-                    $product->product_name .
-                    '"
-                         style="width:45px; height:45px; border-radius:5px; object-fit:cover;">
-                    <div>
-                        <strong>' .
-                    e(Str::limit($product->product_name, 60)) .
-                    '</strong><br>
-                        <div style="font-size:13px;margin-top:10px;">
-                    <span style="font-weight:600;color:#e74399;">
-                        $' .
-                    number_format($finalPrice, 2) .
-                    '
-                    </span>';
-
-                if ($product->discount_price > 0) {
-                    $html .=
-                        '
-                    <span style="margin-left:6px;color:#999;text-decoration:line-through;">
-                        $' .
-                        number_format($product->product_price, 2) .
-                        '
-                    </span>';
-                }
-
-                $html .= '
-                </div>
-                    </div>
-                </a>';
-            }
-        } else {
-            $html = '<p style="padding:10px; text-align:center; color:#888;">No products found.</p>';
-        }
-
-        return response()->json(['html' => $html]);
-    }
-
     public function ChildDevelopment()
     {
         return view('frontend.pages.child_development');
@@ -310,5 +261,55 @@ class FrontendController extends Controller
             ->paginate(9); // 9 per page
 
         return view('frontend.pages.it_product', compact('product_data'));
+    }
+
+    public function ajaxSearch(Request $request)
+    {
+        $query = $request->get('query');
+
+        $products = Product::where('status', 'active')
+            ->where(function ($q) use ($query) {
+                $q->where('product_name', 'like', "%{$query}%")
+                    ->orWhere('product_part_number', 'like', "%{$query}%")
+                    ->orWhere('package', 'like', "%{$query}%")
+                    ->orWhere('date_code', 'like', "%{$query}%");
+            })
+            ->limit(8)
+            ->get();
+
+        $html = '';
+
+        if ($products->count()) {
+            foreach ($products as $product) {
+                $price = $product->product_price - $product->discount_price ?? $product->product_price;
+
+                $html .=
+                    '
+            <a href="' .
+                    route('product.details', $product->product_slug) .
+                    '"
+               style="display:flex;gap:12px;padding:10px;border-bottom:1px solid #eee;text-decoration:none;">
+                <img src="' .
+                    asset($product->product_image) .
+                    '"
+                     style="width:50px;height:50px;border-radius:6px;object-fit:cover;">
+                <div>
+                    <div style="font-weight:600;color:#222;">' .
+                    e(Str::limit($product->product_name, 45)) .
+                    '
+                    </div>
+                    <div style="color:#cf1f1f;font-weight:600;margin-top:5px;">
+                        $' .
+                    number_format($price, 2) .
+                    '
+                    </div>
+                </div>
+            </a>';
+            }
+        } else {
+            $html = '<p style="padding:12px;text-align:center;color:#888;">No products found</p>';
+        }
+
+        return response()->json(['html' => $html]);
     }
 }

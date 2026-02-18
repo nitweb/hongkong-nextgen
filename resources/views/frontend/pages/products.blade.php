@@ -25,26 +25,43 @@
                 <div class="col-xl-3 col-lg-3">
                     <div class="product__sidebar">
 
-                        <div class="shop-search product__sidebar-single">
-                            <form action="#">
-                                <input type="text" placeholder="Search">
-                            </form>
-                        </div>
+                        {{-- Search Product --}}
+                        <div class="shop-search product__sidebar-single product__price-ranger">
 
-                        <div class="product__price-ranger product__sidebar-single">
-                            <h3 class="product__sidebar-title">Price</h3>
-                            <div class="price-ranger">
-                                <div id="slider-range"></div>
-                                <div class="ranger-min-max-block">
-                                    <input type="text" readonly class="min">
-                                    <span>-</span>
-                                    <input type="text" readonly class="max">
-                                    <input type="submit" value="Filter">
-                                </div>
+                            <div class="custom-sidebar-search js-sidebar-search">
+
+                                <input type="text" class="custom-sidebar-search__input js-ajax-search-input" placeholder="Search products..." autocomplete="off">
+
+                                <div class="custom-sidebar-search__result js-ajax-search-result"></div>
+
                             </div>
+
                         </div>
 
-                        <div class="shop-category product__sidebar-single">
+                        {{-- Product Price Filter --}}
+                        <div class="product__price-ranger product__sidebar-single">
+
+                            <h3 class="product__sidebar-title">Price</h3>
+
+                            <div class="custom-price-filter js-price-filter" data-min="{{ request('min_price') }}" data-max="{{ request('max_price') }}">
+
+                                <div class="custom-price-filter__slider" id="priceRangeSlider"></div>
+
+                                <div class="custom-price-filter__inputs">
+                                    <input type="text" class="price-min js-price-min" readonly>
+                                    <span>-</span>
+                                    <input type="text" class="price-max js-price-max" readonly>
+
+                                    <button type="button" class="js-price-filter-btn">
+                                        Filter
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {{-- <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Categories</h3>
 
                             <ul class="list-unstyled">
@@ -56,7 +73,7 @@
                                     </li>
                                 @endforeach
                             </ul>
-                        </div>
+                        </div> --}}
 
                         <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Brands</h3>
