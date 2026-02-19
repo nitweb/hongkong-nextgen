@@ -42,7 +42,7 @@
                                 <li>
                                     <a href="#"><i class="fa fa-user"></i>{{ $blog_details->blogPublisher->name }}</a>
                                     <a href="#"><i class="fa fa-calendar-alt"></i>{{ \Carbon\Carbon::parse($blog_details->blog_published_date)->format('d F Y') }}</a>
-                                    <a href="#"><i class="far fa-comments"></i>{{ $blog_details->blogCategory->blog_category_name ?? 'Uncategorized' }}</a>
+                                    <a href="#"><i class="fa fa-tags"></i>{{ $blog_details->blogCategory->blog_category_name ?? 'Uncategorized' }}</a>
                                 </li>
                             </ul>
 

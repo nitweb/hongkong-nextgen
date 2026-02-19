@@ -324,3 +324,16 @@ button.thm-btn.contact-page__btn {
 .blog-details__tags {
     border-bottom: none;
 }
+
+.company-details {
+    padding-top: 120px;
+}
+
+.about-two__img-box {
+    margin-right: 0px;
+    margin-top: 0px;
+}
+
+.footer-widget__subscribe-text {
+    padding-bottom: 10px;
+}
