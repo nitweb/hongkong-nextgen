@@ -3,8 +3,8 @@
     <div class="container">
 
         <div class="section-title section-title--two text-center">
-            <span class="section-title__tagline">OUR SERVICES</span>
-            <h2 class="section-title__title">Our Efficient Solution</h2>
+            <span class="section-title__tagline">OUR PRODUCT</span>
+            <h2 class="section-title__title">Latest Product</h2>
         </div>
 
         <div class="row">
@@ -24,7 +24,7 @@
 
                                         <a href="{{ route('product.details', $item->product_slug) }}">
                                             <div class="product__all-img">
-                                                <img src="{{ asset('upload/product_image/' . $item->product_image) }}" alt="">
+                                                <img src="{{ asset($item->product_image) }}" alt="">
                                             </div>
                                         </a>
 

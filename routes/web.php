@@ -44,6 +44,9 @@ Route::middleware('web')->group(function () {
     Route::post('/bulk-order-submit', [FrontendController::class, 'bulkOrderSubmit'])->name('bulk.order.submit');
 
     // Product By Category
+    Route::get('/brand/{slug}', [FrontendController::class, 'ProductByBrand'])->name('product.by.brand');
+
+    // Product By Category
     Route::get('/category/{slug}', [FrontendController::class, 'ProductByCategory'])->name('product.by.category');
 
     // Product By Sub-Category
@@ -75,8 +78,11 @@ Route::middleware('web')->group(function () {
     // Child Development
     Route::get('/child-development', [FrontendController::class, 'ChildDevelopment'])->name('child.development');
 
-    // Wholesale
-    Route::get('/wholesale', [FrontendController::class, 'WholesaleProducts'])->name('wholesale');
+    // Flash Sale
+    Route::get('/flash-sale', [FrontendController::class, 'FlashSale'])->name('flash.sale');
+
+    // IT Product
+    Route::get('/it-product', [FrontendController::class, 'ItProduct'])->name('it.product');
 });
 
 // #################### End: Frontend Controller ####################

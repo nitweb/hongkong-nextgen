@@ -36,11 +36,12 @@
                             <h3 class="footer-widget__title">Quick Links</h3>
                         </div>
                         <ul class="footer-widget__Explore-list list-unstyled">
-                            <li><a href="{{ route('index') }}">Home</a></li>
+                            {{-- <li><a href="{{ route('index') }}">Home</a></li> --}}
                             <li><a href="{{ route('about') }}">About Us</a></li>
-                            <li><a href="#!">Services</a></li>
                             <li><a href="{{ route('blog') }}">Blog</a></li>
                             <li><a href="{{ route('contact') }}">Contact Us</a></li>
+                            <li><a href="{{ route('privacy.policy') }}">Privacy Policy</a></li>
+                            <li><a href="{{ route('terms.conditions') }}">Terms & Conditions</a></li>
                         </ul>
                     </div>
                 </div>
@@ -48,14 +49,13 @@
                 <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="300ms">
                     <div class="footer-widget__column footer-widget__services">
                         <div class="footer-widget__title-box">
-                            <h3 class="footer-widget__title">Our Services</h3>
+                            <h3 class="footer-widget__title">Our Brands</h3>
                         </div>
                         <ul class="footer-widget__services-list list-unstyled">
-                            <li><a href="services-details.html">Smartphone Repair</a></li>
-                            <li><a href="services-details.html">Laptop Repair</a></li>
-                            <li><a href="services-details.html">Desktop Repair</a></li>
-                            <li><a href="services-details.html">Tablet Repair</a></li>
-                            <li><a href="services-details.html">Smart Watch Repair</a></li>
+                            @foreach ($product_brands as $item)
+                                <li><a href="{{ route('product.by.brand', $item->product_brand_slug) }}">{{ $item->product_brand_name }}</a></li>
+                            @endforeach
+                            {{-- <li><a href="services-details.html">Smartphone Repair</a></li> --}}
                         </ul>
                     </div>
                 </div>
@@ -63,24 +63,24 @@
                 <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="400ms">
                     <div class="footer-widget__column footer-widget__subscribe">
                         <div class="footer-widget__title-box">
-                            <h3 class="footer-widget__title">Subscribe</h3>
+                            <h3 class="footer-widget__title">Contact Information</h3>
                         </div>
-                        <form class="footer-widget__subscribe-box">
-                            <div class="footer-widget__subscribe-input-box">
-                                <input type="email" placeholder="Your Email" name="email">
-                                <button type="submit" class="footer-widget__subscribe-btn thm-btn">Subscribe
-                                    Now</button>
-                            </div>
-                        </form>
-                        <p class="footer-widget__subscribe-text">Stay always in touch! Subscribe to our
-                            newsletter.</p>
+                        <p class="footer-widget__subscribe-text" style="padding-top: 0px;">
+                            <strong>Address:</strong> {!! GlobalSiteSettings()->site_address !!}
+                        </p>
+                        <p class="footer-widget__subscribe-text">
+                            <strong>Email:</strong> <a href="mailto:{{ GlobalSiteSettings()->site_email }}" target="_blank" style="color: #fff">{{ GlobalSiteSettings()->site_email }}</a>
+                        </p>
+                        <p class="footer-widget__subscribe-text">
+                            <span>Phone:</span> <a href="tel:{{ GlobalSiteSettings()->site_phone }}" target="_blank" style="color: #fff">{{ GlobalSiteSettings()->site_phone }}</a>
+                        </p>
                     </div>
                 </div>
 
             </div>
 
         </div>
-        
+
     </div>
 
     <div class="site-footer__bottom">

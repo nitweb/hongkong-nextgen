@@ -8,8 +8,8 @@ class ProductBrand extends Model
 {
     protected $guarded = [];
 
-    // public function products()
-    // {
-    //     return $this->hasMany(Product::class, 'product_category_id');
-    // }
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'product_brand_id');
+    }
 }

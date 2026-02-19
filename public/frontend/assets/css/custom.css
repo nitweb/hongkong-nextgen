@@ -121,3 +121,219 @@ button.thm-btn.contact-page__btn {
     background-color: var(--fixnix-black);
     color: #fff;
 }
+
+/* ===== HEADER RIGHT ALIGN ===== */
+.main-menu-two__right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.main-menu-two__main-menu-box {
+    flex: 1;
+}
+
+/* ===== SEARCH WRAPPER ===== */
+.custom-header-search {
+    position: relative;
+    width: 280px;
+}
+
+/* Input */
+.custom-header-search__input {
+    width: 100%;
+    height: 42px;
+    padding: 0 14px;
+    font-size: 14px;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.custom-header-search__input:focus {
+    border-color: #cf1f1f;
+}
+
+/* Result Box */
+.custom-header-search__result {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    display: none;
+    z-index: 99999;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+/* Result item (from ajax HTML) */
+.custom-header-search__result a {
+    display: flex;
+    gap: 12px;
+    padding: 10px;
+    text-decoration: none;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.custom-header-search__result a:hover {
+    background-color: #f9f9f9;
+}
+
+/* Mobile */
+@media (max-width: 991px) {
+    .main-menu-two__right {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .custom-header-search {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+
+/* ===== SIDEBAR SEARCH ===== */
+.custom-sidebar-search {
+    position: relative;
+}
+
+.custom-sidebar-search__input {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+}
+
+.custom-sidebar-search__input:focus {
+    border-color: #d2232c;
+}
+
+/* Sidebar result dropdown */
+.custom-sidebar-search__result {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    display: none;
+    z-index: 999;
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+/* Result item */
+.custom-sidebar-search__result a {
+    display: flex;
+    gap: 10px;
+    padding: 8px 10px;
+    border-bottom: 1px solid #f1f1f1;
+    text-decoration: none;
+}
+
+.custom-sidebar-search__result a:hover {
+    background: #f7f7f7;
+}
+
+/* ===== PRICE FILTER ===== */
+.custom-price-filter {
+    margin-top: 10px;
+}
+
+.custom-price-filter__slider {
+    margin: 15px 0 20px;
+}
+
+.custom-price-filter__inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.custom-price-filter__inputs input {
+    width: 70px;
+    height: 36px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.custom-price-filter__inputs button {
+    margin-left: auto;
+    height: 36px;
+    padding: 0 14px;
+    font-size: 13px;
+    border: none;
+    border-radius: 4px;
+    background: #d2232c;
+    color: #fff;
+    cursor: pointer;
+}
+
+.custom-price-filter__inputs button:hover {
+    background: #d2232c;
+}
+
+.blog-sidebar__img:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: inherit;
+    border-radius: 10px;
+    opacity: .30;
+}
+
+.blog-details-two__top-meta-list li {
+    justify-content: start;
+    gap: 30px;
+}
+
+.blog-details-two__top {
+    text-align: left;
+}
+
+.blog-details-two__top-title {
+    font-size: 40px;
+    margin-top: 30px;
+}
+
+.blog-details-two__top-meta-list {
+    margin-top: 10px;
+}
+
+.blog-sidebar__text-1 {
+    margin-top: 40px;
+}
+
+.blog-sidebar__text-1 img {
+    width: 100% !important;
+}
+
+.blog-details__tags {
+    border-bottom: none;
+}
+
+.company-details {
+    padding-top: 120px;
+}
+
+.about-two__img-box {
+    margin-right: 0px;
+    margin-top: 0px;
+}
+
+.footer-widget__subscribe-text {
+    padding-bottom: 10px;
+}
