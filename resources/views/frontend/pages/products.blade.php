@@ -61,7 +61,7 @@
 
                         </div>
 
-                        {{-- <div class="shop-category product__sidebar-single">
+                        <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Categories</h3>
 
                             <ul class="list-unstyled">
@@ -73,9 +73,9 @@
                                     </li>
                                 @endforeach
                             </ul>
-                        </div> --}}
+                        </div>
 
-                        <div class="shop-category product__sidebar-single">
+                        {{-- <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Brands</h3>
                             <ul class="list-unstyled">
                                 @foreach ($product_brand_data as $item)
@@ -84,7 +84,7 @@
                                     </li>
                                 @endforeach
                             </ul>
-                        </div>
+                        </div> --}}
 
                     </div>
                 </div>

@@ -146,7 +146,9 @@ class FrontendController extends Controller
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
 
-        return view('frontend.pages.product_by_brand', compact('brand_info', 'product_data', 'product_brand_data'));
+        $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
+
+        return view('frontend.pages.product_by_brand', compact('brand_info', 'product_data', 'product_brand_data' , 'category_data'));
     }
 
     public function ProductByCategory(Request $request, $slug)
