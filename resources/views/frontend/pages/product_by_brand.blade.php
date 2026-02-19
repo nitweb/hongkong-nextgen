@@ -58,8 +58,23 @@
                             </div>
                         </div>
 
-                        {{-- Brands --}}
+                        {{-- Categories --}}
                         <div class="shop-category product__sidebar-single">
+                            <h3 class="product__sidebar-title">Categories</h3>
+
+                            <ul class="list-unstyled">
+                                @foreach ($category_data as $cat)
+                                    <li class="{{ request()->route('slug') == $cat->product_category_slug ? 'active' : '' }}">
+                                        <a href="{{ route('product.by.category', $cat->product_category_slug) }}">
+                                            {{ $cat->product_category_name }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                        {{-- Brands --}}
+                        {{-- <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Brands</h3>
                             <ul class="list-unstyled">
                                 @foreach ($product_brand_data as $item)
@@ -70,7 +85,7 @@
                                     </li>
                                 @endforeach
                             </ul>
-                        </div>
+                        </div> --}}
 
                     </div>
                 </div>

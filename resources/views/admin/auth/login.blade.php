@@ -6,10 +6,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Admin Login | Dabo Bunny</title>
+    <title>Admin Login</title>
 
     {{-- Favicon Icon --}}
-    <link rel="shortcut icon" href="{{ asset('backend/assets/images/favicon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('frontend/assets/images/favicons/favicon-32x32.png') }}" />
+
     {{-- Bootstrap CSS --}}
     <link href="{{ asset('backend/assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
     {{-- Icons CSS --}}
