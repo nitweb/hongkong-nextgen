@@ -9,10 +9,10 @@
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0 font-size-18">Product Category List</h4>
                         <div class="page-title-right">
-                            <a href="{{ route('backend.product_categories.add') }}" class="btn btn-outline-primary waves-effect waves-light">
+                            <a href="{{ route('backend.product_categories.add') }}" class="btn btn-sm btn-outline-primary waves-effect waves-light">
                                 <i class="bx bx-plus font-size-16 align-middle me-2"></i> Add Product Category
                             </a>
-                            <a href="javascript:history.back()" class="btn btn-outline-dark waves-effect waves-light">
+                            <a href="javascript:history.back()" class="btn btn-sm btn-outline-dark waves-effect waves-light">
                                 <i class="bx bx-undo font-size-16 align-middle me-2"></i> Back
                             </a>
                         </div>
@@ -59,7 +59,7 @@
                                                 <td>
                                                     {{-- Status Update --}}
                                                     <div class="btn-group" role="group" style="margin-top: -8px;">
-                                                        <button type="button" class="btn btn-outline-secondary waves-effect waves-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary waves-effect waves-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                                             Status <i class="mdi mdi-chevron-down"></i>
                                                         </button>
                                                         <ul class="dropdown-menu">
@@ -68,11 +68,11 @@
                                                         </ul>
                                                     </div>
                                                     {{-- Edit btn --}}
-                                                    <a href="{{ route('backend.product_categories.edit', $item->id) }}" class="btn btn-outline-info waves-effect waves-light mb-2">
+                                                    <a href="{{ route('backend.product_categories.edit', $item->id) }}" class="btn btn-sm btn-outline-info waves-effect waves-light mb-2">
                                                         <i class="bx bx-edit font-size-16 align-middle"></i>
                                                     </a>
                                                     {{-- Delete btn --}}
-                                                    <a href="{{ route('backend.product_categories.delete', $item->id) }}" class="btn btn-outline-danger waves-effect waves-light mb-2" onclick="return confirm('Are you sure?')">
+                                                    <a href="{{ route('backend.product_categories.delete', $item->id) }}" class="btn btn-sm btn-outline-danger waves-effect waves-light mb-2" onclick="return confirm('Are you sure?')">
                                                         <i class="bx bxs-trash font-size-16 align-middle"></i>
                                                     </a>
                                                 </td>

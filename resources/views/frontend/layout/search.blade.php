@@ -1,4 +1,4 @@
-<div class="search-popup">
+{{-- <div class="search-popup">
     <div class="search-popup__overlay search-toggler"></div>
 
     <div class="search-popup__content">
@@ -11,4 +11,4 @@
         </form>
     </div>
 
-</div>
+</div> --}}

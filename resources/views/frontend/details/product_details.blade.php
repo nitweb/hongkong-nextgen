@@ -24,7 +24,7 @@
 
                 <div class="col-lg-6 col-xl-6">
                     <div class="product-details__img">
-                        <img src="{{ asset('upload/product_image/' . $product->product_image) }}" alt="{{ $product->product_name }}" />
+                        <img src="{{ asset($product->product_image) }}" alt="{{ $product->product_name }}" />
                     </div>
                 </div>
 
@@ -45,11 +45,18 @@
                         </h3>
                     </div>
 
-                    <div class="product-details__reveiw">
+                    <div class="product-details__reveiw" style="display: block;">
                         <p class="details__brand"><strong>Category:</strong>
                             <span>
                                 <a href="{{ route('product.by.category', $product->category->product_category_slug ?? '#') }}">
                                     {{ $product->category->product_category_name ?? 'N/A' }}
+                                </a>
+                            </span>
+                        </p>
+                        <p class="details__brand"><strong>Brand:</strong>
+                            <span>
+                                <a href="{{ route('product.by.brand', $product->brand->product_brand_slug) }}">
+                                    {{ $product->brand->product_brand_name ?? 'N/A' }}
                                 </a>
                             </span>
                         </p>
@@ -74,10 +81,10 @@
                                                 <td class="col_one">Product Part Number</td>
                                                 <td class="col_two">{{ $product->product_part_number }}</td>
                                             </tr>
-                                            <tr>
+                                            {{-- <tr>
                                                 <td class="col_one">Brand Name</td>
-                                                <td class="col_two">{{ $product->brand_name }}</td>
-                                            </tr>
+                                                <td class="col_two">{{ $product->brand->product_brand_name ?? 'N/A' }}</td>
+                                            </tr> --}}
                                             <tr>
                                                 <td class="col_one">Package</td>
                                                 <td class="col_two">{{ $product->package }}</td>
@@ -104,7 +111,7 @@
                         {{-- ✅ Bulk Order Button (Bootstrap modal open) --}}
                         <div class="product-details__buttons-2">
                             <button type="button" class="thm-btn" data-bs-toggle="modal" data-bs-target="#bulkOrderModal">
-                                Bulk Order
+                                Inquiry
                             </button>
                         </div>
                     </div>
@@ -130,7 +137,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="bulkOrderModalLabel">Bulk Order Request</h5>
+                    <h5 class="modal-title" id="bulkOrderModalLabel">Order Request</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 

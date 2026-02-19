@@ -20,7 +20,7 @@
                             </div>
                         </div>
                         <h3 class="services-three__title">
-                            <a href="#!">{{ $item->product_brand_name }}</a>
+                            <a href="{{ route('product.by.brand', $item->product_brand_slug) }}">{{ $item->product_brand_name }}</a>
                         </h3>
                     </div>
                 </div>

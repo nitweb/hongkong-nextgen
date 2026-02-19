@@ -7,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>Admin Dashboard | Dabo Bunny</title>
+    <title>Admin Dashboard</title>
 
     {{-- Favicon Icon --}}
-    <link rel="shortcut icon" href="{{ asset('backend/assets/images/favicon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('frontend/assets/images/favicons/favicon-32x32.png') }}" />
     {{-- Plugin CSS --}}
     <link rel="stylesheet" href="{{ asset('backend/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css') }}">
     {{-- Bootstrap CSS --}}

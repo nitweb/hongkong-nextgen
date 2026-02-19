@@ -3,172 +3,144 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\AgeGroup;
 use App\Models\Product;
 use App\Models\ProductBrand;
 use App\Models\ProductCategory;
 use App\Models\ProductGallery;
 use App\Models\ProductSpecification;
-use App\Models\ProductSubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    // ========== Product List ==========
+    /* ===================== Product List ===================== */
     public function ProductList()
     {
-        $product_list = Product::latest()
-            ->with(['category', 'subcategory'])
+        $product_list = Product::with(['category', 'brand'])
+            ->latest()
             ->get();
 
         return view('backend.products.list', compact('product_list'));
     }
 
-    // ========== Add Form ==========
+    /* ===================== Add Form ===================== */
     public function ProductAdd()
     {
         $categories = ProductCategory::where('product_category_status', 'active')->get();
-        $subcategories = ProductSubCategory::where('product_sub_category_status', 'active')->get();
-        $ageGroups = AgeGroup::orderBy('id', 'asc')->get();
-        $brands = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name', 'asc')->get();
+        $brands = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
 
-        return view('backend.products.add', compact('categories', 'subcategories', 'ageGroups', 'brands'));
+        return view('backend.products.add', compact('categories', 'brands'));
     }
 
-    // ========== Store ==========
+    /* ===================== Store ===================== */
     public function ProductStore(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'product_name' => 'required|string|max:255',
-                'product_slug' => 'required|string|max:255|unique:products,product_slug',
-                'product_category_id' => 'required|exists:product_categories,id',
-                'product_sub_category_id' => 'nullable|exists:product_sub_categories,id',
-                'product_price' => 'required|numeric|min:0',
-                'discount_price' => 'nullable|numeric|min:0',
-                'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-                'product_gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-                'age_group_id' => 'required|exists:age_groups,id',
-                'test_report_astm' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
-                'test_report_en71' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
-                'stock_status' => 'required|in:in_stock,out_of_stock',
-                'product_part_number' => 'nullable|string|max:255',
-                'brand_name' => 'nullable|string|max:255',
-                'package' => 'nullable|string|max:255',
-                'date_code' => 'nullable|string|max:255',
+        $validator = Validator::make($request->all(), [
+            'product_name' => 'required|string|max:255',
+            'product_slug' => 'required|string|max:255|unique:products,product_slug',
+            'product_category_id' => 'required|exists:product_categories,id',
+            'brand_id' => 'required|exists:product_brands,id',
 
-                // ✅ NEW: specs validation
-                'spec_key.*' => 'nullable|string|max:255',
-                'spec_value.*' => 'nullable|string|max:2000',
-            ],
-            [
-                'product_name.required' => 'Product name is required',
-                'product_slug.required' => 'Slug is required',
-                'product_slug.unique' => 'Slug already exists',
-                'product_category_id.required' => 'Category is required',
-                'product_image.image' => 'Product image must be an image file',
-                'age_group_id.required' => 'Age group is required',
-            ],
-        );
+            'product_price' => 'required|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0',
+
+            'product_part_number' => 'required|string|max:255',
+            'package' => 'required|string|max:255',
+            'date_code' => 'required|string|max:255',
+
+            'product_description' => 'nullable|string',
+
+            'product_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'product_gallery_images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+
+            'stock_status' => 'required|in:in_stock,out_of_stock',
+            'status' => 'required|in:active,inactive',
+
+            'is_flash_sale' => 'nullable|boolean',
+            'is_it_product' => 'nullable|boolean',
+
+            'spec_key.*' => 'nullable|string|max:191',
+            'spec_value.*' => 'nullable|string|max:2000',
+        ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return back()->withErrors($validator)->withInput();
+        }
+
+        if ($request->discount_price && $request->discount_price > $request->product_price) {
+            return back()
+                ->withErrors(['discount_price' => 'Discount price cannot be greater than product price'])
+                ->withInput();
         }
 
         try {
             DB::beginTransaction();
+
             $manager = new ImageManager(new Driver());
 
-            // Create Product
-            $product = new Product();
-            $product->product_name = $request->product_name;
-            $product->product_slug = Str::slug($request->product_slug, '-');
-            $product->product_category_id = $request->product_category_id;
-            $product->product_sub_category_id = $request->product_sub_category_id;
-            $product->age_group_id = $request->age_group_id;
-            $product->product_price = $request->product_price;
-            $product->discount_price = $request->discount_price;
-            $product->product_short_description = $request->product_short_description;
-            $product->product_description = $request->product_description;
+            $product = Product::create([
+                'product_name' => $request->product_name,
+                'product_slug' => Str::slug($request->product_slug),
+                'product_category_id' => $request->product_category_id,
+                'brand_id' => $request->brand_id,
+                'product_price' => $request->product_price,
+                'discount_price' => $request->discount_price,
+                'product_part_number' => $request->product_part_number,
+                'package' => $request->package,
+                'date_code' => $request->date_code,
+                'product_description' => $request->product_description,
+                'stock_status' => $request->stock_status,
+                'status' => $request->status,
+                'is_flash_sale' => $request->boolean('is_flash_sale'),
+                'is_it_product' => $request->boolean('is_it_product'),
+            ]);
 
-            $product->product_part_number = $request->product_part_number;
-            $product->brand_name = $request->brand_name;
-            $product->package = $request->package;
-            $product->date_code = $request->date_code;
-
-            // legacy HTML textarea (optional)
-            $product->product_specifications = $request->product_specifications;
-
-            $product->is_wholesale = $request->has('is_wholesale');
-            $product->is_free_delivery = $request->has('is_free_delivery');
-            $product->stock_status = $request->stock_status ?? 'in_stock';
-            $product->product_status = $request->product_status ?? 'active';
-
-            // ASTM Report
-            if ($request->hasFile('test_report_astm')) {
-                $file = $request->file('test_report_astm');
-                $fileName = uniqid('astm_', true) . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('upload/product_reports'), $fileName);
-                $product->test_report_astm = $fileName;
-            }
-
-            // EN71 Report
-            if ($request->hasFile('test_report_en71')) {
-                $file = $request->file('test_report_en71');
-                $fileName = uniqid('en71_', true) . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('upload/product_reports'), $fileName);
-                $product->test_report_en71 = $fileName;
-            }
-
-            // Main Product Image
+            /* ---- Main Image ---- */
             if ($request->hasFile('product_image')) {
                 $file = $request->file('product_image');
-                $file_name = uniqid('product_', true) . '.' . $file->getClientOriginalExtension();
-                $img = $manager->read($file->getRealPath());
-                $img->resize(583, 583);
-                $img->save(public_path('upload/product_image/') . $file_name);
-                $product->product_image = $file_name;
+                $name = uniqid('product_', true) . '.' . $file->getClientOriginalExtension();
+                $path = public_path('upload/product_image/');
+
+                if (!file_exists($path)) {
+                    mkdir($path, 0755, true);
+                }
+
+                $manager
+                    ->read($file)
+                    ->resize(583, 583)
+                    ->save($path . $name);
+                $product->update(['product_image' => 'upload/product_image/' . $name]);
             }
 
-            $product->save();
-
-            // Multiple Gallery Images
+            /* ---- Gallery ---- */
             if ($request->hasFile('product_gallery_images')) {
                 foreach ($request->file('product_gallery_images') as $file) {
-                    $file_name = uniqid('gallery_', true) . '.' . $file->getClientOriginalExtension();
-                    $img = $manager->read($file->getRealPath());
-                    $img->resize(583, 583);
-                    $img->save(public_path('upload/product_gallery/') . $file_name);
+                    $name = uniqid('gallery_', true) . '.' . $file->getClientOriginalExtension();
+                    $manager
+                        ->read($file)
+                        ->resize(583, 583)
+                        ->save(public_path('upload/product_gallery/' . $name));
 
                     ProductGallery::create([
                         'product_id' => $product->id,
-                        'product_gallery_image' => $file_name,
+                        'product_gallery_image' => $name,
                     ]);
                 }
             }
 
-            // ✅ NEW: Save Specification Rows (key/value)
-            $specKeys = $request->spec_key ?? [];
-            $specValues = $request->spec_value ?? [];
-
-            foreach ($specKeys as $index => $key) {
-                $key = is_string($key) ? trim($key) : '';
-                $value = $specValues[$index] ?? null;
-                $value = is_string($value) ? trim($value) : $value;
-
-                if ($key !== '' && $value !== null && $value !== '') {
+            /* ---- Specifications ---- */
+            foreach ($request->spec_key ?? [] as $i => $key) {
+                if ($key && ($request->spec_value[$i] ?? null)) {
                     ProductSpecification::create([
                         'product_id' => $product->id,
                         'spec_key' => $key,
-                        'spec_value' => $value,
-                        'sort_order' => $index,
+                        'spec_value' => $request->spec_value[$i],
+                        'sort_order' => $i,
                     ]);
                 }
             }
@@ -180,370 +152,187 @@ class ProductController extends Controller
                 ->with(['message' => 'Product created successfully!', 'alert-type' => 'success']);
         } catch (\Throwable $e) {
             DB::rollBack();
-            Log::error('Product Create Error: ' . $e->getMessage());
+            Log::error($e->getMessage());
 
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(['message' => 'Failed to create product.', 'alert-type' => 'error']);
+            return back()->with(['message' => 'Product create failed', 'alert-type' => 'error']);
         }
     }
 
-    // ========== Edit Form ==========
+    /* ===================== Edit ===================== */
     public function ProductEdit($id)
     {
-        $product_info = Product::findOrFail($id);
-
+        $product_info = Product::with(['galleries', 'specifications'])->findOrFail($id);
         $categories = ProductCategory::where('product_category_status', 'active')->get();
-        $subcategories = ProductSubCategory::where('product_sub_category_status', 'active')->get();
-        $ageGroups = AgeGroup::orderBy('id', 'asc')->get();
-        $brands = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name', 'asc')->get();
+        $brands = ProductBrand::where('product_brand_status', 'active')->get();
 
-        return view('backend.products.edit', compact('product_info', 'categories', 'subcategories', 'ageGroups', 'brands'));
+        return view('backend.products.edit', compact('product_info', 'categories', 'brands'));
     }
 
-    // ========== Update ==========
+    /* ===================== Update ===================== */
     public function ProductUpdate(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'product_name' => 'required|string|max:255',
-                'product_slug' => 'required|string|max:255|unique:products,product_slug,' . $request->id,
-                'product_category_id' => 'required|exists:product_categories,id',
-                'product_sub_category_id' => 'nullable|exists:product_sub_categories,id',
-                'product_price' => 'required|numeric|min:0',
-                'discount_price' => 'nullable|numeric|min:0',
-                'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-                'product_gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // ✅ optional new gallery uploads
-                'age_group_id' => 'required|exists:age_groups,id',
-                'test_report_astm' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
-                'test_report_en71' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
-                'stock_status' => 'required|in:in_stock,out_of_stock',
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id',
+            'product_name' => 'required|string|max:255',
+            'product_slug' => 'required|string|max:255',
+            'product_category_id' => 'required|exists:product_categories,id',
+            'brand_id' => 'required|exists:product_brands,id',
 
-                // ✅ NEW: specs validation
-                'spec_key.*' => 'nullable|string|max:255',
-                'spec_value.*' => 'nullable|string|max:2000',
+            'product_price' => 'required|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0',
 
-                'product_part_number' => 'nullable|string|max:255',
-                'brand_name' => 'nullable|string|max:255',
-                'package' => 'nullable|string|max:255',
-                'date_code' => 'nullable|string|max:255',
-            ],
-            [
-                'product_name.required' => 'Product name is required',
-                'product_slug.required' => 'Slug is required',
-                'product_slug.unique' => 'Slug already exists',
-                'product_category_id.required' => 'Category is required',
-                'product_image.image' => 'Product image must be an image file',
-                'age_group_id.required' => 'Age group is required',
-            ],
-        );
+            'product_part_number' => 'required|string|max:255',
+            'package' => 'required|string|max:255',
+            'date_code' => 'required|string|max:255',
+
+            'product_description' => 'nullable|string',
+
+            'product_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'product_gallery_images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+
+            'stock_status' => 'required|in:in_stock,out_of_stock',
+            'status' => 'required|in:active,inactive',
+
+            'is_flash_sale' => 'nullable|boolean',
+            'is_it_product' => 'nullable|boolean',
+
+            'spec_key.*' => 'nullable|string|max:191',
+            'spec_value.*' => 'nullable|string|max:2000',
+        ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $product = Product::findOrFail($request->product_id);
+
+        // Unique slug check with current product
+        $slugExists = Product::where('product_slug', Str::slug($request->product_slug))
+            ->where('id', '!=', $product->id)
+            ->exists();
+
+        if ($slugExists) {
+            return back()
+                ->withErrors(['product_slug' => 'This slug is already taken'])
+                ->withInput();
+        }
+
+        if ($request->discount_price && $request->discount_price > $request->product_price) {
+            return back()
+                ->withErrors(['discount_price' => 'Discount price cannot be greater than product price'])
+                ->withInput();
         }
 
         try {
             DB::beginTransaction();
 
-            $product = Product::findOrFail($request->id);
-            $product->product_name = $request->product_name;
-            $product->product_slug = Str::slug($request->product_slug, '-');
-            $product->product_category_id = $request->product_category_id;
-            $product->product_sub_category_id = $request->product_sub_category_id;
-            $product->age_group_id = $request->age_group_id;
-            $product->product_price = $request->product_price;
-            $product->discount_price = $request->discount_price;
-            $product->product_short_description = $request->product_short_description;
-            $product->product_description = $request->product_description;
+            $manager = new ImageManager(new Driver());
 
-            $product->product_part_number = $request->product_part_number;
-            $product->brand_name = $request->brand_name;
-            $product->package = $request->package;
-            $product->date_code = $request->date_code;
+            $product->update([
+                'product_name' => $request->product_name,
+                'product_slug' => Str::slug($request->product_slug),
+                'product_category_id' => $request->product_category_id,
+                'brand_id' => $request->brand_id,
+                'product_price' => $request->product_price,
+                'discount_price' => $request->discount_price,
+                'product_part_number' => $request->product_part_number,
+                'package' => $request->package,
+                'date_code' => $request->date_code,
+                'product_description' => $request->product_description,
+                'stock_status' => $request->stock_status,
+                'status' => $request->status,
+                'is_flash_sale' => $request->boolean('is_flash_sale'),
+                'is_it_product' => $request->boolean('is_it_product'),
+            ]);
 
-            // legacy HTML textarea (optional)
-            $product->product_specifications = $request->product_specifications;
-
-            $product->is_wholesale = $request->has('is_wholesale');
-            $product->is_free_delivery = $request->has('is_free_delivery');
-            $product->stock_status = $request->stock_status ?? 'in_stock';
-            $product->product_status = $request->product_status ?? 'active';
-
-            // Update ASTM Report
-            if ($request->hasFile('test_report_astm')) {
-                if ($product->test_report_astm) {
-                    $old = public_path('upload/product_reports/' . $product->test_report_astm);
-                    if (file_exists($old)) {
-                        @unlink($old);
-                    }
-                }
-
-                $file = $request->file('test_report_astm');
-                $fileName = uniqid('astm_', true) . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('upload/product_reports'), $fileName);
-                $product->test_report_astm = $fileName;
-            }
-
-            // Update EN71 Report
-            if ($request->hasFile('test_report_en71')) {
-                if ($product->test_report_en71) {
-                    $old = public_path('upload/product_reports/' . $product->test_report_en71);
-                    if (file_exists($old)) {
-                        @unlink($old);
-                    }
-                }
-
-                $file = $request->file('test_report_en71');
-                $fileName = uniqid('en71_', true) . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('upload/product_reports'), $fileName);
-                $product->test_report_en71 = $fileName;
-            }
-
-            // Update Main Image
+            /* ---- Main Image ---- */
             if ($request->hasFile('product_image')) {
-                $oldImage = public_path('upload/product_image/' . $product->product_image);
-                if ($product->product_image && file_exists($oldImage)) {
-                    @unlink($oldImage);
+                // Delete old image
+                if ($product->product_image) {
+                    @unlink(public_path($product->product_image));
                 }
 
                 $file = $request->file('product_image');
-                $manager = new ImageManager(new Driver());
-                $file_name = uniqid('product_', true) . '.' . $file->getClientOriginalExtension();
+                $name = uniqid('product_', true) . '.' . $file->getClientOriginalExtension();
+                $path = public_path('upload/product_image/');
 
-                $img = $manager->read($file->getRealPath());
-                $img->resize(583, 583); // ✅ same as store
-                $img->save(public_path('upload/product_image/') . $file_name);
+                if (!file_exists($path)) {
+                    mkdir($path, 0755, true);
+                }
 
-                $product->product_image = $file_name;
+                $manager
+                    ->read($file)
+                    ->resize(583, 583)
+                    ->save($path . $name);
+                $product->update(['product_image' => 'upload/product_image/' . $name]);
             }
 
-            $product->save();
-
-            // ✅ OPTIONAL: New Gallery Images add from edit page input (product_gallery_images[])
+            /* ---- Gallery ---- */
             if ($request->hasFile('product_gallery_images')) {
-                $manager = new ImageManager(new Driver());
-
                 foreach ($request->file('product_gallery_images') as $file) {
-                    $file_name = uniqid('gallery_', true) . '.' . $file->getClientOriginalExtension();
-                    $img = $manager->read($file->getRealPath());
-                    $img->resize(583, 583);
-                    $img->save(public_path('upload/product_gallery/') . $file_name);
+                    $name = uniqid('gallery_', true) . '.' . $file->getClientOriginalExtension();
+                    $galleryPath = public_path('upload/product_gallery/');
+
+                    if (!file_exists($galleryPath)) {
+                        mkdir($galleryPath, 0755, true);
+                    }
+
+                    $manager
+                        ->read($file)
+                        ->resize(583, 583)
+                        ->save($galleryPath . $name);
 
                     ProductGallery::create([
                         'product_id' => $product->id,
-                        'product_gallery_image' => $file_name,
+                        'product_gallery_image' => $name,
                     ]);
                 }
             }
 
-            // ✅ NEW: Update Specification Rows (replace all)
+            /* ---- Specifications ---- */
             ProductSpecification::where('product_id', $product->id)->delete();
 
-            $specKeys = $request->spec_key ?? [];
-            $specValues = $request->spec_value ?? [];
-
-            foreach ($specKeys as $index => $key) {
-                $key = is_string($key) ? trim($key) : '';
-                $value = $specValues[$index] ?? null;
-                $value = is_string($value) ? trim($value) : $value;
-
-                if ($key !== '' && $value !== null && $value !== '') {
+            foreach ($request->spec_key ?? [] as $i => $key) {
+                if ($key && ($request->spec_value[$i] ?? null)) {
                     ProductSpecification::create([
                         'product_id' => $product->id,
                         'spec_key' => $key,
-                        'spec_value' => $value,
-                        'sort_order' => $index,
+                        'spec_value' => $request->spec_value[$i],
+                        'sort_order' => $i,
                     ]);
                 }
             }
-
-            DB::commit();
-
-            return redirect()
-                ->back()
-                ->with([
-                    'message' => 'Product updated successfully!',
-                    'alert-type' => 'success',
-                ]);
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            Log::error('Product Update Error: ' . $e->getMessage());
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with([
-                    'message' => 'Failed to update product.',
-                    'alert-type' => 'error',
-                ]);
-        }
-    }
-
-    // ========== Delete ==========
-    public function ProductDelete($id)
-    {
-        try {
-            DB::beginTransaction();
-
-            $product = Product::with('galleries')->findOrFail($id);
-
-            if ($product->test_report_astm) {
-                $file = public_path('upload/product_reports/' . $product->test_report_astm);
-                if (file_exists($file)) {
-                    @unlink($file);
-                }
-            }
-
-            if ($product->test_report_en71) {
-                $file = public_path('upload/product_reports/' . $product->test_report_en71);
-                if (file_exists($file)) {
-                    @unlink($file);
-                }
-            }
-
-            // Delete main product image
-            if ($product->product_image) {
-                $oldImage = public_path('upload/product_image/' . $product->product_image);
-                if (file_exists($oldImage)) {
-                    @unlink($oldImage);
-                }
-            }
-
-            // Delete gallery images
-            foreach ($product->galleries as $gallery) {
-                $galleryImage = public_path('upload/product_gallery/' . $gallery->product_gallery_image);
-                if (file_exists($galleryImage)) {
-                    @unlink($galleryImage);
-                }
-            }
-
-            // Delete product (related gallery rows will be deleted automatically via foreign key cascade)
-            $product->delete();
 
             DB::commit();
 
             return redirect()
                 ->route('backend.products.list')
-                ->with([
-                    'message' => 'Product and related gallery images deleted successfully!',
-                    'alert-type' => 'success',
-                ]);
+                ->with(['message' => 'Product updated successfully!', 'alert-type' => 'success']);
         } catch (\Throwable $e) {
             DB::rollBack();
-            Log::error('Product Delete Error: ' . $e->getMessage());
-            return redirect()
-                ->back()
-                ->with([
-                    'message' => 'Failed to delete product.',
-                    'alert-type' => 'error',
-                ]);
+            Log::error('Product Update Error: ' . $e->getMessage());
+
+            return back()
+                ->with(['message' => 'Product update failed', 'alert-type' => 'error'])
+                ->withInput();
         }
     }
 
-    // Update individual gallery image
-    public function ProductGalleryUpdate(Request $request, $id)
+    /* ===================== Delete ===================== */
+    public function ProductDelete($id)
     {
-        $gallery = ProductGallery::findOrFail($id);
+        $product = Product::with('galleries')->findOrFail($id);
 
-        $request->validate([
-            'gallery_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-        ]);
-
-        try {
-            $manager = new ImageManager(new Driver());
-
-            // Delete old image
-            $oldImage = public_path('upload/product_gallery/' . $gallery->product_gallery_image);
-            if (file_exists($oldImage)) {
-                @unlink($oldImage);
-            }
-
-            // Save new image
-            $file = $request->file('gallery_image');
-            $file_name = uniqid('gallery_', true) . '.' . $file->getClientOriginalExtension();
-            $img = $manager->read($file->getRealPath());
-            $img->resize(583, 583);
-            $img->save(public_path('upload/product_gallery/') . $file_name);
-
-            $gallery->product_gallery_image = $file_name;
-            $gallery->save();
-
-            return redirect()
-                ->back()
-                ->with(['message' => 'Gallery image updated!', 'alert-type' => 'success']);
-        } catch (\Throwable $e) {
-            Log::error('Gallery Update Error: ' . $e->getMessage());
-            return redirect()
-                ->back()
-                ->with(['message' => 'Failed to update gallery image.', 'alert-type' => 'error']);
+        foreach ($product->galleries as $gallery) {
+            @unlink(public_path('upload/product_gallery/' . $gallery->product_gallery_image));
         }
-    }
 
-    // Delete individual gallery image
-    public function ProductGalleryDelete($id)
-    {
-        $gallery = ProductGallery::findOrFail($id);
-
-        try {
-            $galleryImage = public_path('upload/product_gallery/' . $gallery->product_gallery_image);
-            if (file_exists($galleryImage)) {
-                @unlink($galleryImage);
-            }
-
-            $gallery->delete();
-
-            return redirect()
-                ->back()
-                ->with(['message' => 'Gallery image deleted!', 'alert-type' => 'success']);
-        } catch (\Throwable $e) {
-            Log::error('Gallery Delete Error: ' . $e->getMessage());
-            return redirect()
-                ->back()
-                ->with(['message' => 'Failed to delete gallery image.', 'alert-type' => 'error']);
+        if ($product->product_image) {
+            @unlink(public_path($product->product_image));
         }
-    }
 
-    public function ProductGalleryAdd(Request $request)
-    {
-        $request->validate([
-            'id' => 'required|exists:products,id',
-            'product_gallery_images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-        ]);
+        $product->delete();
 
-        try {
-            $manager = new ImageManager(new Driver());
-            $product = Product::findOrFail($request->id);
-
-            if ($request->hasFile('product_gallery_images')) {
-                foreach ($request->file('product_gallery_images') as $file) {
-                    $file_name = uniqid('gallery_', true) . '.' . $file->getClientOriginalExtension();
-                    $img = $manager->read($file->getRealPath());
-                    $img->resize(583, 583);
-                    $img->save(public_path('upload/product_gallery/') . $file_name);
-
-                    ProductGallery::create([
-                        'product_id' => $product->id,
-                        'product_gallery_image' => $file_name,
-                    ]);
-                }
-            }
-
-            return redirect()
-                ->back()
-                ->with([
-                    'message' => 'New gallery images added successfully!',
-                    'alert-type' => 'success',
-                ]);
-        } catch (\Throwable $e) {
-            Log::error('Add Gallery Images Error: ' . $e->getMessage());
-            return redirect()
-                ->back()
-                ->with([
-                    'message' => 'Failed to add gallery images.',
-                    'alert-type' => 'error',
-                ]);
-        }
+        return back()->with(['message' => 'Product deleted successfully!', 'alert-type' => 'success']);
     }
 }

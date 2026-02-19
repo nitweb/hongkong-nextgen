@@ -10,7 +10,10 @@
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0 font-size-18">About Company Edit</h4>
                         <div class="page-title-right">
-                            <a href="javascript:history.back()" class="btn btn-outline-dark waves-effect waves-light">
+                            <a href="{{ route('backend.about_company.list') }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bx bx-list-ul me-1"></i> About Company List
+                            </a>
+                            <a href="javascript:history.back()" class="btn btn-sm btn-outline-dark waves-effect waves-light">
                                 <i class="bx bx-undo font-size-16 align-middle me-2"></i> Back
                             </a>
                         </div>
@@ -36,7 +39,7 @@
                                 <input type="hidden" name="id" value="{{ $about_info->id }}">
 
                                 <div class="col-md-8">
-                                    <label for="example-text-input" class="form-label">Image [735px by 825px]</label>
+                                    <label for="example-text-input" class="form-label">Image [470px by 528px]</label>
                                     <input type="file" class="form-control" name="about_image" id="image">
                                     <img id="showImage" src="{{ !empty($about_info->about_image) ? url('upload/about_image/' . $about_info->about_image) : url('upload/no_image.jpg') }}" alt="About Company Cover Image" class="p-1 bg-primary mt-3" style="width: 110px; height: 110px; object-fit: cover; border-radius: 8px;">
                                 </div>
@@ -47,7 +50,7 @@
                                 </div>
 
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
                                 </div>
 
                             </form>

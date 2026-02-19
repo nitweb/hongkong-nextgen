@@ -50,7 +50,7 @@ class AboutCompanyController extends Controller
                 $manager = new ImageManager(new Driver());
                 $file_name = uniqid('about_', true) . '.' . $file->getClientOriginalExtension();
                 $img = $manager->read($file->getRealPath());
-                $img->resize(735, 825);
+                $img->resize(470, 528);
                 $img->save(public_path('upload/about_image/') . $file_name);
                 $about_data->about_image = $file_name;
             }

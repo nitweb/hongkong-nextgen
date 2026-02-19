@@ -9,7 +9,7 @@
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0 font-size-18">Mission/Vision/Values</h4>
                         <div class="page-title-right">
-                            <a href="javascript:history.back()" class="btn btn-outline-dark waves-effect waves-light">
+                            <a href="javascript:history.back()" class="btn btn-sm btn-outline-dark waves-effect waves-light">
                                 <i class="bx bx-undo font-size-16 align-middle me-2"></i> Back
                             </a>
                         </div>
@@ -46,7 +46,7 @@
                                                 <td>{{ $item->mission_vision_title }}</td>
                                                 <td>{{ \Illuminate\Support\Str::limit($item->mission_vision_description, 150) }}</td>
                                                 <td>
-                                                    <a href="{{ route('backend.mission_vision.edit', $item->id) }}" class="btn btn-outline-success waves-effect waves-light">
+                                                    <a href="{{ route('backend.mission_vision.edit', $item->id) }}" class="btn btn-sm btn-outline-success waves-effect waves-light">
                                                         <i class="bx bx-edit font-size-16 align-middle me-2"></i> Edit
                                                     </a>
                                                 </td>
