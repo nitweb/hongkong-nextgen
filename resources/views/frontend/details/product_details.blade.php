@@ -132,8 +132,10 @@
     </section>
 
     <!--=============== BULK ORDER POPUP (Bootstrap Modal - Medium) ===============-->
-    <div class="modal fade" id="bulkOrderModal" tabindex="-1" aria-labelledby="bulkOrderModalLabel" aria-hidden="true">
+    <div class="modal fade" id="bulkOrderModal" tabindex="-1" aria-labelledby="bulkOrderModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+
         <div class="modal-dialog modal-md modal-dialog-centered">
+            
             <div class="modal-content">
 
                 <div class="modal-header">
@@ -174,18 +176,13 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" id="bulkSubmitBtn">Submit</button>
+                        <button type="submit" class="thm-btn custom_thn_btn" id="bulkSubmitBtn">Submit</button>
                     </div>
                 </form>
 
             </div>
         </div>
     </div>
-
-
-    <!--=============== (Optional) Bootstrap CSS/JS if not in master layout ===============-->
-    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script> --}}
 
 
     <!--=============== SCRIPTS ===============-->

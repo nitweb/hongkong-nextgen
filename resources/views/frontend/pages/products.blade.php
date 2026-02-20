@@ -51,10 +51,7 @@
                                     <input type="text" class="price-min js-price-min" readonly>
                                     <span>-</span>
                                     <input type="text" class="price-max js-price-max" readonly>
-
-                                    <button type="button" class="js-price-filter-btn">
-                                        Filter
-                                    </button>
+                                    {{-- ✅ Button remove kora hoyeche --}}
                                 </div>
 
                             </div>
@@ -75,7 +72,7 @@
                             </ul>
                         </div>
 
-                        {{-- <div class="shop-category product__sidebar-single">
+                        <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Brands</h3>
                             <ul class="list-unstyled">
                                 @foreach ($product_brand_data as $item)
@@ -84,7 +81,7 @@
                                     </li>
                                 @endforeach
                             </ul>
-                        </div> --}}
+                        </div>
 
                     </div>
                 </div>
@@ -97,7 +94,7 @@
                             <div class="col-xl-12">
                                 <div class="product__showing-result">
                                     <div class="product__showing-text-box">
-                                        <p class="product__showing-text">
+                                        <p class="product__showing-text" id="product-showing-text">
                                             Showing {{ $product_data->firstItem() ?? 0 }}–{{ $product_data->lastItem() ?? 0 }}
                                             of {{ $product_data->total() }} results
                                         </p>
@@ -106,8 +103,8 @@
                             </div>
                         </div>
 
-                        <div class="product__all">
-                            <div class="row">
+                        <div class="product__all" id="product-list-wrapper">
+                            <div class="row" id="product-grid">
                                 @forelse ($product_data as $item)
                                     <div class="col-xl-4 col-lg-4 col-md-6">
                                         <div class="product__all-single">

@@ -1,3 +1,7 @@
+a:hover {
+	color: #cf1f1f;
+}
+
 .swiper-wrapper {
     height: 80vh;
 }
@@ -194,6 +198,10 @@ button.thm-btn.contact-page__btn {
         width: 100%;
         margin-top: 10px;
     }
+
+    .swiper-wrapper {
+        height: 20vh;
+    }
 }
 
 /* ===== SIDEBAR SEARCH ===== */
@@ -336,4 +344,10 @@ button.thm-btn.contact-page__btn {
 
 .footer-widget__subscribe-text {
     padding-bottom: 10px;
+}
+
+.custom_thn_btn {
+    font-size: 1rem;
+    padding: .375rem .75rem;
+    border: none;
 }

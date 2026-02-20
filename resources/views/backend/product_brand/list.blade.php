@@ -52,7 +52,7 @@
                                                 </td>
                                                 <td>{{ $item->product_brand_name }}</td>
                                                 <td>
-                                                    <span class="badge {{ $item->product_brand_status == 'active' ? 'text-bg-success' : 'text-bg-danger' }}" data-id="{{ $item->id }}" data-model="{{ \App\Models\ProductBrand::class }}">
+                                                    <span class="badge custom_status_badge {{ $item->product_brand_status == 'active' ? 'text-bg-success' : 'text-bg-danger' }}" data-id="{{ $item->id }}" data-model="{{ \App\Models\ProductBrand::class }}">
                                                         {{ ucfirst($item->product_brand_status) }}
                                                     </span>
                                                 </td>

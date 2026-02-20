@@ -44,6 +44,20 @@
 
                         </div>
 
+                        {{-- Price Filter (UI only) --}}
+                        <div class="product__price-ranger product__sidebar-single">
+                            <h3 class="product__sidebar-title">Price</h3>
+                            <div class="custom-price-filter js-price-filter" data-min="{{ request('min_price') }}" data-max="{{ request('max_price') }}">
+                                <div class="custom-price-filter__slider" id="priceRangeSlider"></div>
+                                <div class="custom-price-filter__inputs">
+                                    <input type="text" class="price-min js-price-min" readonly>
+                                    <span>-</span>
+                                    <input type="text" class="price-max js-price-max" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Categories --}}
                         <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Categories</h3>
 
@@ -58,16 +72,19 @@
                             </ul>
                         </div>
 
-                        {{-- <div class="shop-category product__sidebar-single">
+                        {{-- Brands --}}
+                        <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Brands</h3>
                             <ul class="list-unstyled">
                                 @foreach ($product_brand_data as $item)
                                     <li class="{{ request()->route('slug') == $item->product_brand_slug ? 'active' : '' }}">
-                                        <a href="{{ route('product.by.brand', $item->product_brand_slug) }}">{{ $item->product_brand_name }}</a>
+                                        <a href="{{ route('product.by.brand', $item->product_brand_slug) }}">
+                                            {{ $item->product_brand_name }}
+                                        </a>
                                     </li>
                                 @endforeach
                             </ul>
-                        </div> --}}
+                        </div>
 
                     </div>
                 </div>
@@ -80,7 +97,7 @@
                         <div class="row">
                             <div class="col-xl-12">
                                 <div class="product__showing-result">
-                                    <p class="product__showing-text">
+                                    <p class="product__showing-text" id="product-showing-text">
                                         Showing {{ $product_data->firstItem() ?? 0 }}
                                         –
                                         {{ $product_data->lastItem() ?? 0 }}
@@ -91,7 +108,7 @@
                         </div>
 
                         {{-- Product list --}}
-                        <div class="product__all">
+                        <div class="product__all" id="product-list-wrapper">
                             <div class="row">
 
                                 @forelse ($product_data as $item)
