@@ -69,7 +69,7 @@
                                                 </tr>
 
                                                 {{-- Modal --}}
-                                                <div class="modal fade" id="contactFormModal{{ $item->id }}" tabindex="-1" aria-labelledby="contactFormModalLabel" aria-hidden="true">
+                                                <div class="modal fade" id="contactFormModal{{ $item->id }}" tabindex="-1" aria-labelledby="contactFormModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
                                                     <div class="modal-dialog modal-dialog-centered modal-lg">
                                                         <div class="modal-content">
                                                             <div class="modal-header">

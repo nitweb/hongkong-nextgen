@@ -148,7 +148,7 @@ class FrontendController extends Controller
 
         $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
 
-        return view('frontend.pages.product_by_brand', compact('brand_info', 'product_data', 'product_brand_data' , 'category_data'));
+        return view('frontend.pages.product_by_brand', compact('brand_info', 'product_data', 'product_brand_data', 'category_data'));
     }
 
     public function ProductByCategory(Request $request, $slug)
@@ -317,5 +317,12 @@ class FrontendController extends Controller
         }
 
         return response()->json(['html' => $html]);
+    }
+
+    public function Brands()
+    {
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->latest()->get();
+
+        return view('frontend.pages.brands', compact('product_brand_data'));
     }
 }

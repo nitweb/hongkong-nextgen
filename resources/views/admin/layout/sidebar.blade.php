@@ -58,7 +58,7 @@
                     </ul>
                 </li>
 
-                <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="file-text"></i>
                         <span>Product Review Manage</span>
@@ -66,7 +66,7 @@
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('product_review.list') }}"><span>Review List</span></a></li>
                     </ul>
-                </li>
+                </li> --}}
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">

@@ -7,18 +7,18 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Bulk Orders List</h4>
+                        <h4 class="mb-sm-0 font-size-18">Orders List</h4>
                         <div class="page-title-right d-flex gap-2">
                             {{-- Bulk Delete Button --}}
                             <form id="bulkDeleteForm" action="{{ route('backend.bulk_order.bulk_delete') }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger waves-effect waves-light" onclick="return confirm('Are you sure you want to delete the selected bulk orders?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger waves-effect waves-light" onclick="return confirm('Are you sure you want to delete the selected bulk orders?')">
                                     <i class="bx bx-trash me-1"></i> Delete Selected
                                 </button>
                             </form>
 
-                            <a href="javascript:history.back()" class="btn btn-outline-dark waves-effect waves-light">
+                            <a href="javascript:history.back()" class="btn btn-sm btn-outline-dark waves-effect waves-light">
                                 <i class="bx bx-undo font-size-16 align-middle me-2"></i> Back
                             </a>
                         </div>
@@ -62,19 +62,19 @@
                                                     <td>{{ $item->quantity }}</td>
                                                     <td>
                                                         {{-- View --}}
-                                                        <a href="#" class="btn btn-outline-warning waves-effect waves-light mb-2" data-bs-toggle="modal" data-bs-target="#bulkOrderModal{{ $item->id }}">
+                                                        <a href="#" class="btn btn-sm btn-outline-warning waves-effect waves-light mb-2" data-bs-toggle="modal" data-bs-target="#bulkOrderModal{{ $item->id }}">
                                                             <i class="bx bx-show font-size-16 align-middle"></i>
                                                         </a>
 
                                                         {{-- Delete --}}
-                                                        <a href="{{ route('backend.bulk_order.delete', $item->id) }}" onclick="return confirm('Are you sure you want to delete this bulk order?');" class="btn btn-outline-danger waves-effect waves-light mb-2">
+                                                        <a href="{{ route('backend.bulk_order.delete', $item->id) }}" onclick="return confirm('Are you sure you want to delete this bulk order?');" class="btn btn-sm btn-outline-danger waves-effect waves-light mb-2">
                                                             <i class="bx bxs-trash font-size-16 align-middle"></i>
                                                         </a>
                                                     </td>
                                                 </tr>
 
                                                 {{-- Modal --}}
-                                                <div class="modal fade" id="bulkOrderModal{{ $item->id }}" tabindex="-1" aria-labelledby="bulkOrderModalLabel" aria-hidden="true">
+                                                <div class="modal fade" id="bulkOrderModal{{ $item->id }}" tabindex="-1" aria-labelledby="bulkOrderModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
                                                     <div class="modal-dialog modal-dialog-centered modal-lg">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -86,7 +86,7 @@
                                                                     {{-- Product Image --}}
                                                                     <div class="col-md-12 text-center mb-4">
                                                                         @if (!empty($item->product->product_image))
-                                                                            <img src="{{ !empty($item->product->product_image) ? url('upload/product_image/' . $item->product->product_image) : url('upload/no_image.jpg') }}" alt="{{ $item->product->product_name }}" class="img-fluid rounded shadow-sm" style="max-height: 250px; object-fit: contain;">
+                                                                            <img src="{{ !empty($item->product->product_image) ? url($item->product->product_image) : url('upload/no_image.jpg') }}" alt="{{ $item->product->product_name }}" class="img-fluid rounded shadow-sm" style="max-height: 250px; object-fit: contain;">
                                                                         @else
                                                                             <img src="{{ asset('upload/no_image.jpg') }}" alt="No image" class="img-fluid rounded shadow-sm" style="max-height: 250px; object-fit: contain;">
                                                                         @endif
@@ -113,7 +113,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
                                                             </div>
                                                         </div>
                                                     </div>
