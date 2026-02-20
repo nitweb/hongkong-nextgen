@@ -121,13 +121,12 @@
 {{-- Product Price Filter --}}
 <script>
     $(function() {
-
         if (!$('#priceRangeSlider').length) return;
 
         let urlParams = new URLSearchParams(window.location.search);
-
-        let minPrice = urlParams.get('min_price') ?? 0;
-        let maxPrice = urlParams.get('max_price') ?? 5000; // max price changeable
+        let minPrice = parseInt(urlParams.get('min_price')) || 0;
+        let maxPrice = parseInt(urlParams.get('max_price')) || 5000;
+        let filterTimer;
 
         $("#priceRangeSlider").slider({
             range: true,
@@ -137,21 +136,43 @@
             slide: function(event, ui) {
                 $('.js-price-min').val('$' + ui.values[0]);
                 $('.js-price-max').val('$' + ui.values[1]);
+
+                clearTimeout(filterTimer);
+                filterTimer = setTimeout(function() {
+                    doFilter(ui.values[0], ui.values[1]);
+                }, 400);
             }
         });
 
-        // initial set
         $('.js-price-min').val('$' + $("#priceRangeSlider").slider("values", 0));
         $('.js-price-max').val('$' + $("#priceRangeSlider").slider("values", 1));
 
-        // Filter button click
-        $('.js-price-filter-btn').on('click', function() {
+        function doFilter(min, max) {
+            $('#product-list-wrapper').css('opacity', '0.4');
 
-            urlParams.set('min_price', $("#priceRangeSlider").slider("values", 0));
-            urlParams.set('max_price', $("#priceRangeSlider").slider("values", 1));
+            $.ajax({
+                // ✅ Current page er URL-e filter kore - brand/category/products sob page e kaj korbe
+                url: window.location.pathname,
+                type: 'GET',
+                data: {
+                    min_price: min,
+                    max_price: max,
+                },
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    $('#product-list-wrapper').html(response.html).css('opacity', '1');
+                    $('#product-showing-text').text(response.showing_text);
 
-            window.location.search = urlParams.toString();
-        });
-
+                    urlParams.set('min_price', min);
+                    urlParams.set('max_price', max);
+                    window.history.pushState({}, '', '?' + urlParams.toString());
+                },
+                error: function() {
+                    $('#product-list-wrapper').css('opacity', '1');
+                }
+            });
+        }
     });
 </script>
