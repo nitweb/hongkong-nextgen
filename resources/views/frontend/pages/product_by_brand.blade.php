@@ -47,13 +47,12 @@
                         {{-- Price Filter (UI only) --}}
                         <div class="product__price-ranger product__sidebar-single">
                             <h3 class="product__sidebar-title">Price</h3>
-                            <div class="price-ranger">
-                                <div id="slider-range"></div>
-                                <div class="ranger-min-max-block">
-                                    <input type="text" readonly class="min">
+                            <div class="custom-price-filter js-price-filter" data-min="{{ request('min_price') }}" data-max="{{ request('max_price') }}">
+                                <div class="custom-price-filter__slider" id="priceRangeSlider"></div>
+                                <div class="custom-price-filter__inputs">
+                                    <input type="text" class="price-min js-price-min" readonly>
                                     <span>-</span>
-                                    <input type="text" readonly class="max">
-                                    <input type="submit" value="Filter">
+                                    <input type="text" class="price-max js-price-max" readonly>
                                 </div>
                             </div>
                         </div>
@@ -74,7 +73,7 @@
                         </div>
 
                         {{-- Brands --}}
-                        {{-- <div class="shop-category product__sidebar-single">
+                        <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Brands</h3>
                             <ul class="list-unstyled">
                                 @foreach ($product_brand_data as $item)
@@ -85,7 +84,7 @@
                                     </li>
                                 @endforeach
                             </ul>
-                        </div> --}}
+                        </div>
 
                     </div>
                 </div>
@@ -99,7 +98,7 @@
                             <div class="col-xl-12">
                                 <div class="product__showing-result">
                                     <div class="product__showing-text-box">
-                                        <p class="product__showing-text">
+                                        <p class="product__showing-text" id="product-showing-text">
                                             Showing
                                             {{ $product_data->firstItem() ?? 0 }}
                                             –
@@ -114,7 +113,7 @@
                         </div>
 
                         {{-- Product List --}}
-                        <div class="product__all">
+                        <div class="product__all" id="product-list-wrapper">
                             <div class="row">
 
                                 @forelse ($product_data as $item)

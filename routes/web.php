@@ -83,6 +83,9 @@ Route::middleware('web')->group(function () {
 
     // IT Product
     Route::get('/it-product', [FrontendController::class, 'ItProduct'])->name('it.product');
+
+    // IT Product
+    Route::get('/brands', [FrontendController::class, 'Brands'])->name('brands');
 });
 
 // #################### End: Frontend Controller ####################

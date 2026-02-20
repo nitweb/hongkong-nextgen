@@ -10,7 +10,10 @@
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0 font-size-18">Blog Category Edit</h4>
                         <div class="page-title-right">
-                            <a href="javascript:history.back()" class="btn btn-outline-dark waves-effect waves-light">
+                            <a href="{{ route('backend.blog_categories.list') }}" class="btn btn-sm btn-outline-primary waves-effect waves-light">
+                                <i class="bx bx-list-ul font-size-16 align-middle me-2"></i> Blog Category List
+                            </a>
+                            <a href="javascript:history.back()" class="btn btn-sm btn-outline-dark waves-effect waves-light">
                                 <i class="bx bx-undo font-size-16 align-middle me-2"></i> Back
                             </a>
                         </div>
@@ -41,7 +44,7 @@
                                 </div>
 
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
                                 </div>
 
                             </form>

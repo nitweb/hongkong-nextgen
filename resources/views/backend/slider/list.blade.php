@@ -50,7 +50,7 @@
                                                     <img src="{{ !empty($item->slider_image) ? url('upload/slider_image/' . $item->slider_image) : url('upload/no_image.jpg') }}" alt="Slider Image" class="img-fluid d-block" style="width: 150px;">
                                                 </td>
                                                 <td>
-                                                    <span class="badge {{ $item->slider_status == 'active' ? 'text-bg-success' : 'text-bg-danger' }}" data-id="{{ $item->id }}" data-model="{{ \App\Models\Slider::class }}">
+                                                    <span class="badge custom_status_badge {{ $item->slider_status == 'active' ? 'text-bg-success' : 'text-bg-danger' }}" data-id="{{ $item->id }}" data-model="{{ \App\Models\Slider::class }}">
                                                         {{ ucfirst($item->slider_status) }}
                                                     </span>
                                                 </td>
