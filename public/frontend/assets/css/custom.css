@@ -351,3 +351,11 @@ button.thm-btn.contact-page__btn {
     padding: .375rem .75rem;
     border: none;
 }
+
+.main-menu-two__search-cart-btn-box {
+	margin-left: 10px;
+}
+
+.main-menu-two .main-menu__list > li + li, .stricky-header.main-menu-two .main-menu__list > li + li {
+	margin-left: 25px;
+}
