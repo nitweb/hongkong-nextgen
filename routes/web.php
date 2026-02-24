@@ -86,6 +86,31 @@ Route::middleware('web')->group(function () {
 
     // IT Product
     Route::get('/brands', [FrontendController::class, 'Brands'])->name('brands');
+
+    // PDF Download — must be BEFORE /product/{slug}
+Route::get('/product/pdf/download/{id}', function ($id) {
+    $product = \App\Models\Product::findOrFail($id);
+
+    if (empty($product->flash_sale_pdf)) {
+        abort(404);
+    }
+
+    $filePath = public_path($product->flash_sale_pdf);
+
+    if (!file_exists($filePath)) {
+        abort(404, 'PDF file not found.');
+    }
+
+    $fileName = basename($filePath);
+
+    return response()->download($filePath, $fileName, [
+        'Content-Type'        => 'application/pdf',
+        'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+    ]);
+})->name('product.pdf.download');
+
+// Product Details — এটা নিচে থাকবে
+Route::get('/product/{slug}', [FrontendController::class, 'ProductDetails'])->name('product.details');
 });
 
 // #################### End: Frontend Controller ####################

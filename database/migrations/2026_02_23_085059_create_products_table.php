@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -32,6 +33,9 @@ return new class extends Migration {
 
             $table->boolean('is_flash_sale')->default(false);
             $table->boolean('is_it_product')->default(false);
+
+            $table->integer('flash_sale_quantity')->nullable();
+            $table->string('flash_sale_pdf')->nullable();
 
             $table->enum('stock_status', ['in_stock', 'out_of_stock'])->default('in_stock');
             $table->enum('status', ['active', 'inactive'])->default('active');

@@ -278,7 +278,10 @@ class FrontendController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(9); // 9 per page
 
-        return view('frontend.pages.flash_sale', compact('product_data'));
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
+        $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
+
+        return view('frontend.pages.flash_sale', compact('product_data', 'product_brand_data', 'category_data'));
     }
 
     public function ItProduct()

@@ -64,6 +64,9 @@ class ProductController extends Controller
             'is_flash_sale' => 'nullable|boolean',
             'is_it_product' => 'nullable|boolean',
 
+            'flash_sale_quantity' => 'nullable|integer|min:1',
+            'flash_sale_pdf' => 'nullable|mimes:pdf|max:5120',
+
             'spec_key.*' => 'nullable|string|max:191',
             'spec_value.*' => 'nullable|string|max:2000',
         ]);
@@ -97,6 +100,7 @@ class ProductController extends Controller
                 'stock_status' => $request->stock_status,
                 'status' => $request->status,
                 'is_flash_sale' => $request->boolean('is_flash_sale'),
+                'flash_sale_quantity' => $request->flash_sale_quantity,
                 'is_it_product' => $request->boolean('is_it_product'),
             ]);
 
@@ -131,6 +135,20 @@ class ProductController extends Controller
                         'product_gallery_image' => $name,
                     ]);
                 }
+            }
+
+            if ($request->hasFile('flash_sale_pdf')) {
+                $pdfDir = public_path('upload/flash_sale_pdf');
+                if (!file_exists($pdfDir)) {
+                    mkdir($pdfDir, 0755, true);
+                }
+
+                $pdf = $request->file('flash_sale_pdf');
+                $pdfName = uniqid('flash_', true) . '.' . $pdf->getClientOriginalExtension();
+                $pdf->move($pdfDir, $pdfName);
+
+                $product->flash_sale_pdf = 'upload/flash_sale_pdf/' . $pdfName;
+                $product->save();
             }
 
             /* ---- Specifications ---- */
@@ -196,6 +214,9 @@ class ProductController extends Controller
             'is_flash_sale' => 'nullable|boolean',
             'is_it_product' => 'nullable|boolean',
 
+            'flash_sale_quantity' => 'nullable|integer|min:1',
+            'flash_sale_pdf' => 'nullable|mimes:pdf|max:5120',
+
             'spec_key.*' => 'nullable|string|max:191',
             'spec_value.*' => 'nullable|string|max:2000',
         ]);
@@ -242,6 +263,7 @@ class ProductController extends Controller
                 'stock_status' => $request->stock_status,
                 'status' => $request->status,
                 'is_flash_sale' => $request->boolean('is_flash_sale'),
+                'flash_sale_quantity' => $request->flash_sale_quantity,
                 'is_it_product' => $request->boolean('is_it_product'),
             ]);
 
@@ -287,6 +309,25 @@ class ProductController extends Controller
                         'product_gallery_image' => $name,
                     ]);
                 }
+            }
+
+            if ($request->hasFile('flash_sale_pdf')) {
+                // পুরনো PDF থাকলে delete করো
+                if (!empty($product->flash_sale_pdf)) {
+                    @unlink(public_path($product->flash_sale_pdf));
+                }
+
+                $pdfDir = public_path('upload/flash_sale_pdf');
+                if (!file_exists($pdfDir)) {
+                    mkdir($pdfDir, 0755, true);
+                }
+
+                $pdf = $request->file('flash_sale_pdf');
+                $pdfName = uniqid('flash_', true) . '.' . $pdf->getClientOriginalExtension();
+                $pdf->move($pdfDir, $pdfName);
+
+                $product->flash_sale_pdf = 'upload/flash_sale_pdf/' . $pdfName;
+                $product->save();
             }
 
             /* ---- Specifications ---- */
