@@ -10,7 +10,7 @@
     <title>Admin Dashboard</title>
 
     {{-- Favicon Icon --}}
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('frontend/assets/images/favicons/favicon-32x32.png') }}" />
+    <link rel="icon" type="image/png" href="{{ asset('frontend/assets/images/favicons/favicon.png') }}" />
     {{-- Plugin CSS --}}
     <link rel="stylesheet" href="{{ asset('backend/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css') }}">
     {{-- Bootstrap CSS --}}
