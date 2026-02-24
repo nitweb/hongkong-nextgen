@@ -12,7 +12,7 @@
         <div class="row">
 
             @foreach ($product_brand_data as $item)
-                <div class="col-xl-3 col-lg-3 wow fadeInUp" data-wow-delay="100ms">
+                <div class="col-xl-3 col-lg-3 custom_product_margin wow fadeInUp" data-wow-delay="100ms">
                     <div class="services-three__single">
                         <div class="services-three__img-box">
                             <a href="{{ route('product.by.brand', $item->product_brand_slug) }}">

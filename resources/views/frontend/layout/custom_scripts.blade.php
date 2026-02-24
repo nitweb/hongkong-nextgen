@@ -121,11 +121,11 @@
 {{-- Product Price Filter --}}
 <script>
     $(function() {
+
         if (!$('#priceRangeSlider').length) return;
 
-        let urlParams = new URLSearchParams(window.location.search);
-        let minPrice = parseInt(urlParams.get('min_price')) || 0;
-        let maxPrice = parseInt(urlParams.get('max_price')) || 5000;
+        let minPrice = 0;
+        let maxPrice = 5000;
         let filterTimer;
 
         $("#priceRangeSlider").slider({
@@ -134,45 +134,70 @@
             max: 5000,
             values: [minPrice, maxPrice],
             slide: function(event, ui) {
+
                 $('.js-price-min').val('$' + ui.values[0]);
                 $('.js-price-max').val('$' + ui.values[1]);
 
                 clearTimeout(filterTimer);
                 filterTimer = setTimeout(function() {
-                    doFilter(ui.values[0], ui.values[1]);
+                    applyFilters(); // 🔥 SAME function
                 }, 400);
             }
         });
 
-        $('.js-price-min').val('$' + $("#priceRangeSlider").slider("values", 0));
-        $('.js-price-max').val('$' + $("#priceRangeSlider").slider("values", 1));
+        $('.js-price-min').val('$' + minPrice);
+        $('.js-price-max').val('$' + maxPrice);
 
-        function doFilter(min, max) {
-            $('#product-list-wrapper').css('opacity', '0.4');
-
-            $.ajax({
-                // ✅ Current page er URL-e filter kore - brand/category/products sob page e kaj korbe
-                url: window.location.pathname,
-                type: 'GET',
-                data: {
-                    min_price: min,
-                    max_price: max,
-                },
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                success: function(response) {
-                    $('#product-list-wrapper').html(response.html).css('opacity', '1');
-                    $('#product-showing-text').text(response.showing_text);
-
-                    urlParams.set('min_price', min);
-                    urlParams.set('max_price', max);
-                    window.history.pushState({}, '', '?' + urlParams.toString());
-                },
-                error: function() {
-                    $('#product-list-wrapper').css('opacity', '1');
-                }
-            });
-        }
     });
+</script>
+
+
+{{-- JS (checkbox change → AJAX filter) (price + category + brand) --}}
+<script>
+    function applyFilters() {
+
+        let categories = [];
+        let brands = [];
+
+        $('.js-filter-category:checked').each(function() {
+            categories.push($(this).val());
+        });
+
+        $('.js-filter-brand:checked').each(function() {
+            brands.push($(this).val());
+        });
+
+        let minPrice = $('.js-price-min').val()?.replace('$', '') || '';
+        let maxPrice = $('.js-price-max').val()?.replace('$', '') || '';
+
+        $('#product-list-wrapper').css('opacity', '0.4');
+
+        $.ajax({
+            url: window.location.pathname,
+            type: 'GET',
+            data: {
+                categories: categories,
+                brands: brands,
+                min_price: minPrice,
+                max_price: maxPrice,
+            },
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(res) {
+                $('#product-list-wrapper').html(res.html).css('opacity', '1');
+                $('#product-showing-text').text(res.showing_text);
+            },
+            error: function() {
+                $('#product-list-wrapper').css('opacity', '1');
+            }
+        });
+    }
+
+    // checkbox change
+    $(document).on(
+        'change',
+        '.js-filter-category, .js-filter-brand',
+        applyFilters
+    );
 </script>

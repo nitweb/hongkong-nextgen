@@ -384,25 +384,103 @@ button.thm-btn.contact-page__btn {
 }
 
 .footer-widget__about-text-box {
-	padding-top: 20px;
+    padding-top: 20px;
 }
 
 .site-footer__top {
-	padding-bottom: 70px;
+    padding-bottom: 70px;
 }
 
 .footer-widget__about {
-	margin-top: 0px;
+    margin-top: 0px;
 }
 
-.footer-widget__logo a img{
-	width: 100%;
+.footer-widget__logo a img {
+    width: 100%;
 }
 
 .main-menu-two__logo {
-	padding: 0;
+    padding: 0;
 }
 
-.main-menu-two__logo a img{
-	width: 90%;
+.main-menu-two__logo a img {
+    width: 90%;
+}
+
+.product__all-single {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product__all-img {
+    height: 220px;
+    /* fixed image area */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product__all-img img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.product__all-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.services-three__single {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.services-three__img-box {
+    width: 100%;
+}
+
+.services-three__img {
+    height: 180px;
+    /* image area fixed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.services-three__img img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.services-three__title {
+    margin-top: auto;
+    /* title always bottom e thakbe */
+    text-align: center;
+    min-height: 48px;
+    /* long / short name holeo equal */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-check {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.filter-check input {
+    margin-right: 8px;
+}
+
+.custom_product_margin{
+    margin-bottom: 30px;
 }

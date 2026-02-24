@@ -18,7 +18,7 @@
                         <div class="row">
 
                             @foreach ($product_data as $item)
-                                <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="col-xl-3 col-lg-3 col-md-6 custom_product_margin">
 
                                     <div class="product__all-single">
 
@@ -56,6 +56,12 @@
                                 </div>
                             @endforeach
 
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 text-center mt-3">
+                                <a href="{{ route('products') }}" class="welcome-one__btn thm-btn">View All</a>
+                            </div>
                         </div>
 
                     </div>
