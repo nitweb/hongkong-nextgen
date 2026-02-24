@@ -121,8 +121,8 @@
                                 <div class="col-12">
                                     <label class="form-label">Product Description</label>
                                     <textarea name="product_description" class="form-control summernote">
-{{ old('product_description', $product_info->product_description) }}
-                                </textarea>
+                                        {{ old('product_description', $product_info->product_description) }}
+                                    </textarea>
                                 </div>
 
                                 {{-- Specifications --}}
@@ -150,9 +150,22 @@
                                 </div>
 
                                 {{-- Flash Sale --}}
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="is_flash_sale" value="1" {{ old('is_flash_sale', $product_info->is_flash_sale) ? 'checked' : '' }}>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="flashSaleCheck" name="is_flash_sale" value="1" {{ old('is_flash_sale', $product_info->is_flash_sale ?? false) ? 'checked' : '' }}>
                                     <label class="form-check-label">Flash Sale Product</label>
+                                </div>
+
+                                {{-- Flash Sale Extra Fields --}}
+                                <div id="flashSaleFields" style="display:none;">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Flash Sale Quantity</label>
+                                        <input type="number" min="0" name="flash_sale_quantity" class="form-control" value="{{ old('flash_sale_quantity', $product_info->flash_sale_quantity ?? '') }}">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Flash Sale PDF</label>
+                                        <input type="file" name="flash_sale_pdf" class="form-control" accept="application/pdf">
+                                    </div>
                                 </div>
 
                                 {{-- IT Product --}}
@@ -251,6 +264,24 @@
 
         $(document).on('click', '.removeSpec', function() {
             $(this).closest('.specRow').remove();
+        });
+    </script>
+
+    <script>
+        function toggleFlashSaleFields() {
+            if ($('#flashSaleCheck').is(':checked')) {
+                $('#flashSaleFields').slideDown();
+            } else {
+                $('#flashSaleFields').slideUp();
+            }
+        }
+
+        // on page load
+        toggleFlashSaleFields();
+
+        // on checkbox click
+        $('#flashSaleCheck').on('change', function() {
+            toggleFlashSaleFields();
         });
     </script>
 

@@ -24,9 +24,9 @@
   --fixnix-gray-rgb: 100, 100, 100;
   --fixnix-white: #ffffff;
   --fixnix-white-rgb: 255, 255, 255;
-  --fixnix-base: #cf1f1f;
+  --fixnix-base: #30cfd0;
   --fixnix-base-rgb: 207, 31, 31;
-  --fixnix-black: #171a1d;
+  --fixnix-black: #332677;
   --fixnix-black-rgb: 23, 26, 29;
   --fixnix-primary: #f7f7f9;
   --fixnix-primary-rgb: 247, 247, 249;
@@ -10847,7 +10847,7 @@ ul {
   line-height: 18px;
   font-weight: 600;
   counter-increment: count;
-  content: ""counter(count);
+  content: "" counter(count);
   color: var(--fixnix-white);
   background-color: var(--fixnix-base);
   height: 40px;
@@ -10904,13 +10904,6 @@ ul {
 .brand-one .swiper-slide img:hover {
   opacity: 0.60;
 }
-
-
-
-
-
-
-
 
 /*--------------------------------------------------------------
 # Site Footer

@@ -87,7 +87,7 @@
         <div class="container">
             <div class="site-footer__bottom-inner">
                 <p class="site-footer__bottom-text">
-                    Copyright © 2026 <a href="{{ route('index') }}">Semiconductor</a>. Developed by <a href="https://web.nebulaitbd.com/" target="_blank">Nebula IT</a>.
+                    Copyright © 2026 <a href="{{ route('index') }}">Hongkong NextGen</a>. Developed by <a href="https://web.nebulaitbd.com/" target="_blank">Nebula IT</a>.
                 </p>
             </div>
         </div>
