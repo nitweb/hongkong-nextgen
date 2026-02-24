@@ -208,7 +208,7 @@ button.thm-btn.contact-page__btn {
     }
 
     .main-menu-two__logo a img {
-        width: 250px;
+        width: 250px !important;
     }
 
     .mobile-nav__content .logo-box a img {
@@ -381,4 +381,28 @@ button.thm-btn.contact-page__btn {
 
 .thm-btn.inquiry-btn {
     border: none;
+}
+
+.footer-widget__about-text-box {
+	padding-top: 20px;
+}
+
+.site-footer__top {
+	padding-bottom: 70px;
+}
+
+.footer-widget__about {
+	margin-top: 0px;
+}
+
+.footer-widget__logo a img{
+	width: 100%;
+}
+
+.main-menu-two__logo {
+	padding: 0;
+}
+
+.main-menu-two__logo a img{
+	width: 90%;
 }
