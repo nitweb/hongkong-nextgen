@@ -53,31 +53,36 @@ class FrontendController extends Controller
 
     public function Products(Request $request)
     {
-        $query = Product::with(['category', 'brand', 'galleries'])->where('status', 'active');
+        $query = Product::with(['category', 'brand'])->where('status', 'active');
 
-        // ✅ Discounted price consider kore filter
+        // Price
         if ($request->filled('min_price') && $request->filled('max_price')) {
             $query->whereRaw('COALESCE(product_price - discount_price, product_price) BETWEEN ? AND ?', [$request->min_price, $request->max_price]);
         }
 
+        // Categories (checkbox)
+        if ($request->filled('categories')) {
+            $query->whereIn('product_category_id', $request->categories);
+        }
+
+        // Brands (checkbox)
+        if ($request->filled('brands')) {
+            $query->whereIn('brand_id', $request->brands);
+        }
+
         $product_data = $query->latest()->paginate(9)->withQueryString();
 
-        // ✅ AJAX request hole partial HTML return korbo
         if ($request->ajax()) {
-            $html = view('frontend.partials.product-list', compact('product_data'))->render();
-
-            $showing_text = 'Showing ' . ($product_data->firstItem() ?? 0) . '–' . ($product_data->lastItem() ?? 0) . ' of ' . $product_data->total() . ' results';
-
             return response()->json([
-                'html' => $html,
-                'showing_text' => $showing_text,
+                'html' => view('frontend.partials.product-list', compact('product_data'))->render(),
+                'showing_text' => 'Showing ' . ($product_data->firstItem() ?? 0) . '–' . ($product_data->lastItem() ?? 0) . ' of ' . $product_data->total() . ' results',
             ]);
         }
 
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
-        $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
+        $category_data = ProductCategory::where('product_category_status', 'active')->get();
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->get();
 
-        return view('frontend.pages.products', compact('product_data', 'product_brand_data', 'category_data'));
+        return view('frontend.pages.products', compact('product_data', 'category_data', 'product_brand_data'));
     }
 
     public function Cart()
@@ -143,27 +148,40 @@ class FrontendController extends Controller
     public function ProductByBrand(Request $request, $slug)
     {
         $brand_info = ProductBrand::where('product_brand_slug', $slug)->firstOrFail();
-        $query = Product::where('brand_id', $brand_info->id)
-            ->where('status', 'active')
-            ->with(['category', 'brand', 'galleries']);
 
-        // ✅ Discount price consider kore filter
+        $query = Product::with(['category', 'brand', 'galleries'])->where('status', 'active');
+
+        // 🔥 Base brand (page slug)
+        if ($request->filled('brands')) {
+            // checkbox brand select থাকলে
+            $query->whereIn('brand_id', $request->brands);
+        } else {
+            // না থাকলে slug brand
+            $query->where('brand_id', $brand_info->id);
+        }
+
+        // 🔥 Category checkbox
+        if ($request->filled('categories')) {
+            $query->whereIn('product_category_id', $request->categories);
+        }
+
+        // 🔥 Price filter
         if ($request->filled('min_price') && $request->filled('max_price')) {
             $query->whereRaw('COALESCE(product_price - discount_price, product_price) BETWEEN ? AND ?', [$request->min_price, $request->max_price]);
         }
 
         $product_data = $query->latest()->paginate(9)->withQueryString();
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
-        $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
 
-        // ✅ AJAX response
+        // AJAX
         if ($request->ajax()) {
-            $html = view('frontend.partials.product-list', compact('product_data'))->render();
             return response()->json([
-                'html' => $html,
+                'html' => view('frontend.partials.product-list', compact('product_data'))->render(),
                 'showing_text' => 'Showing ' . ($product_data->firstItem() ?? 0) . '–' . ($product_data->lastItem() ?? 0) . ' of ' . $product_data->total() . ' results',
             ]);
         }
+
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
+        $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
 
         return view('frontend.pages.product_by_brand', compact('brand_info', 'product_data', 'product_brand_data', 'category_data'));
     }
@@ -171,27 +189,40 @@ class FrontendController extends Controller
     public function ProductByCategory(Request $request, $slug)
     {
         $category = ProductCategory::where('product_category_slug', $slug)->firstOrFail();
-        $query = Product::where('product_category_id', $category->id)
-            ->where('status', 'active')
-            ->with(['category']);
 
-        // ✅ Discount price consider kore filter
+        $query = Product::with(['category', 'brand', 'galleries'])->where('status', 'active');
+
+        // 🔥 Base category (page slug)
+        if ($request->filled('categories')) {
+            // checkbox category select থাকলে
+            $query->whereIn('product_category_id', $request->categories);
+        } else {
+            // না থাকলে slug category
+            $query->where('product_category_id', $category->id);
+        }
+
+        // 🔥 Brand checkbox
+        if ($request->filled('brands')) {
+            $query->whereIn('brand_id', $request->brands);
+        }
+
+        // 🔥 Price filter
         if ($request->filled('min_price') && $request->filled('max_price')) {
             $query->whereRaw('COALESCE(product_price - discount_price, product_price) BETWEEN ? AND ?', [$request->min_price, $request->max_price]);
         }
 
         $product_data = $query->latest()->paginate(9)->withQueryString();
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
-        $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
 
-        // ✅ AJAX response
+        // AJAX
         if ($request->ajax()) {
-            $html = view('frontend.partials.product-list', compact('product_data'))->render();
             return response()->json([
-                'html' => $html,
+                'html' => view('frontend.partials.product-list', compact('product_data'))->render(),
                 'showing_text' => 'Showing ' . ($product_data->firstItem() ?? 0) . '–' . ($product_data->lastItem() ?? 0) . ' of ' . $product_data->total() . ' results',
             ]);
         }
+
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
+        $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
 
         return view('frontend.pages.product_by_category', compact('category', 'product_data', 'product_brand_data', 'category_data'));
     }

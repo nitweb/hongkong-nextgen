@@ -61,26 +61,23 @@
                         <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Categories</h3>
 
-                            <ul class="list-unstyled">
-                                @foreach ($category_data as $cat)
-                                    <li class="{{ request()->route('slug') == $cat->product_category_slug ? 'active' : '' }}">
-                                        <a href="{{ route('product.by.category', $cat->product_category_slug) }}">
-                                            {{ $cat->product_category_name }}
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
+                            @foreach ($category_data as $cat)
+                                <label class="filter-check">
+                                    <input type="checkbox" class="js-filter-category" value="{{ $cat->id }}" {{ in_array($cat->id, (array) request('categories')) ? 'checked' : '' }}>
+                                    {{ $cat->product_category_name }}
+                                </label>
+                            @endforeach
                         </div>
 
                         <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Brands</h3>
-                            <ul class="list-unstyled">
-                                @foreach ($product_brand_data as $item)
-                                    <li class="{{ request()->route('slug') == $item->product_brand_slug ? 'active' : '' }}">
-                                        <a href="{{ route('product.by.brand', $item->product_brand_slug) }}">{{ $item->product_brand_name }}</a>
-                                    </li>
-                                @endforeach
-                            </ul>
+
+                            @foreach ($product_brand_data as $brand)
+                                <label class="filter-check">
+                                    <input type="checkbox" class="js-filter-brand" value="{{ $brand->id }}" {{ in_array($brand->id, (array) request('brands')) ? 'checked' : '' }}>
+                                    {{ $brand->product_brand_name }}
+                                </label>
+                            @endforeach
                         </div>
 
                     </div>
@@ -106,7 +103,7 @@
                         <div class="product__all" id="product-list-wrapper">
                             <div class="row" id="product-grid">
                                 @forelse ($product_data as $item)
-                                    <div class="col-xl-4 col-lg-4 col-md-6">
+                                    <div class="col-xl-4 col-lg-4 col-md-6 custom_product_margin">
                                         <div class="product__all-single">
 
                                             <a href="{{ route('product.details', $item->product_slug) }}">
