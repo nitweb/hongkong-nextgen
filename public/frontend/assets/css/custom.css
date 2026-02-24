@@ -1,5 +1,5 @@
 a:hover {
-    color: #cf1f1f;
+    color: #30cfd0;
 }
 
 .swiper-wrapper {
@@ -156,7 +156,7 @@ button.thm-btn.contact-page__btn {
 }
 
 .custom-header-search__input:focus {
-    border-color: #cf1f1f;
+    border-color: #30cfd0;
 }
 
 /* Result Box */
@@ -211,7 +211,7 @@ button.thm-btn.contact-page__btn {
         width: 250px;
     }
 
-    .mobile-nav__content .logo-box a img{
+    .mobile-nav__content .logo-box a img {
         width: 220px;
     }
 }
@@ -232,7 +232,7 @@ button.thm-btn.contact-page__btn {
 }
 
 .custom-sidebar-search__input:focus {
-    border-color: #d2232c;
+    border-color: #30cfd0;
 }
 
 /* Sidebar result dropdown */
@@ -294,13 +294,13 @@ button.thm-btn.contact-page__btn {
     font-size: 13px;
     border: none;
     border-radius: 4px;
-    background: #d2232c;
+    background: #30cfd0;
     color: #fff;
     cursor: pointer;
 }
 
 .custom-price-filter__inputs button:hover {
-    background: #d2232c;
+    background: #30cfd0;
 }
 
 .blog-sidebar__img:before {
@@ -371,4 +371,14 @@ button.thm-btn.contact-page__btn {
 .main-menu-two .main-menu__list>li+li,
 .stricky-header.main-menu-two .main-menu__list>li+li {
     margin-left: 25px;
+}
+
+.site-footer-two {
+    background-image: -moz-linear-gradient(90deg, rgb(51, 38, 119) 40%, rgb(48, 207, 208) 100%);
+    background-image: -webkit-linear-gradient(90deg, rgb(51, 38, 119) 40%, rgb(48, 207, 208) 100%);
+    background-image: -ms-linear-gradient(90deg, rgb(51, 38, 119) 40%, rgb(48, 207, 208) 100%);
+}
+
+.thm-btn.inquiry-btn {
+    border: none;
 }
