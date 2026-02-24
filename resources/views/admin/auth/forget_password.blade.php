@@ -9,7 +9,7 @@
     <title>Admin Reset Password</title>
 
     {{-- Favicon Icon --}}
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('frontend/assets/images/favicons/favicon-32x32.png') }}" />
+   <link rel="icon" type="image/png" href="{{ asset('frontend/assets/images/favicons/favicon.png') }}" />
     {{-- Bootstrap CSS --}}
     <link href="{{ asset('backend/assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
     {{-- Icons CSS --}}
