@@ -42,7 +42,7 @@
                         <div class="product__all">
                             <div class="row">
                                 @forelse ($product_data as $item)
-                                    <div class="col-xl-3 col-lg-3 col-md-6">
+                                    <div class="col-xl-3 col-lg-3 col-md-6 custom_product_margin">
                                         <div class="product__all-single">
 
                                             <a href="{{ route('product.details', $item->product_slug) }}">
