@@ -434,7 +434,7 @@ button.thm-btn.contact-page__btn {
     justify-content: space-between;
 }
 
-.product__all-content span{
+.product__all-content span {
     font-size: 14px;
 }
 
@@ -485,6 +485,115 @@ button.thm-btn.contact-page__btn {
     margin-right: 8px;
 }
 
-.custom_product_margin{
+.custom_product_margin {
     margin-bottom: 30px;
+}
+
+.certificate-box {
+    text-align: center;
+    transition: all 0.4s ease;
+}
+
+.certificate-img {
+    border: 1px solid #e5e5e5;
+    padding: 12px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s ease;
+}
+
+.certificate-img img {
+    width: 100%;
+    height: 320px;
+    object-fit: contain;
+    transition: transform 0.4s ease;
+}
+
+.certificate-title {
+    margin-top: 14px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+/* 🔥 Hover Effects */
+.certificate-box:hover .certificate-img {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.15);
+}
+
+.certificate-box:hover img {
+    transform: scale(1.05);
+}
+
+.certificate-box:hover .certificate-title {
+    color: #30cfd0;
+}
+
+/* Each column spacing */
+.custom_certificate_margin {
+    margin-bottom: 30px;
+    /* row gap */
+}
+
+/* Extra space under image */
+.certificate-img {
+    margin-bottom: 10px;
+}
+
+.product__all-single {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.35s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    height: 100%;
+}
+
+.product__all-single:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+}
+
+.product__all-img {
+    background: #f7f7f7;
+    padding: 20px;
+    text-align: center;
+}
+
+.product__all-img img {
+    max-height: 160px;
+    transition: transform 0.4s ease;
+}
+
+.product__all-single:hover .product__all-img img {
+    transform: scale(1.08);
+}
+
+.product__all-content {
+    padding: 18px 16px 22px;
+}
+
+.product__category {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #332677;
+    background: rgba(13, 110, 253, 0.1);
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.product__all-title a {
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+.product__all-title a:hover {
+    color: #30cfd0;
 }

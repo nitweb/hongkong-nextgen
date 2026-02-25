@@ -12,6 +12,7 @@ use App\Models\Clients;
 use App\Models\HeroSection;
 use App\Models\MissionVision;
 use App\Models\CareerForm;
+use App\Models\Certificate;
 use App\Models\Product;
 use App\Models\ProductBrand;
 use App\Models\ProductCategory;
@@ -48,7 +49,9 @@ class FrontendController extends Controller
             ->latest()
             ->get();
 
-        return view('frontend.index', compact('slider_data', 'product_brand_data', 'product_data', 'categories'));
+        $certificate_data = Certificate::where('certificate_status', 'active')->latest()->get();
+
+        return view('frontend.index', compact('slider_data', 'product_brand_data', 'product_data', 'categories', 'certificate_data'));
     }
 
     public function Products(Request $request)

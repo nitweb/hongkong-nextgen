@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\AgeGroupController;
 use App\Http\Controllers\Backend\BlogCategoriesController;
 use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\BulkOrderController;
+use App\Http\Controllers\Backend\CertificateController;
 use App\Http\Controllers\Backend\ContactFormController;
 use App\Http\Controllers\Backend\MissionVisionController;
 use App\Http\Controllers\Backend\ProductBrandController;
@@ -222,6 +223,14 @@ Route::middleware('admin')->group(function () {
     Route::get('/backend/contact-form/list', [ContactFormController::class, 'ContactFormList'])->name('backend.contact_form.list');
     Route::get('/backend/contact-form/delete/{id}', [ContactFormController::class, 'ContactFormDelete'])->name('backend.contact_form.delete');
     Route::post('/backend/contact-form/bulk-delete', [ContactFormController::class, 'ContactFormBulkDelete'])->name('backend.contact_form.bulk_delete');
+
+    // Certificate Controller
+    Route::get('/backend/certificate/list', [CertificateController::class, 'CertificateList'])->name('backend.certificate.list');
+    Route::get('/backend/certificate/add', [CertificateController::class, 'CertificateAdd'])->name('backend.certificate.add');
+    Route::post('/backend/certificate/store', [CertificateController::class, 'CertificateStore'])->name('backend.certificate.store');
+    Route::get('/backend/certificate/edit/{id}', [CertificateController::class, 'CertificateEdit'])->name('backend.certificate.edit');
+    Route::post('/backend/certificate/update', [CertificateController::class, 'CertificateUpdate'])->name('backend.certificate.update');
+    Route::get('/backend/certificate/delete/{id}', [CertificateController::class, 'CertificateDelete'])->name('backend.certificate.delete');
 
     // Font Awesome
     Route::get('/backend/site-settings/font-awesome', [SiteSettingsController::class, 'FontAwesome'])->name('backend.site_settings.font_awesome');

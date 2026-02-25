@@ -21,16 +21,17 @@
                                 <div class="col-xl-3 col-lg-3 col-md-6 custom_product_margin">
 
                                     <div class="product__all-single">
-
                                         <a href="{{ route('product.details', $item->product_slug) }}">
                                             <div class="product__all-img">
-                                                <img src="{{ asset($item->product_image) }}" alt="">
+                                                <img src="{{ asset($item->product_image) }}" alt="{{ $item->product_name }}">
                                             </div>
                                         </a>
 
-                                        <div class="product__all-content">
+                                        <div class="product__all-content text-center">
 
-                                            <span class="product__category">{{ $item->category->product_category_name ?? 'Uncategorized' }}</span>
+                                            <span class="product__category">
+                                                {{ $item->category->product_category_name ?? 'Uncategorized' }}
+                                            </span>
 
                                             <h4 class="product__all-title">
                                                 <a href="{{ route('product.details', $item->product_slug) }}">
@@ -38,19 +39,9 @@
                                                 </a>
                                             </h4>
 
-                                            {{-- <p class="product__all-price mt-2">
-                                                <span class="new__price">
-                                                    ${{ number_format($item->product_price - ($item->discount_price ?? 0), 2) }}
-                                                </span>
-                                                @if ($item->discount_price > 0)
-                                                    <span class="old__price">
-                                                        ${{ number_format($item->product_price, 2) }}
-                                                    </span>
-                                                @endif
-                                            </p> --}}
+
 
                                         </div>
-
                                     </div>
 
                                 </div>
