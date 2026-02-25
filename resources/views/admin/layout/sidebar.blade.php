@@ -49,6 +49,16 @@
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="file-text"></i>
+                        <span>Qualification Certificate</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('backend.certificate.list') }}"><span>List</span></a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="file-text"></i>
                         <span>Product Manage</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">

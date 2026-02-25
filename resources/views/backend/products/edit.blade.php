@@ -88,16 +88,16 @@
                                 </div>
 
                                 {{-- Price --}}
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <label class="form-label">Price</label>
                                     <input type="number" step="0.01" min="0" name="product_price" class="form-control" value="{{ old('product_price', $product_info->product_price) }}" required>
-                                </div>
+                                </div> --}}
 
                                 {{-- Discount --}}
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <label class="form-label">Discount Price</label>
                                     <input type="number" step="0.01" min="0" name="discount_price" class="form-control" value="{{ old('discount_price', $product_info->discount_price) }}">
-                                </div>
+                                </div> --}}
 
                                 {{-- Part Number --}}
                                 <div class="col-md-6">

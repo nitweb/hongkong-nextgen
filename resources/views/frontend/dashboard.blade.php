@@ -74,6 +74,56 @@
 
     <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="icon-right-arrow"></i></a>
 
+    {{-- Floating WhatsApp & WeChat Buttons --}}
+    <div class="floating-contact-buttons">
+        <a href="https://wa.me/YOURNUMBER" target="_blank" rel="noopener noreferrer" class="floating-btn whatsapp-btn" title="Chat on WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+        <a href="weixin://dl/chat?YOURWECHATID" target="_blank" rel="noopener noreferrer" class="floating-btn wechat-btn" title="Chat on WeChat">
+            <i class="fab fa-weixin"></i>
+        </a>
+    </div>
+
+    <style>
+        .floating-contact-buttons {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 9999;
+        }
+
+        .floating-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #fff;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        .whatsapp-btn {
+            background-color: #25D366;
+        }
+
+        .wechat-btn {
+            background-color: #07C160;
+        }
+    </style>
+
     <script src="{{ asset('frontend/assets/vendors/jquery/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/vendors/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/vendors/jarallax/jarallax.min.js') }}"></script>

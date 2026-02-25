@@ -8,7 +8,10 @@
     {{-- Brand Area --}}
     @include('frontend.home.02_brand')
 
+    {{-- Certificate Area --}}
+    @include('frontend.home.03_certificate')
+
     {{-- Product Area --}}
-    @include('frontend.home.03_products')
+    @include('frontend.home.04_products')
 
 @endsection

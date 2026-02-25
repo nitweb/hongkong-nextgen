@@ -35,7 +35,7 @@
                                             <th>Name</th>
                                             <th>Category</th>
                                             <th>Brand</th>
-                                            <th>Price</th>
+                                            {{-- <th>Price</th> --}}
                                             <th>Stock</th>
                                             <th>Status</th>
                                             <th>Action</th>
@@ -65,7 +65,7 @@
 
                                                 <td>{{ $item->brand->product_brand_name ?? '-' }}</td>
 
-                                                <td>
+                                                {{-- <td>
                                                     @if (!is_null($item->discount_price))
                                                         <div>
                                                             <span class="fw-semibold">${{ number_format($item->discount_price, 2) }}</span>
@@ -74,7 +74,7 @@
                                                     @else
                                                         ${{ number_format($item->product_price, 2) }}
                                                     @endif
-                                                </td>
+                                                </td> --}}
 
                                                 <td>
                                                     <span class="badge {{ $item->stock_status === 'in_stock' ? 'text-bg-success' : 'text-bg-danger' }}">
