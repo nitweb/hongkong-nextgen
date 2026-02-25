@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('product_name');
             $table->string('product_slug')->unique();
 
-            $table->decimal('product_price', 12, 2);
+            $table->decimal('product_price', 12, 2)->nullable();
             $table->decimal('discount_price', 12, 2)->nullable();
 
             $table->string('product_part_number');

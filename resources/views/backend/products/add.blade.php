@@ -52,16 +52,16 @@
                                 </div>
 
                                 {{-- Price --}}
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <label class="form-label">Price</label>
                                     <input type="number" step="0.01" min="0" name="product_price" class="form-control" value="{{ old('product_price') }}" required>
-                                </div>
+                                </div> --}}
 
                                 {{-- Discount --}}
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <label class="form-label">Discount Price</label>
                                     <input type="number" step="0.01" min="0" name="discount_price" class="form-control" value="{{ old('discount_price') }}">
-                                </div>
+                                </div> --}}
 
                                 {{-- Category --}}
                                 <div class="col-md-6">
