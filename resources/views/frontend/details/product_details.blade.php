@@ -34,14 +34,14 @@
                         <h3 class="product-details__title">
                             {{ $product->product_name }}
                             {{-- <br> --}}
-                            <div style="margin-top: -15px;">
+                            {{-- <div style="margin-top: -15px;">
                                 <span>${{ number_format($product->product_price - ($product->discount_price ?? 0), 2) }}</span>
                                 @if ($product->discount_price > 0)
                                     <span class="old__price">
                                         ${{ number_format($product->product_price, 2) }}
                                     </span>
                                 @endif
-                            </div>
+                            </div> --}}
                         </h3>
                     </div>
 

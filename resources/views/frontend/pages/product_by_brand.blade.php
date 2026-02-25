@@ -45,7 +45,7 @@
                         </div>
 
                         {{-- Price Filter (UI only) --}}
-                        <div class="product__price-ranger product__sidebar-single">
+                        {{-- <div class="product__price-ranger product__sidebar-single">
                             <h3 class="product__sidebar-title">Price</h3>
                             <div class="custom-price-filter js-price-filter" data-min="{{ request('min_price') }}" data-max="{{ request('max_price') }}">
                                 <div class="custom-price-filter__slider" id="priceRangeSlider"></div>
@@ -55,7 +55,7 @@
                                     <input type="text" class="price-max js-price-max" readonly>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Categories</h3>
@@ -132,7 +132,7 @@
                                                 </h4>
 
                                                 <p class="product__all-price mt-2">
-                                                    <span class="new__price">
+                                                    {{-- <span class="new__price">
                                                         $
                                                         {{ number_format($item->product_price - ($item->discount_price ?? 0), 2) }}
                                                     </span>
@@ -142,7 +142,7 @@
                                                             ${{ number_format($item->product_price, 2) }}
                                                         </span>
                                                     @endif
-                                                </p>
+                                                </p> --}}
 
                                             </div>
                                         </div>

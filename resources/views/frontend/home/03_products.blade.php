@@ -38,7 +38,7 @@
                                                 </a>
                                             </h4>
 
-                                            <p class="product__all-price mt-2">
+                                            {{-- <p class="product__all-price mt-2">
                                                 <span class="new__price">
                                                     ${{ number_format($item->product_price - ($item->discount_price ?? 0), 2) }}
                                                 </span>
@@ -47,7 +47,7 @@
                                                         ${{ number_format($item->product_price, 2) }}
                                                     </span>
                                                 @endif
-                                            </p>
+                                            </p> --}}
 
                                         </div>
 

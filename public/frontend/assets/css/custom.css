@@ -434,6 +434,10 @@ button.thm-btn.contact-page__btn {
     justify-content: space-between;
 }
 
+.product__all-content span{
+    font-size: 14px;
+}
+
 .services-three__single {
     height: 100%;
     display: flex;
