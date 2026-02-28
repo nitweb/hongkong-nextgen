@@ -201,3 +201,25 @@
         applyFilters
     );
 </script>
+
+
+{{-- Clear All Filter --}}
+<script>
+    // Clear All Filters
+    $(document).on('click', '#clear-all-filters', function(e) {
+        e.preventDefault();
+
+        // সব checkbox uncheck করো
+        $('.js-filter-category, .js-filter-brand').prop('checked', false);
+
+        // Price reset (যদি slider থাকে)
+        $('.js-price-min').val('$0');
+        $('.js-price-max').val('$5000');
+        if ($('#priceRangeSlider').length) {
+            $('#priceRangeSlider').slider('values', [0, 5000]);
+        }
+
+        // Filter apply করো
+        applyFilters();
+    });
+</script>
