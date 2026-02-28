@@ -25,19 +25,6 @@
                 <div class="col-xl-3 col-lg-3">
                     <div class="product__sidebar">
 
-                        {{-- Search Product --}}
-                        <div class="shop-search product__sidebar-single product__price-ranger">
-
-                            <div class="custom-sidebar-search js-sidebar-search">
-
-                                <input type="text" class="custom-sidebar-search__input js-ajax-search-input" placeholder="Search products..." autocomplete="off">
-
-                                <div class="custom-sidebar-search__result js-ajax-search-result"></div>
-
-                            </div>
-
-                        </div>
-
                         {{-- <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Categories</h3>
 
@@ -67,6 +54,15 @@
                 </div>
 
                 <div class="col-xl-9 col-lg-9">
+
+                    {{-- Search Product --}}
+                    <div class="shop-search product__sidebar-single product__price-ranger">
+                        <div class="custom-sidebar-search js-sidebar-search">
+                            <input type="text" class="custom-sidebar-search__input js-ajax-search-input" placeholder="Search products..." autocomplete="off">
+                            <div class="custom-sidebar-search__result js-ajax-search-result"></div>
+                        </div>
+                    </div>
+
                     <div class="product__items">
 
                         {{-- Showing result --}}

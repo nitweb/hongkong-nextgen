@@ -25,19 +25,6 @@
                 <div class="col-xl-3 col-lg-3">
                     <div class="product__sidebar">
 
-                        {{-- Search Product --}}
-                        <div class="shop-search product__sidebar-single product__price-ranger">
-
-                            <div class="custom-sidebar-search js-sidebar-search">
-
-                                <input type="text" class="custom-sidebar-search__input js-ajax-search-input" placeholder="Search products..." autocomplete="off">
-
-                                <div class="custom-sidebar-search__result js-ajax-search-result"></div>
-
-                            </div>
-
-                        </div>
-
                         {{-- Product Price Filter --}}
                         {{-- <div class="product__price-ranger product__sidebar-single">
                             <h3 class="product__sidebar-title">Price</h3>
@@ -73,10 +60,24 @@
                             @endforeach
                         </div>
 
+                        <div class="col-xl-12 col-lg-12 text-center mt-3">
+                            <a href="#!" id="clear-all-filters" class="welcome-one__btn thm-btn" style="padding: 7px 28px;">Clear All</a>
+                        </div>
+
                     </div>
                 </div>
 
                 <div class="col-xl-9 col-lg-9">
+
+                    {{-- Search Product --}}
+                    <div class="shop-search product__sidebar-single product__price-ranger">
+                        <div class="custom-sidebar-search js-sidebar-search">
+                            <input type="text" class="custom-sidebar-search__input js-ajax-search-input" placeholder="Search products..." autocomplete="off">
+                            <div class="custom-sidebar-search__result js-ajax-search-result"></div>
+                        </div>
+                    </div>
+
+
                     <div class="product__items">
 
                         {{-- Showing result dynamic --}}

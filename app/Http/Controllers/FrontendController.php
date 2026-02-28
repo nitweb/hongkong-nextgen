@@ -36,7 +36,7 @@ class FrontendController extends Controller
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')->latest()->take(8)->get();
 
-        $product_data = Product::where('status', 'active')->latest()->take(20)->get();
+        $product_data = Product::where('status', 'active')->latest()->take(12)->get();
 
         // Get all active categories with their latest products
         $categories = ProductCategory::with([
