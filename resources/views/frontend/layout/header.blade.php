@@ -25,6 +25,7 @@
 
                             <ul class="main-menu__list">
                                 <li><a href="{{ route('index') }}">Home</a></li>
+                                <li><a href="{{ route('about') }}">About Us</a></li>
 
                                 <li class="dropdown {{ request()->is('category/*') ? 'current' : '' }}">
                                     <a href="{{ route('products') }}">Products</a>

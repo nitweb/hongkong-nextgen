@@ -8,10 +8,13 @@
     {{-- Brand Area --}}
     @include('frontend.home.02_brand')
 
-    {{-- Certificate Area --}}
-    @include('frontend.home.03_certificate')
-
     {{-- Product Area --}}
-    @include('frontend.home.04_products')
+    @include('frontend.home.03_products')
+
+    {{-- Industries We Serve Area --}}
+    @include('frontend.home.04_industries_we_serve')
+
+    {{-- Certificate Area --}}
+    @include('frontend.home.05_certificate')
 
 @endsection

@@ -1,9 +1,5 @@
 <section class="services-two">
 
-    {{-- <div class="blog-one-shape-1 float-bob-y" style="background-image: url({{ asset('frontend/assets/images/shapes/blog-one-shape-1.png') }});"></div> --}}
-
-    <div class="two-section-bg" style="background-image: url({{ asset('frontend/assets/images/backgrounds/two-section-bg.jpg') }});"></div>
-
     <div class="container">
 
         <div class="section-title section-title--two text-center">
