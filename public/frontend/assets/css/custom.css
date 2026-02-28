@@ -611,7 +611,8 @@ button.thm-btn.contact-page__btn {
 
 /* ===== Feature Card ===== */
 .feature-one__single {
-    height: 170px;                 /* fixed & compact */
+    height: 170px;
+    /* fixed & compact */
     background: #f9fbfc;
     border: 1px solid #e5e7eb;
     border-radius: 6px;
@@ -639,7 +640,8 @@ button.thm-btn.contact-page__btn {
 }
 
 .feature-one__icon img {
-    width: 65px;          /* 🔥 big image */
+    width: 65px;
+    /* 🔥 big image */
     height: 65px;
     object-fit: contain;
 }
@@ -669,22 +671,33 @@ button.thm-btn.contact-page__btn {
 /* ===== Responsive ===== */
 @media (max-width: 1199px) {
     .feature-five-cols .col-5-custom {
-        width: 33.3333%; /* tablet = 3 col */
+        width: 33.3333%;
+        /* tablet = 3 col */
     }
 }
 
 @media (max-width: 767px) {
     .feature-five-cols .col-5-custom {
-        width: 50%; /* mobile = 2 col */
+        width: 50%;
+        /* mobile = 2 col */
     }
 }
 
 @media (max-width: 480px) {
     .feature-five-cols .col-5-custom {
-        width: 100%; /* small mobile = 1 col */
+        width: 100%;
+        /* small mobile = 1 col */
     }
 }
 
 .services-three__title a {
-	font-size: 18px;
+    font-size: 18px;
+}
+
+
+.product__price-ranger {
+    position: relative;
+    padding: 0;
+    margin-bottom: 20px;
+    background-color: inherit;
 }
