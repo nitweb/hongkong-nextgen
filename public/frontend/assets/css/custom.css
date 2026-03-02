@@ -408,7 +408,7 @@ button.thm-btn.contact-page__btn {
 }
 
 .product__all-single {
-    height: 100%;
+    /* height: 100%; */
     display: flex;
     flex-direction: column;
 }
@@ -435,7 +435,7 @@ button.thm-btn.contact-page__btn {
 }
 
 .product__all-content span {
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .services-three__single {
@@ -464,7 +464,7 @@ button.thm-btn.contact-page__btn {
 }
 
 .services-three__title {
-    margin-top: auto;
+    /* margin-top: auto; */
     /* title always bottom e thakbe */
     text-align: center;
     min-height: 48px;
@@ -548,7 +548,7 @@ button.thm-btn.contact-page__btn {
     overflow: hidden;
     transition: all 0.35s ease;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-    height: 100%;
+    /* height: 100%; */
 }
 
 .product__all-single:hover {
@@ -700,4 +700,16 @@ button.thm-btn.contact-page__btn {
     padding: 0;
     margin-bottom: 20px;
     background-color: inherit;
+}
+
+.product__all-content {
+    margin-top: 0;
+}
+
+.product__all-single {
+    padding: 0;
+}
+
+.services-three__single {
+    margin-bottom: 0px;
 }
