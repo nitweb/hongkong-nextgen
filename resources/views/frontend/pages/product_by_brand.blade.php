@@ -34,7 +34,7 @@
                             @foreach ($category_data as $cat)
                                 <label class="filter-check">
                                     <input type="checkbox" class="js-filter-category" value="{{ $cat->id }}" {{ in_array($cat->id, (array) request('categories')) ? 'checked' : '' }}>
-                                    {{ $cat->product_category_name }}
+                                    {{ $cat->product_category_name }} ({{ $cat->products_count }})
                                 </label>
                             @endforeach
                         </div>
@@ -44,7 +44,7 @@
                             @foreach ($product_brand_data as $brand)
                                 <label class="filter-check">
                                     <input type="checkbox" class="js-filter-brand" value="{{ $brand->id }}" {{ (isset($brand_info) && $brand->id == $brand_info->id) || in_array($brand->id, (array) request('brands')) ? 'checked' : '' }}>
-                                    {{ $brand->product_brand_name }}
+                                    {{ $brand->product_brand_name }} ({{ $brand->products_count }})
                                 </label>
                             @endforeach
 
@@ -102,7 +102,7 @@
                                             </a>
                                             <div class="product__all-content">
                                                 <span class="product__category">
-                                                    {{ $item->category->product_category_name ?? 'Uncategorized' }}
+                                                    <a href="{{ route('product.by.category', $item->category->product_category_slug ?? '#') }}">{{ $item->category->product_category_name ?? 'Uncategorized' }}</a>
                                                 </span>
                                                 <h4 class="product__all-title">
                                                     <a href="{{ route('product.details', $item->product_slug) }}">
