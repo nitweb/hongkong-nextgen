@@ -19,10 +19,13 @@
 
     {{-- Product Area --}}
     <section class="product">
+
         <div class="container">
+
             <div class="row">
 
                 <div class="col-xl-3 col-lg-3">
+
                     <div class="product__sidebar">
 
                         {{-- Product Price Filter --}}
@@ -54,17 +57,15 @@
 
                             @foreach ($product_brand_data as $brand)
                                 <label class="filter-check">
-                                    <input type="checkbox" class="js-filter-brand" value="{{ $brand->id }}" {{ in_array($brand->id, (array) request('brands')) ? 'checked' : '' }}>
+                                    <input type="checkbox" class="js-filter-brand" value="{{ $brand->id }}" {{ (isset($brand_info) && $brand->id == $brand_info->id) || in_array($brand->id, (array) request('brands')) ? 'checked' : '' }}>
                                     {{ $brand->product_brand_name }}
                                 </label>
                             @endforeach
-                        </div>
 
-                        <div class="col-xl-12 col-lg-12 text-center mt-3">
-                            <a href="#!" id="clear-all-filters" class="welcome-one__btn thm-btn" style="padding: 7px 28px;">Clear All</a>
                         </div>
 
                     </div>
+
                 </div>
 
                 <div class="col-xl-9 col-lg-9">
@@ -77,25 +78,35 @@
                         </div>
                     </div>
 
-
                     <div class="product__items">
 
                         {{-- Showing result dynamic --}}
                         <div class="row">
                             <div class="col-xl-12">
-                                <div class="product__showing-result">
+                                <div class="product__showing-result d-flex justify-content-between align-items-center">
+
+                                    <!-- Clear All Link (Left) - Initially Hidden -->
+                                    <a href="#!" id="clear-all-filters" style="display: none; color: red; text-decoration: underline;">Clear All</a>
+
+                                    <!-- Empty div to balance flex layout when "Clear All" is hidden -->
+                                    <div id="clear-all-placeholder" style="visibility: hidden; flex: 0 0 auto; color: red; text-decoration: underline;">Clear All</div>
+
+                                    <!-- Showing Results (Right) -->
                                     <div class="product__showing-text-box">
                                         <p class="product__showing-text" id="product-showing-text">
                                             Showing {{ $product_data->firstItem() ?? 0 }}–{{ $product_data->lastItem() ?? 0 }}
                                             of {{ $product_data->total() }} results
                                         </p>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
 
                         <div class="product__all" id="product-list-wrapper">
+
                             <div class="row" id="product-grid">
+
                                 @forelse ($product_data as $item)
                                     <div class="col-xl-4 col-lg-4 col-md-6 custom_product_margin">
                                         <div class="product__all-single">
@@ -127,9 +138,11 @@
                                                         </span>
                                                     @endif
                                                 </p> --}}
+
                                             </div>
 
                                         </div>
+
                                     </div>
                                 @empty
                                     <div class="col-xl-12">
@@ -179,7 +192,9 @@
                             @endif
 
                         </div>
+
                     </div>
+
                 </div>
 
             </div>

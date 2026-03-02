@@ -4,7 +4,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             Swal.fire({
-                icon: "{{ session('alert-type', 'success') }}", // success | error | warning | info | question
+                icon: "{{ session('alert-type', 'success') }}",
                 title: "{{ session('alert-type') == 'success' ? 'Success!' : 'Oops!' }}",
                 text: @json(session('message')),
                 confirmButtonText: 'OK'
@@ -26,30 +26,26 @@
     </script>
 @endif
 
-
-{{-- Search Script --}}
 <script>
+    // =============================================
+    // ALL SCRIPTS CONSOLIDATED FOR PRODUCTS PAGE
+    // =============================================
+
+    // 1. Header Search Script (for dropdown results only)
     document.addEventListener("DOMContentLoaded", function() {
-
         let delayTimer = null;
-
         document.addEventListener("keyup", function(e) {
-
-            const input = e.target.closest(".js-ajax-search-input");
+            const input = e.target.closest(".custom-header-search .js-ajax-search-input");
             if (!input) return;
-
             const wrapper = input.closest(".custom-header-search");
             const resultBox = wrapper.querySelector(".js-ajax-search-result");
-
             const query = input.value.trim();
             clearTimeout(delayTimer);
-
             if (query.length < 2) {
                 resultBox.style.display = "none";
                 resultBox.innerHTML = "";
                 return;
             }
-
             delayTimer = setTimeout(() => {
                 fetch("{{ route('ajax.search') }}?query=" + encodeURIComponent(query))
                     .then(res => res.json())
@@ -68,118 +64,64 @@
                 }
             });
         });
-
     });
-</script>
 
-{{-- Product Sidebar Search Scripts --}}
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-
-        let delayTimer = null;
-
-        document.addEventListener("keyup", function(e) {
-
-            const input = e.target.closest(".js-ajax-search-input");
-            if (!input) return;
-
-            const wrapper = input.closest(".custom-header-search, .custom-sidebar-search");
-            const resultBox = wrapper.querySelector(".js-ajax-search-result");
-
-            const query = input.value.trim();
-            clearTimeout(delayTimer);
-
-            if (query.length < 2) {
-                resultBox.style.display = "none";
-                resultBox.innerHTML = "";
-                return;
-            }
-
-            delayTimer = setTimeout(() => {
-                fetch("{{ route('ajax.search') }}?query=" + encodeURIComponent(query))
-                    .then(res => res.json())
-                    .then(data => {
-                        resultBox.innerHTML = data.html;
-                        resultBox.style.display = "block";
-                    });
-            }, 300);
-        });
-
-        document.addEventListener("click", function(e) {
-            document.querySelectorAll(".custom-header-search, .custom-sidebar-search")
-                .forEach(box => {
-                    if (!box.contains(e.target)) {
-                        const result = box.querySelector(".js-ajax-search-result");
-                        if (result) result.style.display = "none";
-                    }
-                });
-        });
-
-    });
-</script>
-
-{{-- Product Price Filter --}}
-<script>
+    // 2. Product Price Filter (if enabled)
     $(function() {
-
         if (!$('#priceRangeSlider').length) return;
-
         let minPrice = 0;
         let maxPrice = 5000;
         let filterTimer;
-
         $("#priceRangeSlider").slider({
             range: true,
             min: 0,
             max: 5000,
             values: [minPrice, maxPrice],
             slide: function(event, ui) {
-
                 $('.js-price-min').val('$' + ui.values[0]);
                 $('.js-price-max').val('$' + ui.values[1]);
-
                 clearTimeout(filterTimer);
-                filterTimer = setTimeout(function() {
-                    applyFilters(); // 🔥 SAME function
-                }, 400);
+                filterTimer = setTimeout(applyFilters, 400);
             }
         });
-
         $('.js-price-min').val('$' + minPrice);
         $('.js-price-max').val('$' + maxPrice);
-
     });
-</script>
 
-
-{{-- JS (checkbox change → AJAX filter) (price + category + brand) --}}
-<script>
+    // Main AJAX function to apply filters and update product list
     function applyFilters() {
-
         let categories = [];
         let brands = [];
 
+        // Get selected categories
         $('.js-filter-category:checked').each(function() {
             categories.push($(this).val());
         });
 
+        // Get selected brands
         $('.js-filter-brand:checked').each(function() {
             brands.push($(this).val());
         });
 
-        let minPrice = $('.js-price-min').val()?.replace('$', '') || '';
-        let maxPrice = $('.js-price-max').val()?.replace('$', '') || '';
+        let searchQuery = $('.custom-sidebar-search .js-ajax-search-input').val().trim();
 
+        // Debug output
+        console.log('Applying filters:', {
+            categories: categories,
+            brands: brands,
+            query: searchQuery
+        });
+
+        // Show loading state
         $('#product-list-wrapper').css('opacity', '0.4');
 
         $.ajax({
-            url: window.location.pathname,
+            url: "{{ route('ajax.products') }}",
             type: 'GET',
             data: {
                 categories: categories,
                 brands: brands,
-                min_price: minPrice,
-                max_price: maxPrice,
+                query: searchQuery,
             },
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -187,39 +129,62 @@
             success: function(res) {
                 $('#product-list-wrapper').html(res.html).css('opacity', '1');
                 $('#product-showing-text').text(res.showing_text);
+                checkFilters();
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error("AJAX Error:", error);
+                console.error("Response:", xhr.responseText);
                 $('#product-list-wrapper').css('opacity', '1');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while filtering products. Please try again.',
+                    confirmButtonText: 'OK'
+                });
             }
         });
     }
 
-    // checkbox change
-    $(document).on(
-        'change',
-        '.js-filter-category, .js-filter-brand',
-        applyFilters
-    );
-</script>
+    // Check if any filter is active
+    function checkFilters() {
+        const hasCategory = $('.js-filter-category:checked').length > 0;
+        const hasBrand = $('.js-filter-brand:checked').length > 0;
+        const hasSearch = $('.custom-sidebar-search .js-ajax-search-input').val().trim().length >= 2;
 
-
-{{-- Clear All Filter --}}
-<script>
-    // Clear All Filters
-    $(document).on('click', '#clear-all-filters', function(e) {
-        e.preventDefault();
-
-        // সব checkbox uncheck করো
-        $('.js-filter-category, .js-filter-brand').prop('checked', false);
-
-        // Price reset (যদি slider থাকে)
-        $('.js-price-min').val('$0');
-        $('.js-price-max').val('$5000');
-        if ($('#priceRangeSlider').length) {
-            $('#priceRangeSlider').slider('values', [0, 5000]);
+        if (hasCategory || hasBrand || hasSearch) {
+            $('#clear-all-filters').show();
+            $('#clear-all-placeholder').hide();
+        } else {
+            $('#clear-all-filters').hide();
+            $('#clear-all-placeholder').show();
         }
+    }
 
-        // Filter apply করো
-        applyFilters();
+    // Initialize everything when DOM is ready
+    $(document).ready(function() {
+        // Sidebar search input
+        $(document).on('keyup', '.custom-sidebar-search .js-ajax-search-input', function() {
+            clearTimeout($.data(this, 'timer'));
+            $.data(this, 'timer', setTimeout(applyFilters, 300));
+        });
+
+        // Checkbox change for categories and brands
+        $(document).on('change', '.js-filter-category, .js-filter-brand', applyFilters);
+
+        // Clear All Filters
+        $(document).on('click', '#clear-all-filters', function(e) {
+            e.preventDefault();
+            $('.js-filter-category, .js-filter-brand').prop('checked', false);
+            $('.custom-sidebar-search .js-ajax-search-input').val('');
+            applyFilters();
+        });
+
+        // Initial check for filters
+        checkFilters();
+
+        // Debug: Log current brand selections
+        console.log("Current brand selections:", $('.js-filter-brand:checked').map(function() {
+            return $(this).val();
+        }).get());
     });
 </script>

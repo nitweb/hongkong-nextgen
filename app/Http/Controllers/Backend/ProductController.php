@@ -376,4 +376,63 @@ class ProductController extends Controller
 
         return back()->with(['message' => 'Product deleted successfully!', 'alert-type' => 'success']);
     }
+
+    // AJAX Search Method
+    public function ajaxSearch(Request $request)
+    {
+        $query = $request->input('query');
+        $products = Product::where('product_name', 'LIKE', "%{$query}%")->paginate(12);
+
+        $html = view('frontend.partials.product_grid', compact('products'))->render();
+        $total = $products->total();
+
+        return response()->json([
+            'html' => $html,
+            'total' => $total,
+        ]);
+    }
+
+    // AJAX Default Products Method
+    public function ajaxProducts(Request $request)
+    {
+        $query = $request->input('query');
+        $categories = $request->input('categories', []);
+        $brands = $request->input('brands', []);
+
+        $products = Product::query();
+
+        // Search by product name
+        if ($query) {
+            $products->where('product_name', 'LIKE', "%{$query}%");
+        }
+
+        // Filter by categories
+        if (!empty($categories)) {
+            $products->whereIn('product_category_id', $categories);
+        }
+
+        // Filter by brands - Using brand_id to match your database
+        if (!empty($brands)) {
+            $products->whereIn('brand_id', $brands);
+        }
+
+        // Debug output
+        Log::info('Filtering products with:', [
+            'query' => $query,
+            'categories' => $categories,
+            'brands' => $brands,
+            'sql' => $products->toSql(),
+            'bindings' => $products->getBindings(),
+        ]);
+
+        $products = $products->with(['category', 'brand'])->paginate(12);
+
+        $html = view('frontend.partials.product_list_wrapper', compact('products'))->render();
+        $showingText = "Showing {$products->firstItem()}–{$products->lastItem()} of {$products->total()} results";
+
+        return response()->json([
+            'html' => $html,
+            'showing_text' => $showingText,
+        ]);
+    }
 }

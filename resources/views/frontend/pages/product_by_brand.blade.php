@@ -5,9 +5,7 @@
 
     {{-- ================= Breadcrumb ================= --}}
     <section class="page-header">
-        <div class="page-header-bg" style="background-image: url({{ asset('frontend/assets/static_images/breadcrumb.jpg') }})">
-        </div>
-
+        <div class="page-header-bg" style="background-image: url({{ asset('frontend/assets/static_images/breadcrumb.jpg') }})"></div>
         <div class="container">
             <div class="page-header__inner">
                 <h2>{{ $brand_info->product_brand_name ?? 'Products' }}</h2>
@@ -16,7 +14,7 @@
                     <li><span>//</span></li>
                     <li><a href="{{ route('products') }}">Product</a></li>
                     <li><span>//</span></li>
-                    <li>Brand</li>
+                    <li>{{ $brand_info->product_brand_name ?? 'Brand' }}</li>
                 </ul>
             </div>
         </div>
@@ -31,22 +29,8 @@
                 <div class="col-xl-3 col-lg-3">
                     <div class="product__sidebar">
 
-                        {{-- Price Filter (UI only) --}}
-                        {{-- <div class="product__price-ranger product__sidebar-single">
-                            <h3 class="product__sidebar-title">Price</h3>
-                            <div class="custom-price-filter js-price-filter" data-min="{{ request('min_price') }}" data-max="{{ request('max_price') }}">
-                                <div class="custom-price-filter__slider" id="priceRangeSlider"></div>
-                                <div class="custom-price-filter__inputs">
-                                    <input type="text" class="price-min js-price-min" readonly>
-                                    <span>-</span>
-                                    <input type="text" class="price-max js-price-max" readonly>
-                                </div>
-                            </div>
-                        </div> --}}
-
                         <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Categories</h3>
-
                             @foreach ($category_data as $cat)
                                 <label class="filter-check">
                                     <input type="checkbox" class="js-filter-category" value="{{ $cat->id }}" {{ in_array($cat->id, (array) request('categories')) ? 'checked' : '' }}>
@@ -57,17 +41,13 @@
 
                         <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Brands</h3>
-
                             @foreach ($product_brand_data as $brand)
                                 <label class="filter-check">
-                                    <input type="checkbox" class="js-filter-brand" value="{{ $brand->id }}" {{ in_array($brand->id, (array) request('brands')) ? 'checked' : '' }}>
+                                    <input type="checkbox" class="js-filter-brand" value="{{ $brand->id }}" {{ (isset($brand_info) && $brand->id == $brand_info->id) || in_array($brand->id, (array) request('brands')) ? 'checked' : '' }}>
                                     {{ $brand->product_brand_name }}
                                 </label>
                             @endforeach
-                        </div>
 
-                        <div class="col-xl-12 col-lg-12 text-center mt-3">
-                            <a href="#!" id="clear-all-filters" class="welcome-one__btn thm-btn" style="padding: 7px 28px;">Clear All</a>
                         </div>
 
                     </div>
@@ -89,61 +69,46 @@
                         {{-- Showing Result --}}
                         <div class="row">
                             <div class="col-xl-12">
-                                <div class="product__showing-result">
+                                <div class="product__showing-result d-flex justify-content-between align-items-center">
+
+                                    <!-- Clear All Link (Left) - Initially Hidden -->
+                                    <a href="#!" id="clear-all-filters" style="display: none; color: red; text-decoration: underline;">Clear All</a>
+
+                                    <!-- Empty div to balance flex layout when "Clear All" is hidden -->
+                                    <div id="clear-all-placeholder" style="visibility: hidden; flex: 0 0 auto; color: red; text-decoration: underline;">Clear All</div>
+
+                                    <!-- Showing Results (Right) -->
                                     <div class="product__showing-text-box">
                                         <p class="product__showing-text" id="product-showing-text">
-                                            Showing
-                                            {{ $product_data->firstItem() ?? 0 }}
-                                            –
-                                            {{ $product_data->lastItem() ?? 0 }}
-                                            of
-                                            {{ $product_data->total() }}
-                                            results
+                                            Showing {{ $product_data->firstItem() ?? 0 }}–{{ $product_data->lastItem() ?? 0 }}
+                                            of {{ $product_data->total() }} results
                                         </p>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
 
                         {{-- Product List --}}
                         <div class="product__all" id="product-list-wrapper">
-                            <div class="row">
-
+                            <div class="row" id="product-grid">
                                 @forelse ($product_data as $item)
                                     <div class="col-xl-4 col-lg-4 col-md-6 custom_product_margin">
                                         <div class="product__all-single">
-
                                             <a href="{{ route('product.details', $item->product_slug) }}">
                                                 <div class="product__all-img">
                                                     <img src="{{ asset($item->product_image) }}" alt="{{ $item->product_name }}">
                                                 </div>
                                             </a>
-
                                             <div class="product__all-content">
-
                                                 <span class="product__category">
                                                     {{ $item->category->product_category_name ?? 'Uncategorized' }}
                                                 </span>
-
                                                 <h4 class="product__all-title">
                                                     <a href="{{ route('product.details', $item->product_slug) }}">
                                                         {{ Str::limit($item->product_name, 40) }}
                                                     </a>
                                                 </h4>
-
-                                                <p class="product__all-price mt-2">
-                                                    {{-- <span class="new__price">
-                                                        $
-                                                        {{ number_format($item->product_price - ($item->discount_price ?? 0), 2) }}
-                                                    </span>
-
-                                                    @if (!empty($item->discount_price) && $item->discount_price > 0)
-                                                        <span class="old__price">
-                                                            ${{ number_format($item->product_price, 2) }}
-                                                        </span>
-                                                    @endif
-                                                </p> --}}
-
                                             </div>
                                         </div>
                                     </div>
@@ -152,7 +117,6 @@
                                         <p class="text-center">No products found.</p>
                                     </div>
                                 @endforelse
-
                             </div>
 
                             {{-- Pagination --}}
@@ -161,8 +125,6 @@
                                     <div class="col-xl-12">
                                         <div class="blog-page__pagination">
                                             <ul class="pg-pagination list-unstyled">
-
-                                                {{-- Prev --}}
                                                 @if (!$product_data->onFirstPage())
                                                     <li class="prev">
                                                         <a href="{{ $product_data->previousPageUrl() }}">
@@ -170,15 +132,11 @@
                                                         </a>
                                                     </li>
                                                 @endif
-
-                                                {{-- Pages --}}
                                                 @foreach ($product_data->getUrlRange(1, $product_data->lastPage()) as $page => $url)
                                                     <li class="count {{ $page == $product_data->currentPage() ? 'active' : '' }}">
                                                         <a href="{{ $url }}">{{ $page }}</a>
                                                     </li>
                                                 @endforeach
-
-                                                {{-- Next --}}
                                                 @if ($product_data->hasMorePages())
                                                     <li class="next">
                                                         <a href="{{ $product_data->nextPageUrl() }}">
@@ -186,13 +144,11 @@
                                                         </a>
                                                     </li>
                                                 @endif
-
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                             @endif
-
                         </div>
                     </div>
                 </div>

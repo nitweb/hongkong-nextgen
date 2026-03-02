@@ -89,29 +89,35 @@ Route::middleware('web')->group(function () {
     Route::get('/brands', [FrontendController::class, 'Brands'])->name('brands');
 
     // PDF Download — must be BEFORE /product/{slug}
-Route::get('/product/pdf/download/{id}', function ($id) {
-    $product = \App\Models\Product::findOrFail($id);
+    Route::get('/product/pdf/download/{id}', function ($id) {
+        $product = \App\Models\Product::findOrFail($id);
 
-    if (empty($product->flash_sale_pdf)) {
-        abort(404);
-    }
+        if (empty($product->flash_sale_pdf)) {
+            abort(404);
+        }
 
-    $filePath = public_path($product->flash_sale_pdf);
+        $filePath = public_path($product->flash_sale_pdf);
 
-    if (!file_exists($filePath)) {
-        abort(404, 'PDF file not found.');
-    }
+        if (!file_exists($filePath)) {
+            abort(404, 'PDF file not found.');
+        }
 
-    $fileName = basename($filePath);
+        $fileName = basename($filePath);
 
-    return response()->download($filePath, $fileName, [
-        'Content-Type'        => 'application/pdf',
-        'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-    ]);
-})->name('product.pdf.download');
+        return response()->download($filePath, $fileName, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ]);
+    })->name('product.pdf.download');
 
-// Product Details — এটা নিচে থাকবে
-Route::get('/product/{slug}', [FrontendController::class, 'ProductDetails'])->name('product.details');
+    // Product Details — এটা নিচে থাকবে
+    Route::get('/product/{slug}', [FrontendController::class, 'ProductDetails'])->name('product.details');
+
+    // AJAX Search Route
+    Route::get('/ajax/search', [ProductController::class, 'ajaxSearch'])->name('ajax.search');
+
+    // AJAX Default Products Route
+    Route::get('/ajax/products', [ProductController::class, 'ajaxProducts'])->name('ajax.products');
 });
 
 // #################### End: Frontend Controller ####################

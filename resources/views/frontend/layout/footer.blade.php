@@ -14,7 +14,7 @@
                             <a href="{{ route('index') }}"><img src="{{ asset(GlobalSiteSettings()->site_footer_logo) }}" alt=""></a>
                         </div>
                         <div class="footer-widget__about-text-box">
-                            <p class="footer-widget__about-text">
+                            <p class="footer-widget__about-text" style="text-align: justify;">
                                 {{ GlobalSiteSettings()->site_description ?? '' }}
                             </p>
                         </div>
