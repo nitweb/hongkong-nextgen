@@ -118,6 +118,8 @@ Route::middleware('web')->group(function () {
 
     // AJAX Default Products Route
     Route::get('/ajax/products', [ProductController::class, 'ajaxProducts'])->name('ajax.products');
+
+    Route::get('/ajax/flash-sale', [ProductController::class, 'ajaxFlashSale'])->name('ajax.flash.sale');
 });
 
 // #################### End: Frontend Controller ####################
