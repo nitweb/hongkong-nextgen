@@ -82,8 +82,13 @@ class FrontendController extends Controller
             ]);
         }
 
-        $category_data = ProductCategory::where('product_category_status', 'active')->get();
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->get();
+        $category_data = ProductCategory::where('product_category_status', 'active')
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')])
+            ->get();
+
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')])
+            ->get();
 
         return view('frontend.pages.products', compact('product_data', 'category_data', 'product_brand_data'));
     }
@@ -183,8 +188,13 @@ class FrontendController extends Controller
             ]);
         }
 
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
-        $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
+        $category_data = ProductCategory::where('product_category_status', 'active')
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')])
+            ->get();
+
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')])
+            ->get();
 
         return view('frontend.pages.product_by_brand', compact('brand_info', 'product_data', 'product_brand_data', 'category_data'));
     }
@@ -224,8 +234,13 @@ class FrontendController extends Controller
             ]);
         }
 
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
-        $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
+        $category_data = ProductCategory::where('product_category_status', 'active')
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')])
+            ->get();
+
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')])
+            ->get();
 
         return view('frontend.pages.product_by_category', compact('category', 'product_data', 'product_brand_data', 'category_data'));
     }
@@ -306,13 +321,17 @@ class FrontendController extends Controller
 
     public function FlashSale()
     {
-        $product_data = Product::where('is_flash_sale', true) // Flash Sale products
-            ->where('status', 'active')
-            ->with('category', 'brand', 'galleries') // eager load
-            ->orderBy('created_at', 'desc')
-            ->paginate(9); // 9 per page
+        $product_data = Product::where('is_flash_sale', true)->where('status', 'active')->with('category', 'brand', 'galleries')->orderBy('created_at', 'desc')->paginate(9);
 
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')
+            ->orderBy('product_brand_name')
+            ->withCount([
+                'products' => function ($query) {
+                    $query->where('is_flash_sale', true)->where('status', 'active');
+                },
+            ])
+            ->get();
+
         $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
 
         return view('frontend.pages.flash_sale', compact('product_data', 'product_brand_data', 'category_data'));

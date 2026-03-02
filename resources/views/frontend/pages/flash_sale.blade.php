@@ -25,26 +25,15 @@
                 <div class="col-xl-3 col-lg-3">
                     <div class="product__sidebar">
 
-                        {{-- <div class="shop-category product__sidebar-single">
-                            <h3 class="product__sidebar-title">Categories</h3>
-
-                            <ul class="list-unstyled">
-                                @foreach ($category_data as $cat)
-                                    <li class="{{ request()->route('slug') == $cat->product_category_slug ? 'active' : '' }}">
-                                        <a href="{{ route('product.by.category', $cat->product_category_slug) }}">
-                                            {{ $cat->product_category_name }}
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div> --}}
-
                         <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Brands</h3>
                             <ul class="list-unstyled">
                                 @foreach ($product_brand_data as $item)
                                     <li class="{{ request()->route('slug') == $item->product_brand_slug ? 'active' : '' }}">
-                                        <a href="{{ route('product.by.brand', $item->product_brand_slug) }}">{{ $item->product_brand_name }}</a>
+                                        <a href="{{ route('product.by.brand', $item->product_brand_slug) }}">
+                                            {{ $item->product_brand_name }}
+                                            <span>({{ $item->products_count }})</span>
+                                        </a>
                                     </li>
                                 @endforeach
                             </ul>
@@ -58,8 +47,7 @@
                     {{-- Search Product --}}
                     <div class="shop-search product__sidebar-single product__price-ranger">
                         <div class="custom-sidebar-search js-sidebar-search">
-                            <input type="text" class="custom-sidebar-search__input js-ajax-search-input" placeholder="Search products..." autocomplete="off">
-                            <div class="custom-sidebar-search__result js-ajax-search-result"></div>
+                            <input type="text" id="flash-sale-search-input" class="custom-sidebar-search__input" placeholder="Search products..." autocomplete="off">
                         </div>
                     </div>
 
@@ -68,18 +56,26 @@
                         {{-- Showing result --}}
                         <div class="row">
                             <div class="col-xl-12">
-                                <div class="product__showing-result">
+                                <div class="product__showing-result d-flex justify-content-between align-items-center">
+
+                                    {{-- Clear All (left) --}}
+                                    <a href="#!" id="flash-clear-all" style="display: none; color: red; text-decoration: underline;">Clear All</a>
+                                    <div id="flash-clear-placeholder" style="visibility: hidden;">Clear All</div>
+
+                                    {{-- Showing text (right) --}}
                                     <div class="product__showing-text-box">
-                                        <p class="product__showing-text">
+                                        <p class="product__showing-text" id="flash-showing-text">
                                             Showing {{ $product_data->firstItem() ?? 0 }}–{{ $product_data->lastItem() ?? 0 }}
                                             of {{ $product_data->total() }} results
                                         </p>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
 
-                        <div class="product__all">
+                        {{-- Table Wrapper (AJAX replaces this) --}}
+                        <div class="product__all" id="flash-sale-table-wrapper">
                             <div class="row">
                                 <div class="col-xl-12">
                                     <div class="table-responsive">
@@ -98,29 +94,24 @@
                                                 @forelse ($product_data as $item)
                                                     <tr style="border-bottom: 1px solid #ddd;">
 
-                                                        {{-- Part No --}}
                                                         <td style="padding: 14px 16px; text-align: center; border: 1px solid #ddd;">
                                                             <a href="{{ route('product.details', $item->product_slug) }}" style="color: #4a90d9; text-decoration: none;">
                                                                 {{ $item->product_part_number }}
                                                             </a>
                                                         </td>
 
-                                                        {{-- Brand --}}
                                                         <td style="padding: 14px 16px; text-align: center; color: #333; border: 1px solid #ddd;">
                                                             {{ $item->brand->product_brand_name ?? '' }}
                                                         </td>
 
-                                                        {{-- Package --}}
                                                         <td style="padding: 14px 16px; text-align: center; color: #333; border: 1px solid #ddd;">
                                                             {{ $item->package ?? '' }}
                                                         </td>
 
-                                                        {{-- Quantity (flash_sale_quantity) --}}
                                                         <td style="padding: 14px 16px; text-align: center; color: #333; border: 1px solid #ddd;">
                                                             {{ $item->flash_sale_quantity ?? '' }}
                                                         </td>
 
-                                                        {{-- PDF Download --}}
                                                         <td style="padding: 14px 16px; text-align: center; border: 1px solid #ddd;">
                                                             @if (!empty($item->flash_sale_pdf) && file_exists(public_path($item->flash_sale_pdf)))
                                                                 <a href="{{ route('product.pdf.download', $item->id) }}" title="Download PDF" style="color: #e74c3c; font-size: 22px; text-decoration: none; display: inline-block;">
@@ -131,7 +122,6 @@
                                                             @endif
                                                         </td>
 
-                                                        {{-- Inquiry Button → opens modal with product pre-filled --}}
                                                         <td style="padding: 14px 16px; text-align: center; border: 1px solid #ddd;">
                                                             <button type="button" class="thm-btn inquiry-btn" style="padding: 6px 18px; font-size: 13px;" data-product-id="{{ $item->id }}" data-product-name="{{ $item->product_name }}" data-bs-toggle="modal" data-bs-target="#flashSaleInquiryModal">
                                                                 Inquiry
@@ -149,52 +139,51 @@
                                             </tbody>
                                         </table>
                                     </div>
+
+                                    {{-- Pagination --}}
+                                    @if ($product_data->hasPages())
+                                        <div class="row mt-3">
+                                            <div class="col-xl-12">
+                                                <div class="blog-page__pagination">
+                                                    <ul class="pg-pagination list-unstyled">
+
+                                                        @if (!$product_data->onFirstPage())
+                                                            <li class="prev">
+                                                                <a href="{{ $product_data->previousPageUrl() }}" aria-label="Previous">
+                                                                    <i class="fa fa-angle-double-left"></i>
+                                                                </a>
+                                                            </li>
+                                                        @endif
+
+                                                        @foreach ($product_data->getUrlRange(1, $product_data->lastPage()) as $page => $url)
+                                                            <li class="count {{ $page == $product_data->currentPage() ? 'active' : '' }}">
+                                                                <a href="{{ $url }}">{{ $page }}</a>
+                                                            </li>
+                                                        @endforeach
+
+                                                        @if ($product_data->hasMorePages())
+                                                            <li class="next">
+                                                                <a href="{{ $product_data->nextPageUrl() }}" aria-label="Next">
+                                                                    <i class="fa fa-angle-double-right"></i>
+                                                                </a>
+                                                            </li>
+                                                        @endif
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
                                 </div>
                             </div>
-
-                            {{-- Pagination --}}
-                            @if ($product_data->hasPages())
-                                <div class="row mt-3">
-                                    <div class="col-xl-12">
-                                        <div class="blog-page__pagination">
-                                            <ul class="pg-pagination list-unstyled">
-
-                                                @if (!$product_data->onFirstPage())
-                                                    <li class="prev">
-                                                        <a href="{{ $product_data->previousPageUrl() }}" aria-label="Previous">
-                                                            <i class="fa fa-angle-double-left"></i>
-                                                        </a>
-                                                    </li>
-                                                @endif
-
-                                                @foreach ($product_data->getUrlRange(1, $product_data->lastPage()) as $page => $url)
-                                                    <li class="count {{ $page == $product_data->currentPage() ? 'active' : '' }}">
-                                                        <a href="{{ $url }}">{{ $page }}</a>
-                                                    </li>
-                                                @endforeach
-
-                                                @if ($product_data->hasMorePages())
-                                                    <li class="next">
-                                                        <a href="{{ $product_data->nextPageUrl() }}" aria-label="Next">
-                                                            <i class="fa fa-angle-double-right"></i>
-                                                        </a>
-                                                    </li>
-                                                @endif
-
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-
                         </div>
+
                     </div>
                 </div>
 
 
-                {{-- ============================================================ --}}
-                {{-- INQUIRY MODAL (reused from product details, works for table) --}}
-                {{-- ============================================================ --}}
+                {{-- INQUIRY MODAL --}}
                 <div class="modal fade" id="flashSaleInquiryModal" tabindex="-1" aria-labelledby="flashSaleInquiryModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
                     <div class="modal-dialog modal-md modal-dialog-centered">
                         <div class="modal-content">
@@ -206,12 +195,10 @@
 
                             <form id="flashSaleInquiryForm" action="{{ route('bulk.order.submit') }}" method="POST">
                                 @csrf
-                                {{-- dynamically filled by JS --}}
                                 <input type="hidden" name="product_id" id="inquiry_product_id" value="">
 
                                 <div class="modal-body">
 
-                                    {{-- Show selected product name for clarity --}}
                                     <div class="mb-3">
                                         <p style="font-size:13px; color:#555; margin-bottom:4px;">Product:</p>
                                         <p id="inquiry_product_name" style="font-weight:600; color:#333; margin:0;"></p>
@@ -253,88 +240,138 @@
                     </div>
                 </div>
 
-
-                {{-- ============================================================ --}}
-                {{-- SCRIPTS                                                      --}}
-                {{-- ============================================================ --}}
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-                <script>
-                    $(document).ready(function() {
-
-                        // ✅ Toastr options
-                        toastr.options = {
-                            closeButton: true,
-                            progressBar: true,
-                            timeOut: 3500,
-                            positionClass: "toast-top-right"
-                        };
-
-                        // ✅ When Inquiry button is clicked → fill hidden product_id & product name into modal
-                        $(document).on('click', '.inquiry-btn', function() {
-                            const productId = $(this).data('product-id');
-                            const productName = $(this).data('product-name');
-
-                            $('#inquiry_product_id').val(productId);
-                            $('#inquiry_product_name').text(productName);
-                        });
-
-                        // ✅ Reset form when modal is closed
-                        $('#flashSaleInquiryModal').on('hidden.bs.modal', function() {
-                            $('#flashSaleInquiryForm')[0].reset();
-                            $('#inquiry_product_id').val('');
-                            $('#inquiry_product_name').text('');
-                        });
-
-                        // ✅ AJAX form submit
-                        $('#flashSaleInquiryForm').submit(function(e) {
-                            e.preventDefault();
-
-                            const $form = $(this);
-                            const $btn = $('#flashSaleSubmitBtn');
-
-                            $btn.prop('disabled', true).text('Submitting...');
-
-                            $.ajax({
-                                url: $form.attr('action'),
-                                method: 'POST',
-                                data: $form.serialize(),
-                                success: function(response) {
-                                    toastr.success(response.message || 'Your inquiry has been submitted successfully!');
-
-                                    const modalEl = document.getElementById('flashSaleInquiryModal');
-                                    const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-                                    modal.hide();
-
-                                    $form[0].reset();
-                                    $('#inquiry_product_id').val('');
-                                    $('#inquiry_product_name').text('');
-                                },
-                                error: function(xhr) {
-                                    if (xhr.status === 422) {
-                                        let errors = xhr.responseJSON.errors;
-                                        for (let key in errors) {
-                                            toastr.error(errors[key][0]);
-                                        }
-                                    } else {
-                                        toastr.error('Something went wrong. Please try again.');
-                                    }
-                                },
-                                complete: function() {
-                                    $btn.prop('disabled', false).text('Submit');
-                                }
-                            });
-                        });
-
-                    });
-                </script>
-
             </div>
-
         </div>
-
     </section>
+
+
+    {{-- SCRIPTS --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            // ── Toastr options ──────────────────────────────────────────────
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 3500,
+                positionClass: "toast-top-right"
+            };
+
+            // ── Flash Sale Dynamic Search ───────────────────────────────────
+
+            let searchTimer = null;
+
+            // Check if search has content → show/hide Clear All
+            function checkFlashFilters() {
+                const hasSearch = $('#flash-sale-search-input').val().trim().length >= 1;
+                if (hasSearch) {
+                    $('#flash-clear-all').show();
+                    $('#flash-clear-placeholder').hide();
+                } else {
+                    $('#flash-clear-all').hide();
+                    $('#flash-clear-placeholder').show();
+                }
+            }
+
+            // AJAX call to fetch filtered flash sale products
+            function applyFlashSearch() {
+                const query = $('#flash-sale-search-input').val().trim();
+
+                $('#flash-sale-table-wrapper').css('opacity', '0.4');
+
+                $.ajax({
+                    url: "{{ route('ajax.flash.sale') }}",
+                    type: 'GET',
+                    data: {
+                        query: query
+                    },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(res) {
+                        $('#flash-sale-table-wrapper').html(res.html).css('opacity', '1');
+                        $('#flash-showing-text').text(res.showing_text);
+                        checkFlashFilters();
+                    },
+                    error: function() {
+                        $('#flash-sale-table-wrapper').css('opacity', '1');
+                        toastr.error('Something went wrong. Please try again.');
+                    }
+                });
+            }
+
+            // Search input keyup → debounce 300ms
+            $('#flash-sale-search-input').on('keyup', function() {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(applyFlashSearch, 300);
+                checkFlashFilters();
+            });
+
+            // Clear All click
+            $(document).on('click', '#flash-clear-all', function(e) {
+                e.preventDefault();
+                $('#flash-sale-search-input').val('');
+                applyFlashSearch();
+            });
+
+            // ── Inquiry Modal: fill product info ───────────────────────────
+            $(document).on('click', '.inquiry-btn', function() {
+                $('#inquiry_product_id').val($(this).data('product-id'));
+                $('#inquiry_product_name').text($(this).data('product-name'));
+            });
+
+            // Reset modal on close
+            $('#flashSaleInquiryModal').on('hidden.bs.modal', function() {
+                $('#flashSaleInquiryForm')[0].reset();
+                $('#inquiry_product_id').val('');
+                $('#inquiry_product_name').text('');
+            });
+
+            // ── Inquiry Form AJAX Submit ────────────────────────────────────
+            $('#flashSaleInquiryForm').submit(function(e) {
+                e.preventDefault();
+
+                const $form = $(this);
+                const $btn = $('#flashSaleSubmitBtn');
+
+                $btn.prop('disabled', true).text('Submitting...');
+
+                $.ajax({
+                    url: $form.attr('action'),
+                    method: 'POST',
+                    data: $form.serialize(),
+                    success: function(response) {
+                        toastr.success(response.message || 'Your inquiry has been submitted successfully!');
+
+                        const modalEl = document.getElementById('flashSaleInquiryModal');
+                        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                        modal.hide();
+
+                        $form[0].reset();
+                        $('#inquiry_product_id').val('');
+                        $('#inquiry_product_name').text('');
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            for (let key in errors) {
+                                toastr.error(errors[key][0]);
+                            }
+                        } else {
+                            toastr.error('Something went wrong. Please try again.');
+                        }
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).text('Submit');
+                    }
+                });
+            });
+
+        });
+    </script>
 
 @endsection

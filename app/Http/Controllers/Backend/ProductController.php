@@ -435,4 +435,28 @@ class ProductController extends Controller
             'showing_text' => $showingText,
         ]);
     }
+
+    public function ajaxFlashSale(Request $request)
+    {
+        $query = $request->input('query');
+
+        $products = Product::query()->where('is_flash_sale', 1); // ✅ শুধু flash sale products
+
+        if ($query) {
+            $products->where(function ($q) use ($query) {
+                $q->where('product_name', 'LIKE', "%{$query}%")->orWhere('product_part_number', 'LIKE', "%{$query}%"); // part number দিয়েও search হবে
+            });
+        }
+
+        $products = $products->with(['brand'])->paginate(15);
+
+        $html = view('frontend.partials.flash_sale_table_wrapper', compact('products'))->render();
+
+        $showingText = $products->total() > 0 ? "Showing {$products->firstItem()}–{$products->lastItem()} of {$products->total()} results" : 'Showing 0–0 of 0 results';
+
+        return response()->json([
+            'html' => $html,
+            'showing_text' => $showingText,
+        ]);
+    }
 }

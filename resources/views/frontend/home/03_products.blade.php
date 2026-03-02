@@ -30,7 +30,7 @@
                                         <div class="product__all-content text-center">
 
                                             <span class="product__category">
-                                                {{ $item->category->product_category_name ?? 'Uncategorized' }}
+                                                <a href="{{ route('product.by.category', $item->category->product_category_slug ?? '#') }}">{{ $item->category->product_category_name ?? 'Uncategorized' }}</a>
                                             </span>
 
                                             <h4 class="product__all-title">
