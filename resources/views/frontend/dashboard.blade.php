@@ -84,46 +84,6 @@
         </a>
     </div>
 
-    <style>
-        .floating-contact-buttons {
-            position: fixed;
-            bottom: 90px;
-            right: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 9999;
-        }
-
-        .floating-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #fff;
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .floating-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-            color: #fff;
-        }
-
-        .whatsapp-btn {
-            background-color: #25D366;
-        }
-
-        .wechat-btn {
-            background-color: #07C160;
-        }
-    </style>
-
     <script src="{{ asset('frontend/assets/vendors/jquery/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/vendors/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/vendors/jarallax/jarallax.min.js') }}"></script>
