@@ -44,7 +44,7 @@
 
                                 <div class="col-xl-12">
                                     <div class="contact-page__form-input-box">
-                                        <input type="text" placeholder="Name" name="contact_form_name" value="{{ old('contact_form_name') }}">
+                                        <input type="text" placeholder="Name" name="contact_form_name" value="{{ old('contact_form_name') }}" required>
                                         @error('contact_form_name')
                                             <span class="error-text">{{ $message }}</span>
                                         @enderror
@@ -53,7 +53,7 @@
 
                                 <div class="col-xl-6">
                                     <div class="contact-page__form-input-box">
-                                        <input type="email" placeholder="Email" name="contact_form_email" value="{{ old('contact_form_email') }}">
+                                        <input type="email" placeholder="Email" name="contact_form_email" value="{{ old('contact_form_email') }}" required>
                                         @error('contact_form_email')
                                             <span class="error-text">{{ $message }}</span>
                                         @enderror
@@ -62,7 +62,7 @@
 
                                 <div class="col-xl-6">
                                     <div class="contact-page__form-input-box">
-                                        <input type="text" placeholder="Phone" name="contact_form_phone" value="{{ old('contact_form_phone') }}">
+                                        <input type="text" placeholder="Phone" name="contact_form_phone" value="{{ old('contact_form_phone') }}" required>
                                         @error('contact_form_phone')
                                             <span class="error-text">{{ $message }}</span>
                                         @enderror
@@ -71,7 +71,7 @@
 
                                 <div class="col-xl-12">
                                     <div class="contact-page__form-input-box">
-                                        <input type="text" placeholder="Subject" name="contact_form_subject" value="{{ old('contact_form_subject') }}">
+                                        <input type="text" placeholder="Subject" name="contact_form_subject" value="{{ old('contact_form_subject') }}" required>
                                         @error('contact_form_subject')
                                             <span class="error-text">{{ $message }}</span>
                                         @enderror
@@ -80,7 +80,7 @@
 
                                 <div class="col-xl-12">
                                     <div class="contact-page__form-input-box text-message-box">
-                                        <textarea name="contact_form_message" placeholder="Comment">{{ old('contact_form_message') }}</textarea>
+                                        <textarea name="contact_form_message" placeholder="Comment" required>{{ old('contact_form_message') }}</textarea>
                                         @error('contact_form_message')
                                             <span class="error-text">{{ $message }}</span>
                                         @enderror
@@ -170,7 +170,7 @@
             </div>
 
         </div>
-        
+
     </section>
 
     {{-- Google Map --}}

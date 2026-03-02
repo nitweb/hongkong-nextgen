@@ -49,7 +49,7 @@ class ContactFormController extends Controller
             return redirect()
                 ->back()
                 ->with([
-                    'message' => 'Application submitted successfully!',
+                    'message' => 'Thank you for contacting us! We will get back to you soon.',
                     'alert-type' => 'success',
                 ]);
         } catch (\Throwable $e) {
