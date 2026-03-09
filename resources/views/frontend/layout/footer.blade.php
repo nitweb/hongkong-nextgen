@@ -14,8 +14,8 @@
                             <a href="{{ route('index') }}"><img src="{{ asset(GlobalSiteSettings()->site_footer_logo) }}" alt=""></a>
                         </div>
                         <div class="footer-widget__about-text-box">
-                            <p class="footer-widget__about-text" style="text-align: justify;">
-                                {{ GlobalSiteSettings()->site_description ?? '' }}
+                            <p class="footer-widget__about-text">
+                                {!! GlobalSiteSettings()->site_description ?? '' !!}
                             </p>
                         </div>
                         <div class="footer-widget__social-box">
@@ -36,8 +36,10 @@
                             <h3 class="footer-widget__title">Quick Links</h3>
                         </div>
                         <ul class="footer-widget__Explore-list list-unstyled">
-                            {{-- <li><a href="{{ route('index') }}">Home</a></li> --}}
+                            <li><a href="{{ route('index') }}">Home</a></li>
                             <li><a href="{{ route('about') }}">About Us</a></li>
+                            <li><a href="{{ route('products') }}">Products</a></li>
+                            <li><a href="{{ route('flash.sale') }}">Flash Sale</a></li>
                             <li><a href="{{ route('blog') }}">Blog</a></li>
                             <li><a href="{{ route('contact') }}">Contact Us</a></li>
                             <li><a href="{{ route('privacy.policy') }}">Privacy Policy</a></li>
@@ -65,15 +67,85 @@
                         <div class="footer-widget__title-box">
                             <h3 class="footer-widget__title">Contact Information</h3>
                         </div>
-                        <p class="footer-widget__subscribe-text" style="padding-top: 0px;">
-                            <strong>Address:</strong> {!! GlobalSiteSettings()->site_address !!}
-                        </p>
-                        <p class="footer-widget__subscribe-text">
-                            <strong>Email:</strong> <a href="mailto:{{ GlobalSiteSettings()->site_email }}" target="_blank" style="color: #fff">{{ GlobalSiteSettings()->site_email }}</a>
-                        </p>
-                        <p class="footer-widget__subscribe-text">
-                            <span>Phone:</span> <a href="tel:{{ GlobalSiteSettings()->site_phone }}" target="_blank" style="color: #fff">{{ GlobalSiteSettings()->site_phone }}</a>
-                        </p>
+
+                        <ul class="footer-widget__contact-list">
+
+                            <!-- Address -->
+                            <li>
+                                <div class="footer-contact__icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                </div>
+                                <div class="footer-contact__body">
+                                    <span class="footer-contact__label">Address</span>
+                                    <p class="footer-contact__value">{!! GlobalSiteSettings()->site_address !!}</p>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="footer-contact__divider"></div>
+                            </li>
+
+                            <!-- Email - Sabik -->
+                            <li>
+                                <div class="footer-contact__icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                    </svg>
+                                </div>
+                                <div class="footer-contact__body">
+                                    <span class="footer-contact__label">Mr. Sabik</span>
+                                    <p class="footer-contact__value">
+                                        <a href="mailto:{{ GlobalSiteSettings()->site_email }}" target="_blank">
+                                            {{ GlobalSiteSettings()->site_email }}
+                                        </a>
+                                    </p>
+                                </div>
+                            </li>
+
+                            <!-- Email - Mike -->
+                            <li>
+                                <div class="footer-contact__icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                    </svg>
+                                </div>
+                                <div class="footer-contact__body">
+                                    <span class="footer-contact__label">Mr. Mike</span>
+                                    <p class="footer-contact__value">
+                                        <a href="mailto:{{ GlobalSiteSettings()->site_email_alt }}" target="_blank">
+                                            {{ GlobalSiteSettings()->site_email_alt }}
+                                        </a>
+                                    </p>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="footer-contact__divider"></div>
+                            </li>
+
+                            <!-- Phone -->
+                            <li>
+                                <div class="footer-contact__icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.36 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6.29 6.29l.87-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                                    </svg>
+                                </div>
+                                <div class="footer-contact__body">
+                                    <span class="footer-contact__label">Phone</span>
+                                    <p class="footer-contact__value">
+                                        <a href="tel:{{ GlobalSiteSettings()->site_phone }}" target="_blank">
+                                            {{ GlobalSiteSettings()->site_phone }}
+                                        </a>
+                                    </p>
+                                </div>
+                            </li>
+
+                        </ul>
                     </div>
                 </div>
 
@@ -87,7 +159,7 @@
         <div class="container">
             <div class="site-footer__bottom-inner">
                 <p class="site-footer__bottom-text">
-                    Copyright © 2026 <a href="{{ route('index') }}">Hongkong NextGen</a>. Developed by <a href="https://web.nebulaitbd.com/" target="_blank">Nebula IT</a>.
+                    {!! GlobalSiteSettings()->site_copyright !!} Developed by <a href="https://web.nebulaitbd.com/" target="_blank">Nebula IT</a>.
                 </p>
             </div>
         </div>
