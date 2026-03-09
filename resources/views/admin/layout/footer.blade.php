@@ -5,7 +5,7 @@
         <div class="row">
 
             <div class="col-sm-6">
-                {{ GlobalSiteSettings()->site_copyright ?? '' }}
+                {!! GlobalSiteSettings()->site_copyright !!}
             </div>
 
             <div class="col-sm-6">

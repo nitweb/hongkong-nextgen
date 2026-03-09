@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Footer menu te active brands auto share
         View::composer('frontend.layout.footer', function ($view) {
-            $product_brands = ProductBrand::where('product_brand_status', 'active')->latest()->take(5)->get();
+            $product_brands = ProductBrand::where('product_brand_status', 'active')->orderBy('id', 'asc')->take(8)->get();
 
             $view->with('product_brands', $product_brands);
         });
