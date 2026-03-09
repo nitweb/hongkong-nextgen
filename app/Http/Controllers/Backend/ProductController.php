@@ -32,7 +32,7 @@ class ProductController extends Controller
     public function ProductAdd()
     {
         $categories = ProductCategory::where('product_category_status', 'active')->get();
-        $brands = ProductBrand::where('product_brand_status', 'active')->orderBy('product_brand_name')->get();
+        $brands = ProductBrand::where('product_brand_status', 'active')->orderBy('id', 'asc')->get();
 
         return view('backend.products.add', compact('categories', 'brands'));
     }
@@ -181,7 +181,7 @@ class ProductController extends Controller
     {
         $product_info = Product::with(['galleries', 'specifications'])->findOrFail($id);
         $categories = ProductCategory::where('product_category_status', 'active')->get();
-        $brands = ProductBrand::where('product_brand_status', 'active')->get();
+        $brands = ProductBrand::where('product_brand_status', 'active')->orderBy('id', 'asc')->get();
 
         return view('backend.products.edit', compact('product_info', 'categories', 'brands'));
     }
