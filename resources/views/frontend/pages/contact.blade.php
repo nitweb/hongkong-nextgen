@@ -122,38 +122,64 @@
 
                                 <ul class="contact-page__points-list list-unstyled">
 
-                                    <li>
+                                    <!-- Address -->
+                                    <li class="has-address">
                                         <div class="icon">
-                                            <span class="icon-send"></span>
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z" />
+                                                <circle cx="12" cy="10" r="3" />
+                                            </svg>
                                         </div>
                                         <div class="text">
+                                            <span class="label">Address</span>
                                             <p>{!! GlobalSiteSettings()->site_address !!}</p>
                                         </div>
                                     </li>
 
+                                    <!-- Email - Mr. Sabik -->
                                     <li>
                                         <div class="icon">
-                                            <span class="icon-mail"></span>
+                                            <svg viewBox="0 0 24 24">
+                                                <rect x="2" y="4" width="20" height="16" rx="2" />
+                                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                            </svg>
                                         </div>
                                         <div class="text">
-                                            <p>
-                                                <a href="mailto:{{ GlobalSiteSettings()->site_email }}">
-                                                    {{ GlobalSiteSettings()->site_email }}
-                                                </a>
-                                            </p>
+                                            <span class="label">Mr. Sabik</span>
+                                            <a href="mailto:{{ GlobalSiteSettings()->site_email }}">
+                                                {{ GlobalSiteSettings()->site_email }}
+                                            </a>
                                         </div>
                                     </li>
 
+                                    <!-- Email - Mr. Mike -->
                                     <li>
                                         <div class="icon">
-                                            <span class="icon-call"></span>
+                                            <svg viewBox="0 0 24 24">
+                                                <rect x="2" y="4" width="20" height="16" rx="2" />
+                                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                            </svg>
                                         </div>
                                         <div class="text">
-                                            <p>
-                                                <a href="tel:{{ GlobalSiteSettings()->site_phone }}">
-                                                    {{ GlobalSiteSettings()->site_phone }}
-                                                </a>
-                                            </p>
+                                            <span class="label">Mr. Mike</span>
+                                            <a href="mailto:{{ GlobalSiteSettings()->site_email_alt }}">
+                                                {{ GlobalSiteSettings()->site_email_alt }}
+                                            </a>
+                                        </div>
+                                    </li>
+
+                                    <!-- Phone -->
+                                    <li>
+                                        <div class="icon">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.36 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6.29 6.29l.87-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                                            </svg>
+                                        </div>
+                                        <div class="text">
+                                            <span class="label">Phone</span>
+                                            <a href="tel:{{ GlobalSiteSettings()->site_phone }}">
+                                                {{ GlobalSiteSettings()->site_phone }}
+                                            </a>
                                         </div>
                                     </li>
 

@@ -34,7 +34,7 @@ class FrontendController extends Controller
     {
         $slider_data = Slider::where('slider_status', 'active')->latest()->get();
 
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->latest()->take(8)->get();
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('id', 'asc')->take(8)->get();
 
         $product_data = Product::where('status', 'active')->latest()->take(12)->get();
 
@@ -400,7 +400,7 @@ class FrontendController extends Controller
 
     public function Brands()
     {
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->latest()->get();
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('id', 'asc')->get();
 
         return view('frontend.pages.brands', compact('product_brand_data'));
     }
