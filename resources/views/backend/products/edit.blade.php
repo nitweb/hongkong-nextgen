@@ -30,8 +30,40 @@
                             @include('widgets.errors')
 
                             <form action="{{ route('backend.products.update') }}" method="POST" enctype="multipart/form-data" class="row g-3">
+
                                 @csrf
+
                                 <input type="hidden" name="product_id" value="{{ $product_info->id }}">
+
+                                {{-- Main Image --}}
+                                <div class="col-md-12">
+                                    <label class="form-label">Main Image (583 × 583)</label>
+                                    <input type="file" name="product_image" class="form-control" id="image">
+
+                                    @php
+                                        $img = $product_info->product_image ? $product_info->product_image : 'upload/no_image.jpg';
+                                    @endphp
+
+                                    <img id="showImage" src="{{ asset($img) }}" class="mt-2 rounded" style="width:120px;height:120px;object-fit:cover;">
+                                </div>
+
+                                {{-- Add New Gallery Images --}}
+                                {{-- <div class="col-md-12">
+                                    <label class="form-label">Add New Gallery Images</label>
+                                    <input type="file" name="product_gallery_images[]" class="form-control" multiple>
+                                </div> --}}
+
+                                {{-- Product Name --}}
+                                <div class="col-md-6">
+                                    <label class="form-label">Product Name</label>
+                                    <input type="text" name="product_name" class="form-control" value="{{ old('product_name', $product_info->product_name) }}" required>
+                                </div>
+
+                                {{-- Slug --}}
+                                <div class="col-md-6">
+                                    <label class="form-label">Product Slug</label>
+                                    <input type="text" name="product_slug" class="form-control" value="{{ old('product_slug', $product_info->product_slug) }}" required>
+                                </div>
 
                                 {{-- Category --}}
                                 <div class="col-md-6">
@@ -57,35 +89,9 @@
                                     </select>
                                 </div>
 
-                                {{-- Main Image --}}
-                                <div class="col-md-12">
-                                    <label class="form-label">Main Image (583 × 583)</label>
-                                    <input type="file" name="product_image" class="form-control" id="image">
 
-                                    @php
-                                        $img = $product_info->product_image ? $product_info->product_image : 'upload/no_image.jpg';
-                                    @endphp
 
-                                    <img id="showImage" src="{{ asset($img) }}" class="mt-2 rounded" style="width:120px;height:120px;object-fit:cover;">
-                                </div>
 
-                                {{-- Add New Gallery Images --}}
-                                <div class="col-md-12">
-                                    <label class="form-label">Add New Gallery Images</label>
-                                    <input type="file" name="product_gallery_images[]" class="form-control" multiple>
-                                </div>
-
-                                {{-- Product Name --}}
-                                <div class="col-md-6">
-                                    <label class="form-label">Product Name</label>
-                                    <input type="text" name="product_name" class="form-control" value="{{ old('product_name', $product_info->product_name) }}" required>
-                                </div>
-
-                                {{-- Slug --}}
-                                <div class="col-md-6">
-                                    <label class="form-label">Product Slug</label>
-                                    <input type="text" name="product_slug" class="form-control" value="{{ old('product_slug', $product_info->product_slug) }}" required>
-                                </div>
 
                                 {{-- Price --}}
                                 {{-- <div class="col-md-6">
@@ -117,13 +123,6 @@
                                     <input type="text" name="date_code" class="form-control" value="{{ old('date_code', $product_info->date_code) }}" required>
                                 </div>
 
-                                {{-- Description --}}
-                                <div class="col-12">
-                                    <label class="form-label">Product Description</label>
-                                    <textarea name="product_description" class="form-control summernote">
-                                        {{ old('product_description', $product_info->product_description) }}
-                                    </textarea>
-                                </div>
 
                                 {{-- Specifications --}}
                                 <div class="col-12">
@@ -147,6 +146,14 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                </div>
+
+                                {{-- Description --}}
+                                <div class="col-12">
+                                    <label class="form-label">Product Description</label>
+                                    <textarea name="product_description" class="form-control summernote">
+                                        {{ old('product_description', $product_info->product_description) }}
+                                    </textarea>
                                 </div>
 
                                 {{-- Flash Sale --}}

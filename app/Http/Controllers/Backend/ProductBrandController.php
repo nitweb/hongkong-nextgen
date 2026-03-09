@@ -18,7 +18,7 @@ class ProductBrandController extends Controller
     {
         $title = 'Product Brand';
 
-        $product_brand_list = ProductBrand::latest()->get();
+        $product_brand_list = ProductBrand::orderBy('id', 'asc')->get();
 
         return view('backend.product_brand.list', compact('title', 'product_brand_list'));
     } // End Method
