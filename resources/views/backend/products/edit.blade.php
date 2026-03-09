@@ -69,6 +69,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Category</label>
                                     <select name="product_category_id" class="form-select" required>
+                                        <option value="" disabled selected>Select Category</option>
                                         @foreach ($categories as $cat)
                                             <option value="{{ $cat->id }}" {{ old('product_category_id', $product_info->product_category_id) == $cat->id ? 'selected' : '' }}>
                                                 {{ $cat->product_category_name }}
@@ -81,6 +82,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Brand</label>
                                     <select name="brand_id" class="form-select" required>
+                                        <option value="" disabled selected>Select Brand</option>
                                         @foreach ($brands as $brand)
                                             <option value="{{ $brand->id }}" {{ old('brand_id', $product_info->brand_id) == $brand->id ? 'selected' : '' }}>
                                                 {{ $brand->product_brand_name }}
