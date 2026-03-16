@@ -86,6 +86,7 @@
                                                     <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">Brand</th>
                                                     <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">Package</th>
                                                     <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">Quantity</th>
+                                                    <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">Stock Status</th>
                                                     <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">PDF</th>
                                                     <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">Action</th>
                                                 </tr>
@@ -112,6 +113,15 @@
                                                             {{ $item->flash_sale_quantity ?? '' }}
                                                         </td>
 
+                                                        {{-- ✅ Stock Status --}}
+                                                        <td style="padding: 14px 16px; text-align: center; border: 1px solid #ddd;">
+                                                            @if ($item->stock_status === 'in_stock')
+                                                                <span style="color: #28a745; font-weight: 600;">&#10003; In Stock</span>
+                                                            @else
+                                                                <span style="color: #dc3545; font-weight: 600;">&#10007; Out of Stock</span>
+                                                            @endif
+                                                        </td>
+
                                                         <td style="padding: 14px 16px; text-align: center; border: 1px solid #ddd;">
                                                             @if (!empty($item->flash_sale_pdf) && file_exists(public_path($item->flash_sale_pdf)))
                                                                 <a href="{{ route('product.pdf.download', $item->id) }}" title="Download PDF" style="color: #e74c3c; font-size: 22px; text-decoration: none; display: inline-block;">
@@ -122,16 +132,23 @@
                                                             @endif
                                                         </td>
 
+                                                        {{-- ✅ Inquiry Button - disabled if out of stock --}}
                                                         <td style="padding: 14px 16px; text-align: center; border: 1px solid #ddd;">
-                                                            <button type="button" class="thm-btn inquiry-btn" style="padding: 6px 18px; font-size: 13px;" data-product-id="{{ $item->id }}" data-product-name="{{ $item->product_name }}" data-bs-toggle="modal" data-bs-target="#flashSaleInquiryModal">
-                                                                Inquiry
-                                                            </button>
+                                                            @if ($item->stock_status === 'in_stock')
+                                                                <button type="button" class="thm-btn inquiry-btn" style="padding: 6px 18px; font-size: 13px;" data-product-id="{{ $item->id }}" data-product-name="{{ $item->product_name }}" data-bs-toggle="modal" data-bs-target="#flashSaleInquiryModal">
+                                                                    Inquiry
+                                                                </button>
+                                                            @else
+                                                                <button type="button" class="thm-btn" disabled style="padding: 6px 8px; font-size: 10px; opacity: 0.5; cursor: not-allowed;" title="This product is currently out of stock">
+                                                                    Out of Stock
+                                                                </button>
+                                                            @endif
                                                         </td>
 
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="6" style="padding: 20px; text-align: center; color: #777;">
+                                                        <td colspan="7" style="padding: 20px; text-align: center; color: #777;">
                                                             No products found.
                                                         </td>
                                                     </tr>
