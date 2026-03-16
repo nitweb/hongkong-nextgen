@@ -351,7 +351,6 @@ class FrontendController extends Controller
     public function ajaxSearch(Request $request)
     {
         $query = $request->get('query');
-
         $products = Product::where('status', 'active')
             ->where(function ($q) use ($query) {
                 $q->where('product_name', 'like', "%{$query}%")
@@ -363,33 +362,26 @@ class FrontendController extends Controller
             ->get();
 
         $html = '';
-
         if ($products->count()) {
             foreach ($products as $product) {
-                $price = $product->product_price - $product->discount_price ?? $product->product_price;
-
                 $html .=
-                    '
-            <a href="' .
+                    '<a href="' .
                     route('product.details', $product->product_slug) .
                     '"
-               style="display:flex;gap:12px;padding:10px;border-bottom:1px solid #eee;text-decoration:none;">
-                <img src="' .
+                   style="display:flex;gap:12px;padding:10px;border-bottom:1px solid #eee;text-decoration:none;">
+                    <img src="' .
                     asset($product->product_image) .
                     '"
-                     style="width:50px;height:50px;border-radius:6px;object-fit:cover;">
-                <div>
-                    <div style="font-weight:600;color:#222;">' .
+                         style="width:50px;height:50px;border-radius:6px;object-fit:cover;">
+                    <div>
+                        <div style="font-weight:600;color:#222;">' .
                     e(Str::limit($product->product_name, 45)) .
-                    '
+                    '</div>
+                        <div style="color:#888;font-size:12px;margin-top:3px;">' .
+                    e($product->product_part_number) .
+                    '</div>
                     </div>
-                    <div style="color:#cf1f1f;font-weight:600;margin-top:5px;">
-                        $' .
-                    number_format($price, 2) .
-                    '
-                    </div>
-                </div>
-            </a>';
+                </a>';
             }
         } else {
             $html = '<p style="padding:12px;text-align:center;color:#888;">No products found</p>';

@@ -46,7 +46,7 @@ class ProductController extends Controller
             'product_category_id' => 'required|exists:product_categories,id',
             'brand_id' => 'required|exists:product_brands,id',
 
-            'product_price' => 'required|numeric|min:0',
+            'product_price' => 'nullable|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0',
 
             'product_part_number' => 'required|string|max:255',
@@ -196,7 +196,7 @@ class ProductController extends Controller
             'product_category_id' => 'required|exists:product_categories,id',
             'brand_id' => 'required|exists:product_brands,id',
 
-            'product_price' => 'required|numeric|min:0',
+            'product_price' => 'nullable|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0',
 
             'product_part_number' => 'required|string|max:255',

@@ -33,15 +33,6 @@
                     <div class="product-details__top">
                         <h3 class="product-details__title">
                             {{ $product->product_name }}
-                            {{-- <br> --}}
-                            {{-- <div style="margin-top: -15px;">
-                                <span>${{ number_format($product->product_price - ($product->discount_price ?? 0), 2) }}</span>
-                                @if ($product->discount_price > 0)
-                                    <span class="old__price">
-                                        ${{ number_format($product->product_price, 2) }}
-                                    </span>
-                                @endif
-                            </div> --}}
                         </h3>
                     </div>
 
@@ -60,15 +51,23 @@
                                 </a>
                             </span>
                         </p>
+                        {{-- ✅ Stock Status --}}
+                        <p class="details__brand"><strong>Stock Status:</strong>
+                            <span>
+                                @if ($product->stock_status === 'in_stock')
+                                    <span style="color: #28a745; font-weight: 600;">
+                                        &#10003; In Stock
+                                    </span>
+                                @else
+                                    <span style="color: #dc3545; font-weight: 600;">
+                                        &#10007; Out of Stock
+                                    </span>
+                                @endif
+                            </span>
+                        </p>
                     </div>
 
                     <div class="product-details__content">
-                        {{-- <div class="product-details__content-text1" style="text-align: justify;">
-                            {{ $product->product_short_description }}
-                        </div> --}}
-
-                        {{-- <p class="product-details__content-text2">REF. 4231/406 <br>
-                            Available in store</p> --}}
 
                         @if ($product->specifications && $product->specifications->count() > 0)
                             <div class="product-spec-table" style="margin-top:20px;">
@@ -81,10 +80,6 @@
                                                 <td class="col_one">Product Part Number</td>
                                                 <td class="col_two">{{ $product->product_part_number }}</td>
                                             </tr>
-                                            {{-- <tr>
-                                                <td class="col_one">Brand Name</td>
-                                                <td class="col_two">{{ $product->brand->product_brand_name ?? 'N/A' }}</td>
-                                            </tr> --}}
                                             <tr>
                                                 <td class="col_one">Package</td>
                                                 <td class="col_two">{{ $product->package }}</td>
@@ -108,11 +103,17 @@
                     </div>
 
                     <div class="product-details__buttons">
-                        {{-- ✅ Bulk Order Button (Bootstrap modal open) --}}
+                        {{-- ✅ Bulk Order Button (Bootstrap modal open) - disabled if out of stock --}}
                         <div class="product-details__buttons-2">
-                            <button type="button" class="thm-btn" data-bs-toggle="modal" data-bs-target="#bulkOrderModal">
-                                Inquiry
-                            </button>
+                            @if ($product->stock_status === 'in_stock')
+                                <button type="button" class="thm-btn" data-bs-toggle="modal" data-bs-target="#bulkOrderModal">
+                                    Inquiry
+                                </button>
+                            @else
+                                <button type="button" class="thm-btn" disabled style="opacity: 0.5; cursor: not-allowed;" title="This product is currently out of stock">
+                                    Out of Stock
+                                </button>
+                            @endif
                         </div>
                     </div>
 
@@ -135,7 +136,7 @@
     <div class="modal fade" id="bulkOrderModal" tabindex="-1" aria-labelledby="bulkOrderModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 
         <div class="modal-dialog modal-md modal-dialog-centered">
-            
+
             <div class="modal-content">
 
                 <div class="modal-header">

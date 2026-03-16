@@ -32,6 +32,7 @@ class GlobalController extends Controller
                 \App\Models\Product::class,
                 \App\Models\Blog::class,
                 \App\Models\ProductBrand::class,
+                \App\Models\Certificate::class,
             ];
 
             if (!in_array($modelClass, $allowedModels)) {
