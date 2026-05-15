@@ -874,8 +874,8 @@ ul {
 .stricky-header .main-menu__list>li>ul>li>a,
 .stricky-header .main-menu__list>li>ul>li>ul>li>a {
   position: relative;
-  font-size: 16px;
-  line-height: 30px;
+  font-size: 14px;
+  /* line-height: 30px; */
   color: var(--fixnix-gray);
   letter-spacing: 0;
   font-weight: 600;

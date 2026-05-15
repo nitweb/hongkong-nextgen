@@ -30,7 +30,7 @@ class ProductCategoryController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'product_category_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+                'product_category_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
                 'product_category_name' => 'required|string|max:255',
                 'product_category_slug' => 'required|string|max:255|unique:product_categories,product_category_slug',
             ],

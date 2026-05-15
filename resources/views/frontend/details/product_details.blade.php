@@ -37,10 +37,17 @@
                     </div>
 
                     <div class="product-details__reveiw" style="display: block;">
-                        <p class="details__brand"><strong>Category:</strong>
+                        {{-- <p class="details__brand"><strong>Category:</strong>
                             <span>
                                 <a href="{{ route('product.by.category', $product->category->product_category_slug ?? '#') }}">
                                     {{ $product->category->product_category_name ?? 'N/A' }}
+                                </a>
+                            </span>
+                        </p> --}}
+                        <p class="details__brand"><strong>Part Number:</strong>
+                            <span>
+                                <a href="javascript:void(0);">
+                                    {{ $product->product_part_number ?? 'N/A' }}
                                 </a>
                             </span>
                         </p>
@@ -48,6 +55,13 @@
                             <span>
                                 <a href="{{ route('product.by.brand', $product->brand->product_brand_slug) }}">
                                     {{ $product->brand->product_brand_name ?? 'N/A' }}
+                                </a>
+                            </span>
+                        </p>
+                        <p class="details__brand"><strong>Package:</strong>
+                            <span>
+                                <a href="javascript:void(0);">
+                                    {{ $product->package ?? 'N/A' }}
                                 </a>
                             </span>
                         </p>
