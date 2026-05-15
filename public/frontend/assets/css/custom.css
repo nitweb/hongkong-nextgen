@@ -404,7 +404,7 @@ button.thm-btn.contact-page__btn {
 }
 
 .main-menu-two__logo a img {
-    width: 90%;
+    width: 250px !important;
 }
 
 .product__all-single {
@@ -910,5 +910,6 @@ button.thm-btn.contact-page__btn {
     line-height: 1.8;
     color: rgba(255, 255, 255, 0.75);
     margin: 0;
-    text-align: justify; /* remove justify */
+    text-align: justify;
+    /* remove justify */
 }

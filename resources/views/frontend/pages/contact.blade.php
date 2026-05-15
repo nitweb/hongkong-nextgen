@@ -19,15 +19,11 @@
 
     {{-- Contact Section --}}
     <section class="contact-page">
-
         <div class="container">
-
-            {{-- Center Alignment --}}
             <div class="row align-items-center">
 
                 {{-- LEFT SIDE FORM --}}
                 <div class="col-xl-6 col-lg-6">
-
                     <div class="contact-page__left">
 
                         <div class="contact-page__shape-1">
@@ -37,9 +33,7 @@
                         <h3 class="contact-page__title">Leave a message</h3>
 
                         <form action="{{ route('contact.submit') }}" method="POST" class="contact-page__form">
-
                             @csrf
-
                             <div class="row">
 
                                 <div class="col-xl-12">
@@ -96,16 +90,13 @@
                                 </div>
 
                             </div>
-
                         </form>
 
                     </div>
-
                 </div>
 
                 {{-- RIGHT SIDE CONTACT INFO --}}
                 <div class="col-xl-6 col-lg-6">
-
                     <div class="contact-page__right">
 
                         <div class="section-title text-left">
@@ -117,12 +108,10 @@
                         </div>
 
                         <div class="contact-page__points-box-inner">
-
                             <div class="contact-page__points-box">
-
                                 <ul class="contact-page__points-list list-unstyled">
 
-                                    <!-- Address -->
+                                    {{-- Address --}}
                                     <li class="has-address">
                                         <div class="icon">
                                             <svg viewBox="0 0 24 24">
@@ -136,67 +125,90 @@
                                         </div>
                                     </li>
 
-                                    <!-- Email - Mr. Sabik -->
-                                    <li>
-                                        <div class="icon">
-                                            <svg viewBox="0 0 24 24">
-                                                <rect x="2" y="4" width="20" height="16" rx="2" />
-                                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                                            </svg>
-                                        </div>
-                                        <div class="text">
-                                            <span class="label">Mr. Sabik</span>
-                                            <a href="mailto:{{ GlobalSiteSettings()->site_email }}">
-                                                {{ GlobalSiteSettings()->site_email }}
-                                            </a>
-                                        </div>
-                                    </li>
+                                    {{-- Person 1 --}}
+                                    @if (GlobalSiteSettings()->person1_name)
+                                        <li>
+                                            <div class="icon">
+                                                <svg viewBox="0 0 24 24">
+                                                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                                </svg>
+                                            </div>
+                                            <div class="text">
+                                                <span class="label">{{ GlobalSiteSettings()->person1_name }}</span>
+                                                @if (GlobalSiteSettings()->person1_email)
+                                                    <a href="mailto:{{ GlobalSiteSettings()->person1_email }}">
+                                                        {{ GlobalSiteSettings()->person1_email }}
+                                                    </a>
+                                                @endif
+                                                @if (GlobalSiteSettings()->person1_phone)
+                                                    <a href="tel:{{ GlobalSiteSettings()->person1_phone }}">
+                                                        {{ GlobalSiteSettings()->person1_phone }}
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </li>
+                                    @endif
 
-                                    <!-- Email - Mr. Mike -->
-                                    <li>
-                                        <div class="icon">
-                                            <svg viewBox="0 0 24 24">
-                                                <rect x="2" y="4" width="20" height="16" rx="2" />
-                                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                                            </svg>
-                                        </div>
-                                        <div class="text">
-                                            <span class="label">Mr. Mike</span>
-                                            <a href="mailto:{{ GlobalSiteSettings()->site_email_alt }}">
-                                                {{ GlobalSiteSettings()->site_email_alt }}
-                                            </a>
-                                        </div>
-                                    </li>
+                                    {{-- Person 2 --}}
+                                    @if (GlobalSiteSettings()->person2_name)
+                                        <li>
+                                            <div class="icon">
+                                                <svg viewBox="0 0 24 24">
+                                                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                                </svg>
+                                            </div>
+                                            <div class="text">
+                                                <span class="label">{{ GlobalSiteSettings()->person2_name }}</span>
+                                                @if (GlobalSiteSettings()->person2_email)
+                                                    <a href="mailto:{{ GlobalSiteSettings()->person2_email }}">
+                                                        {{ GlobalSiteSettings()->person2_email }}
+                                                    </a>
+                                                @endif
+                                                @if (GlobalSiteSettings()->person2_phone)
+                                                    <a href="tel:{{ GlobalSiteSettings()->person2_phone }}">
+                                                        {{ GlobalSiteSettings()->person2_phone }}
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </li>
+                                    @endif
 
-                                    <!-- Phone -->
-                                    <li>
-                                        <div class="icon">
-                                            <svg viewBox="0 0 24 24">
-                                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.36 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6.29 6.29l.87-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-                                            </svg>
-                                        </div>
-                                        <div class="text">
-                                            <span class="label">Phone</span>
-                                            <a href="tel:{{ GlobalSiteSettings()->site_phone }}">
-                                                {{ GlobalSiteSettings()->site_phone }}
-                                            </a>
-                                        </div>
-                                    </li>
+                                    {{-- Person 3 --}}
+                                    @if (GlobalSiteSettings()->person3_name)
+                                        <li>
+                                            <div class="icon">
+                                                <svg viewBox="0 0 24 24">
+                                                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                                </svg>
+                                            </div>
+                                            <div class="text">
+                                                <span class="label">{{ GlobalSiteSettings()->person3_name }}</span>
+                                                @if (GlobalSiteSettings()->person3_email)
+                                                    <a href="mailto:{{ GlobalSiteSettings()->person3_email }}">
+                                                        {{ GlobalSiteSettings()->person3_email }}
+                                                    </a>
+                                                @endif
+                                                @if (GlobalSiteSettings()->person3_phone)
+                                                    <a href="tel:{{ GlobalSiteSettings()->person3_phone }}">
+                                                        {{ GlobalSiteSettings()->person3_phone }}
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </li>
+                                    @endif
 
                                 </ul>
-
                             </div>
-
                         </div>
 
                     </div>
-
                 </div>
 
             </div>
-
         </div>
-
     </section>
 
     {{-- Google Map --}}

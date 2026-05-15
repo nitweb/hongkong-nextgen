@@ -38,11 +38,11 @@
 
                                 <input type="hidden" name="id" value="{{ $product_categories_info->id }}">
 
-                                <div class="col-md-8">
+                                {{-- <div class="col-md-8">
                                     <label for="example-text-input" class="form-label">Image [440px by 440px]</label>
                                     <input type="file" class="form-control" name="product_category_image" id="image">
                                     <img id="showImage" src="{{ !empty($product_categories_info->product_category_image) ? url('upload/product_category_image/' . $product_categories_info->product_category_image) : url('upload/no_image.jpg') }}" alt="Product Category Image" class="p-1 bg-primary mt-3" style="width: 110px; height: 110px; object-fit: cover; border-radius: 8px;">
-                                </div>
+                                </div> --}}
 
                                 <div class="col-md-8">
                                     <label for="product_category_name" class="form-label">Name</label>
