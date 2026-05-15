@@ -1,5 +1,5 @@
 @extends('frontend.dashboard')
-@section('frontend_title', 'Flash Sale')
+@section('frontend_title', 'Access Inventory')
 @section('frontend_contents')
 
     {{-- Breadcrumb --}}
@@ -7,11 +7,11 @@
         <div class="page-header-bg" style="background-image: url({{ asset('frontend/assets/static_images/breadcrumb.jpg') }})"></div>
         <div class="container">
             <div class="page-header__inner">
-                <h2>Flash Sale</h2>
+                <h2>Access Inventory</h2>
                 <ul class="thm-breadcrumb list-unstyled">
                     <li><a href="{{ route('index') }}">Home</a></li>
                     <li><span>//</span></li>
-                    <li>Flash Sale</li>
+                    <li>Access Inventory</li>
                 </ul>
             </div>
         </div>
