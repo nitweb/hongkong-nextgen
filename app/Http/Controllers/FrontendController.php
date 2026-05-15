@@ -337,15 +337,44 @@ class FrontendController extends Controller
         return view('frontend.pages.flash_sale', compact('product_data', 'product_brand_data', 'category_data'));
     }
 
-    public function ItProduct()
+    public function ItProduct(Request $request)
     {
-        $product_data = Product::where('is_it_product', true) // Flash Sale products
+        $query = Product::where('is_it_product', true)
             ->where('status', 'active')
-            ->with('category', 'brand', 'galleries') // eager load
-            ->orderBy('created_at', 'desc')
-            ->paginate(9); // 9 per page
+            ->with('category', 'brand', 'galleries');
 
-        return view('frontend.pages.it_product', compact('product_data'));
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('product_name', 'like', "%{$search}%")
+                    ->orWhere('product_part_number', 'like', "%{$search}%")
+                    ->orWhere('package', 'like', "%{$search}%")
+                    ->orWhere('date_code', 'like', "%{$search}%");
+            });
+        }
+
+        // Brand filter
+        if ($request->filled('brands')) {
+            $query->whereIn('brand_id', $request->brands);
+        }
+
+        $product_data = $query->orderBy('created_at', 'desc')->paginate(9)->withQueryString();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('frontend.partials.product-list', compact('product_data'))->render(),
+                'showing_text' => 'Showing ' . ($product_data->firstItem() ?? 0) . '–' . ($product_data->lastItem() ?? 0) . ' of ' . $product_data->total() . ' results',
+            ]);
+        }
+
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')
+            ->withCount(['products' => fn($q) => $q->where('is_it_product', true)->where('status', 'active')])
+            ->having('products_count', '>', 0)
+            ->orderBy('product_brand_name')
+            ->get();
+
+        return view('frontend.pages.it_product', compact('product_data', 'product_brand_data'));
     }
 
     public function ajaxSearch(Request $request)

@@ -22,15 +22,45 @@
         <div class="container">
             <div class="row">
 
-                <div class="col-xl-12 col-lg-12">
+                {{-- ===== SIDEBAR ===== --}}
+                <div class="col-xl-3 col-lg-3">
+                    <div class="product__sidebar">
+
+                        {{-- Brands --}}
+                        <div class="shop-category product__sidebar-single">
+                            <h3 class="product__sidebar-title">Brands</h3>
+                            @foreach ($product_brand_data as $brand)
+                                <label class="filter-check">
+                                    <input type="checkbox" class="js-filter-brand" value="{{ $brand->id }}" {{ in_array($brand->id, (array) request('brands')) ? 'checked' : '' }}>
+                                    {{ $brand->product_brand_name }} ({{ $brand->products_count }})
+                                </label>
+                            @endforeach
+                        </div>
+
+                    </div>
+                </div>
+
+                {{-- ===== PRODUCT AREA ===== --}}
+                <div class="col-xl-9 col-lg-9">
+
+                    {{-- Search Bar --}}
+                    <div class="shop-search product__sidebar-single product__price-ranger">
+                        <div class="custom-sidebar-search js-sidebar-search">
+                            <input type="text" id="it-search-input" class="custom-sidebar-search__input" placeholder="Search IT products..." autocomplete="off" value="{{ request('search') }}">
+                        </div>
+                    </div>
+
                     <div class="product__items">
 
-                        {{-- Showing result dynamic --}}
+                        {{-- Showing result --}}
                         <div class="row">
                             <div class="col-xl-12">
-                                <div class="product__showing-result">
+                                <div class="product__showing-result d-flex justify-content-between align-items-center">
+                                    <a href="{{ route('it.product') }}" id="clear-all-filters" style="{{ request()->hasAny(['brands', 'search']) ? '' : 'display:none;' }} color:red; text-decoration:underline;">
+                                        Clear All
+                                    </a>
                                     <div class="product__showing-text-box">
-                                        <p class="product__showing-text">
+                                        <p class="product__showing-text" id="product-showing-text">
                                             Showing {{ $product_data->firstItem() ?? 0 }}–{{ $product_data->lastItem() ?? 0 }}
                                             of {{ $product_data->total() }} results
                                         </p>
@@ -39,41 +69,26 @@
                             </div>
                         </div>
 
-                        <div class="product__all">
-                            <div class="row">
+                        <div class="product__all" id="product-list-wrapper">
+                            <div class="row" id="product-grid">
                                 @forelse ($product_data as $item)
                                     <div class="col-xl-3 col-lg-3 col-md-6 custom_product_margin">
                                         <div class="product__all-single">
-
                                             <a href="{{ route('product.details', $item->product_slug) }}">
                                                 <div class="product__all-img">
                                                     <img src="{{ asset($item->product_image) }}" alt="">
                                                 </div>
                                             </a>
-
                                             <div class="product__all-content">
                                                 <span class="product__category">
                                                     {{ $item->category->product_category_name ?? 'Uncategorized' }}
                                                 </span>
-
                                                 <h4 class="product__all-title">
                                                     <a href="{{ route('product.details', $item->product_slug) }}">
                                                         {{ Str::limit($item->product_name, 40) }}
                                                     </a>
                                                 </h4>
-
-                                                {{-- <p class="product__all-price mt-2">
-                                                    <span class="new__price">
-                                                        ${{ number_format($item->product_price - ($item->discount_price ?? 0), 2) }}
-                                                    </span>
-                                                    @if (!empty($item->discount_price) && $item->discount_price > 0)
-                                                        <span class="old__price">
-                                                            ${{ number_format($item->product_price, 2) }}
-                                                        </span>
-                                                    @endif
-                                                </p> --}}
                                             </div>
-
                                         </div>
                                     </div>
                                 @empty
@@ -83,17 +98,14 @@
                                 @endforelse
                             </div>
 
-                            {{-- ✅ Template Pagination (dynamic) --}}
+                            {{-- Pagination --}}
                             @if ($product_data->hasPages())
                                 <div class="row">
                                     <div class="col-xl-12">
                                         <div class="blog-page__pagination">
                                             <ul class="pg-pagination list-unstyled">
 
-                                                {{-- Prev --}}
-                                                @if ($product_data->onFirstPage())
-                                                    {{-- first page e prev dekhabo na (template e prev class nai) --}}
-                                                @else
+                                                @if (!$product_data->onFirstPage())
                                                     <li class="prev">
                                                         <a href="{{ $product_data->previousPageUrl() }}" aria-label="Previous">
                                                             <i class="fa fa-angle-double-left"></i>
@@ -101,14 +113,12 @@
                                                     </li>
                                                 @endif
 
-                                                {{-- Pages --}}
                                                 @foreach ($product_data->getUrlRange(1, $product_data->lastPage()) as $page => $url)
                                                     <li class="count {{ $page == $product_data->currentPage() ? 'active' : '' }}">
                                                         <a href="{{ $url }}">{{ $page }}</a>
                                                     </li>
                                                 @endforeach
 
-                                                {{-- Next --}}
                                                 @if ($product_data->hasMorePages())
                                                     <li class="next">
                                                         <a href="{{ $product_data->nextPageUrl() }}" aria-label="Next">
@@ -128,9 +138,40 @@
                 </div>
 
             </div>
-
         </div>
-
     </section>
+
+    {{-- ===== JS ===== --}}
+    <script>
+        (function() {
+
+            function applyFilters() {
+                const brands = [...document.querySelectorAll('.js-filter-brand:checked')].map(el => el.value);
+                const search = document.getElementById('it-search-input')?.value.trim() ?? '';
+
+                const params = new URLSearchParams();
+                brands.forEach(v => params.append('brands[]', v));
+                if (search) params.set('search', search);
+
+                window.location.href = '{{ route('it.product') }}?' + params.toString();
+            }
+
+            // Brand checkboxes
+            document.querySelectorAll('.js-filter-brand').forEach(function(checkbox) {
+                checkbox.addEventListener('change', applyFilters);
+            });
+
+            // Search input with debounce
+            let searchTimer;
+            const searchInput = document.getElementById('it-search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(searchTimer);
+                    searchTimer = setTimeout(applyFilters, 500);
+                });
+            }
+
+        })();
+    </script>
 
 @endsection
