@@ -73,7 +73,7 @@ class FrontendController extends Controller
             $query->whereIn('brand_id', $request->brands);
         }
 
-        $product_data = $query->latest()->paginate(9)->withQueryString();
+        $product_data = $query->latest()->paginate(12)->withQueryString();
 
         if ($request->ajax()) {
             return response()->json([
@@ -178,7 +178,7 @@ class FrontendController extends Controller
             $query->whereRaw('COALESCE(product_price - discount_price, product_price) BETWEEN ? AND ?', [$request->min_price, $request->max_price]);
         }
 
-        $product_data = $query->latest()->paginate(9)->withQueryString();
+        $product_data = $query->latest()->paginate(12)->withQueryString();
 
         // AJAX
         if ($request->ajax()) {
@@ -224,7 +224,7 @@ class FrontendController extends Controller
             $query->whereRaw('COALESCE(product_price - discount_price, product_price) BETWEEN ? AND ?', [$request->min_price, $request->max_price]);
         }
 
-        $product_data = $query->latest()->paginate(9)->withQueryString();
+        $product_data = $query->latest()->paginate(12)->withQueryString();
 
         // AJAX
         if ($request->ajax()) {
@@ -282,7 +282,7 @@ class FrontendController extends Controller
 
     public function Blog()
     {
-        $blog_list = Blog::where('blog_status', 'active')->latest()->paginate(9);
+        $blog_list = Blog::where('blog_status', 'active')->latest()->paginate(12);
         return view('frontend.pages.blog', compact('blog_list'));
     } // End Method
 
@@ -321,7 +321,7 @@ class FrontendController extends Controller
 
     public function FlashSale()
     {
-        $product_data = Product::where('is_flash_sale', true)->where('status', 'active')->with('category', 'brand', 'galleries')->orderBy('created_at', 'desc')->paginate(9);
+        $product_data = Product::where('is_flash_sale', true)->where('status', 'active')->with('category', 'brand', 'galleries')->orderBy('created_at', 'desc')->paginate(12);
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')
             ->orderBy('product_brand_name')
@@ -359,7 +359,7 @@ class FrontendController extends Controller
             $query->whereIn('brand_id', $request->brands);
         }
 
-        $product_data = $query->orderBy('created_at', 'desc')->paginate(9)->withQueryString();
+        $product_data = $query->orderBy('created_at', 'desc')->paginate(12)->withQueryString();
 
         if ($request->ajax()) {
             return response()->json([

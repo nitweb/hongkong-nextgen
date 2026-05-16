@@ -56,7 +56,7 @@
                                     </ul>
                                 </li>
 
-                                <li><a href="{{ route('flash.sale') }}">Access Inventory</a></li>
+                                <li><a href="{{ route('flash.sale') }}">Excess Inventory</a></li>
                                 <li><a href="{{ route('it.product') }}">IT Product</a></li>
                                 <li><a href="{{ route('contact') }}">Contact</a></li>
                             </ul>

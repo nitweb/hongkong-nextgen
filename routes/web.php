@@ -80,7 +80,7 @@ Route::middleware('web')->group(function () {
     Route::get('/child-development', [FrontendController::class, 'ChildDevelopment'])->name('child.development');
 
     // Flash Sale
-    Route::get('/access-inventory', [FrontendController::class, 'FlashSale'])->name('flash.sale');
+    Route::get('/excess-inventory', [FrontendController::class, 'FlashSale'])->name('flash.sale');
 
     // IT Product
     Route::get('/it-product', [FrontendController::class, 'ItProduct'])->name('it.product');

@@ -5,11 +5,11 @@
     {{-- Slider Area --}}
     @include('frontend.home.01_slider')
 
-    {{-- Brand Area --}}
-    @include('frontend.home.02_brand')
-
     {{-- Product Area --}}
     @include('frontend.home.03_products')
+
+    {{-- Brand Area --}}
+    @include('frontend.home.02_brand')
 
     {{-- Industries We Serve Area --}}
     @include('frontend.home.04_industries_we_serve')

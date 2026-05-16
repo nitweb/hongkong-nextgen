@@ -41,7 +41,7 @@
                             <li><a href="{{ route('index') }}">Home</a></li>
                             <li><a href="{{ route('about') }}">About Us</a></li>
                             <li><a href="{{ route('products') }}">Products</a></li>
-                            <li><a href="{{ route('flash.sale') }}">Flash Sale</a></li>
+                            <li><a href="{{ route('flash.sale') }}">Excess Inventory</a></li>
                             <li><a href="{{ route('blog') }}">Blog</a></li>
                             <li><a href="{{ route('contact') }}">Contact Us</a></li>
                             <li><a href="{{ route('privacy.policy') }}">Privacy Policy</a></li>
