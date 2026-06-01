@@ -2,7 +2,7 @@
 
     <nav class="main-menu main-menu-two">
         <div class="main-menu-two__wrapper">
-            <div class="container">
+            <div class="container-sm">
                 <div class="main-menu-two__wrapper-inner">
 
                     {{-- LEFT : LOGO --}}
@@ -25,7 +25,6 @@
 
                             <ul class="main-menu__list">
                                 <li><a href="{{ route('index') }}">Home</a></li>
-                                <li><a href="{{ route('about') }}">About Us</a></li>
 
                                 <li class="dropdown {{ request()->is('category/*') || request()->is('products') ? 'current' : '' }}">
                                     <a href="{{ route('products') }}">Products</a>
@@ -56,8 +55,12 @@
                                     </ul>
                                 </li>
 
+                                <li><a href="#!">Battery Items</a></li>
+
                                 <li><a href="{{ route('flash.sale') }}">Excess Inventory</a></li>
+
                                 <li><a href="{{ route('it.product') }}">IT Product</a></li>
+
                                 <li><a href="{{ route('contact') }}">Contact</a></li>
                             </ul>
                         </div>

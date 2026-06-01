@@ -64,6 +64,7 @@
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('backend.product_brand.list') }}"><span>Brand List</span></a></li>
                         <li><a href="{{ route('backend.product_categories.list') }}"><span>Category List</span></a></li>
+                        <li><a href="{{ route('backend.it_categories.list') }}"><span>IT Category List</span></a></li>
                         <li><a href="{{ route('backend.products.list') }}"><span>Product List</span></a></li>
                     </ul>
                 </li>

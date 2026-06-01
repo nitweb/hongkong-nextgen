@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\BulkOrderController;
 use App\Http\Controllers\Backend\CertificateController;
 use App\Http\Controllers\Backend\ContactFormController;
+use App\Http\Controllers\Backend\ItProductCategoryController;
 use App\Http\Controllers\Backend\MissionVisionController;
 use App\Http\Controllers\Backend\ProductBrandController;
 use App\Http\Controllers\Backend\ProductCategoryController;
@@ -189,6 +190,14 @@ Route::middleware('admin')->group(function () {
     Route::post('/backend/product/gallery/update/{id}', [ProductController::class, 'ProductGalleryUpdate'])->name('backend.product.gallery.update');
     Route::delete('/backend/product/gallery/delete/{id}', [ProductController::class, 'ProductGalleryDelete'])->name('backend.product.gallery.delete');
     Route::post('/backend/product/gallery/add', [ProductController::class, 'ProductGalleryAdd'])->name('backend.product.gallery.add');
+
+    // IT Product Categories
+    Route::get('/backend/it-categories/list',       [ItProductCategoryController::class, 'List'])->name('backend.it_categories.list');
+    Route::get('/backend/it-categories/add',        [ItProductCategoryController::class, 'Add'])->name('backend.it_categories.add');
+    Route::post('/backend/it-categories/store',     [ItProductCategoryController::class, 'Store'])->name('backend.it_categories.store');
+    Route::get('/backend/it-categories/edit/{id}',  [ItProductCategoryController::class, 'Edit'])->name('backend.it_categories.edit');
+    Route::post('/backend/it-categories/update',    [ItProductCategoryController::class, 'Update'])->name('backend.it_categories.update');
+    Route::get('/backend/it-categories/delete/{id}', [ItProductCategoryController::class, 'Delete'])->name('backend.it_categories.delete');
 
     // Bulk Orders
     Route::get('/backend/bulk-order/list', [BulkOrderController::class, 'BulkOrderList'])->name('backend.bulk_order.list');
