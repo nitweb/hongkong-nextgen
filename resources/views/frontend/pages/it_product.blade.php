@@ -182,6 +182,26 @@
                     searchTimer = setTimeout(applyFilters, 500);
                 });
             }
+
+            // ✅ Clear All Fix
+            const clearBtn = document.getElementById('clear-all-filters');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Uncheck all checkboxes
+                    document.querySelectorAll('.js-filter-brand, .js-filter-it-category').forEach(function(cb) {
+                        cb.checked = false;
+                    });
+
+                    // Clear search input
+                    const searchInput = document.getElementById('it-search-input');
+                    if (searchInput) searchInput.value = '';
+
+                    // Redirect to clean URL
+                    window.location.href = '{{ route('it.product') }}';
+                });
+            }
         })();
     </script>
 

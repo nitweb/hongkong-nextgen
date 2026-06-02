@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Backend\AboutCompanyController;
 use App\Http\Controllers\Backend\AgeGroupController;
+use App\Http\Controllers\Backend\BatteryModuleController;
 use App\Http\Controllers\Backend\BlogCategoriesController;
 use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\BulkOrderController;
@@ -121,6 +122,9 @@ Route::middleware('web')->group(function () {
     Route::get('/ajax/products', [ProductController::class, 'ajaxProducts'])->name('ajax.products');
 
     Route::get('/ajax/flash-sale', [ProductController::class, 'ajaxFlashSale'])->name('ajax.flash.sale');
+
+    Route::get('/battery-management', [BatteryModuleController::class, 'frontend'])->name('frontend.battery');
+    Route::get('/battery-management/search', [BatteryModuleController::class, 'ajaxSearch'])->name('frontend.battery.search');
 });
 
 // #################### End: Frontend Controller ####################
@@ -192,11 +196,11 @@ Route::middleware('admin')->group(function () {
     Route::post('/backend/product/gallery/add', [ProductController::class, 'ProductGalleryAdd'])->name('backend.product.gallery.add');
 
     // IT Product Categories
-    Route::get('/backend/it-categories/list',       [ItProductCategoryController::class, 'List'])->name('backend.it_categories.list');
-    Route::get('/backend/it-categories/add',        [ItProductCategoryController::class, 'Add'])->name('backend.it_categories.add');
-    Route::post('/backend/it-categories/store',     [ItProductCategoryController::class, 'Store'])->name('backend.it_categories.store');
-    Route::get('/backend/it-categories/edit/{id}',  [ItProductCategoryController::class, 'Edit'])->name('backend.it_categories.edit');
-    Route::post('/backend/it-categories/update',    [ItProductCategoryController::class, 'Update'])->name('backend.it_categories.update');
+    Route::get('/backend/it-categories/list', [ItProductCategoryController::class, 'List'])->name('backend.it_categories.list');
+    Route::get('/backend/it-categories/add', [ItProductCategoryController::class, 'Add'])->name('backend.it_categories.add');
+    Route::post('/backend/it-categories/store', [ItProductCategoryController::class, 'Store'])->name('backend.it_categories.store');
+    Route::get('/backend/it-categories/edit/{id}', [ItProductCategoryController::class, 'Edit'])->name('backend.it_categories.edit');
+    Route::post('/backend/it-categories/update', [ItProductCategoryController::class, 'Update'])->name('backend.it_categories.update');
     Route::get('/backend/it-categories/delete/{id}', [ItProductCategoryController::class, 'Delete'])->name('backend.it_categories.delete');
 
     // Bulk Orders
@@ -248,6 +252,25 @@ Route::middleware('admin')->group(function () {
     Route::get('/backend/certificate/edit/{id}', [CertificateController::class, 'CertificateEdit'])->name('backend.certificate.edit');
     Route::post('/backend/certificate/update', [CertificateController::class, 'CertificateUpdate'])->name('backend.certificate.update');
     Route::get('/backend/certificate/delete/{id}', [CertificateController::class, 'CertificateDelete'])->name('backend.certificate.delete');
+
+    // Backend Battery Module
+    Route::prefix('backend/battery')
+        ->name('backend.battery.')
+        ->group(function () {
+            Route::get('/list', [BatteryModuleController::class, 'BatteryList'])->name('list');
+            Route::get('/add', [BatteryModuleController::class, 'BatteryAdd'])->name('add');
+            Route::post('/store', [BatteryModuleController::class, 'BatteryStore'])->name('store');
+            Route::get('/edit/{id}', [BatteryModuleController::class, 'BatteryEdit'])->name('edit');
+            Route::post('/update', [BatteryModuleController::class, 'BatteryUpdate'])->name('update');
+            Route::get('/delete/{id}', [BatteryModuleController::class, 'BatteryDelete'])->name('delete');
+
+            Route::get('/ad/list', [BatteryModuleController::class, 'BatteryAdList'])->name('ad.list');
+            Route::get('/ad/add', [BatteryModuleController::class, 'BatteryAdAdd'])->name('ad.add');
+            Route::post('/ad/store', [BatteryModuleController::class, 'BatteryAdStore'])->name('ad.store');
+            Route::get('/ad/edit/{id}', [BatteryModuleController::class, 'BatteryAdEdit'])->name('ad.edit');
+            Route::post('/ad/update', [BatteryModuleController::class, 'BatteryAdUpdate'])->name('ad.update');
+            Route::get('/ad/delete/{id}', [BatteryModuleController::class, 'BatteryAdDelete'])->name('ad.delete');
+        });
 
     // Font Awesome
     Route::get('/backend/site-settings/font-awesome', [SiteSettingsController::class, 'FontAwesome'])->name('backend.site_settings.font_awesome');

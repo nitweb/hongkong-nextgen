@@ -33,6 +33,8 @@ class GlobalController extends Controller
                 \App\Models\Blog::class,
                 \App\Models\ProductBrand::class,
                 \App\Models\Certificate::class,
+                \App\Models\BatteryAd::class,
+                \App\Models\BatteryModule::class,
             ];
 
             if (!in_array($modelClass, $allowedModels)) {

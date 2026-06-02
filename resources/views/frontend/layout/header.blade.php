@@ -55,7 +55,7 @@
                                     </ul>
                                 </li>
 
-                                <li><a href="#!">Battery Items</a></li>
+                                <li><a href="{{ route('frontend.battery') }}">Battery Items</a></li>
 
                                 <li><a href="{{ route('flash.sale') }}">Excess Inventory</a></li>
 
