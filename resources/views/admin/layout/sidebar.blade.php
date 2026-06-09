@@ -2,7 +2,6 @@
 
     <div data-simplebar class="h-100">
 
-
         <div id="sidebar-menu">
 
             <ul class="metismenu list-unstyled" id="side-menu">
@@ -18,7 +17,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
+                        <i data-feather="image"></i>
                         <span>Slider Manage</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -28,7 +27,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
+                        <i data-feather="info"></i>
                         <span>About Company</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -38,7 +37,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
+                        <i data-feather="target"></i>
                         <span>Mission/Vision/Values</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -48,7 +47,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
+                        <i data-feather="award"></i>
                         <span>Qualification Certificate</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -58,29 +57,31 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
+                        <i data-feather="box"></i>
                         <span>Product Manage</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('backend.product_brand.list') }}"><span>Brand List</span></a></li>
                         <li><a href="{{ route('backend.product_categories.list') }}"><span>Category List</span></a></li>
+                        <li><a href="{{ route('backend.it_categories.list') }}"><span>IT Category List</span></a></li>
                         <li><a href="{{ route('backend.products.list') }}"><span>Product List</span></a></li>
                     </ul>
                 </li>
 
-                {{-- <li>
+                <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
-                        <span>Product Review Manage</span>
+                        <i data-feather="battery-charging"></i>
+                        <span>Battery Management</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('product_review.list') }}"><span>Review List</span></a></li>
+                        <li><a href="{{ route('backend.battery.ad.list') }}"><span>Battery Ad List</span></a></li>
+                        <li><a href="{{ route('backend.battery.list') }}"><span>Battery List</span></a></li>
                     </ul>
-                </li> --}}
+                </li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
+                        <i data-feather="shopping-cart"></i>
                         <span>Order Manage</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -90,7 +91,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
+                        <i data-feather="edit-3"></i>
                         <span>Blog</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -101,7 +102,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
+                        <i data-feather="mail"></i>
                         <span>Contact Form</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -111,7 +112,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
+                        <i data-feather="settings"></i>
                         <span>Settings</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -122,7 +123,7 @@
 
                 <li>
                     <a href="{{ url('/analytics') }}" target="_blank">
-                        <i class="fas fa-chart-bar"></i>
+                        <i data-feather="bar-chart-2"></i>
                         <span>Site Analytics</span>
                     </a>
                 </li>

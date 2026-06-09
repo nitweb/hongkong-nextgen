@@ -26,6 +26,19 @@
                 <div class="col-xl-3 col-lg-3">
                     <div class="product__sidebar">
 
+                        {{-- IT Categories --}}
+                        @if ($it_category_data->count() > 0)
+                            <div class="shop-category product__sidebar-single">
+                                <h3 class="product__sidebar-title">Categories</h3>
+                                @foreach ($it_category_data as $itCat)
+                                    <label class="filter-check">
+                                        <input type="checkbox" class="js-filter-it-category" value="{{ $itCat->id }}" {{ in_array($itCat->id, (array) request('it_categories')) ? 'checked' : '' }}>
+                                        {{ $itCat->name }} ({{ $itCat->products_count }})
+                                    </label>
+                                @endforeach
+                            </div>
+                        @endif
+
                         {{-- Brands --}}
                         <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Brands</h3>
@@ -56,7 +69,7 @@
                         <div class="row">
                             <div class="col-xl-12">
                                 <div class="product__showing-result d-flex justify-content-between align-items-center">
-                                    <a href="{{ route('it.product') }}" id="clear-all-filters" style="{{ request()->hasAny(['brands', 'search']) ? '' : 'display:none;' }} color:red; text-decoration:underline;">
+                                    <a href="{{ route('it.product') }}" id="clear-all-filters" style="{{ request()->hasAny(['brands', 'search', 'it_categories']) ? '' : 'display:none;' }} color:red; text-decoration:underline;">
                                         Clear All
                                     </a>
                                     <div class="product__showing-text-box">
@@ -80,8 +93,9 @@
                                                 </div>
                                             </a>
                                             <div class="product__all-content">
+                                                {{-- IT category দেখাবে, না থাকলে general category --}}
                                                 <span class="product__category">
-                                                    {{ $item->category->product_category_name ?? 'Uncategorized' }}
+                                                    {{ $item->itCategory->name ?? ($item->category->product_category_name ?? 'Uncategorized') }}
                                                 </span>
                                                 <h4 class="product__all-title">
                                                     <a href="{{ route('product.details', $item->product_slug) }}">
@@ -141,27 +155,25 @@
         </div>
     </section>
 
-    {{-- ===== JS ===== --}}
     <script>
         (function() {
-
             function applyFilters() {
                 const brands = [...document.querySelectorAll('.js-filter-brand:checked')].map(el => el.value);
+                const itCategories = [...document.querySelectorAll('.js-filter-it-category:checked')].map(el => el.value);
                 const search = document.getElementById('it-search-input')?.value.trim() ?? '';
 
                 const params = new URLSearchParams();
                 brands.forEach(v => params.append('brands[]', v));
+                itCategories.forEach(v => params.append('it_categories[]', v));
                 if (search) params.set('search', search);
 
                 window.location.href = '{{ route('it.product') }}?' + params.toString();
             }
 
-            // Brand checkboxes
-            document.querySelectorAll('.js-filter-brand').forEach(function(checkbox) {
+            document.querySelectorAll('.js-filter-brand, .js-filter-it-category').forEach(function(checkbox) {
                 checkbox.addEventListener('change', applyFilters);
             });
 
-            // Search input with debounce
             let searchTimer;
             const searchInput = document.getElementById('it-search-input');
             if (searchInput) {
@@ -171,6 +183,25 @@
                 });
             }
 
+            // ✅ Clear All Fix
+            const clearBtn = document.getElementById('clear-all-filters');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Uncheck all checkboxes
+                    document.querySelectorAll('.js-filter-brand, .js-filter-it-category').forEach(function(cb) {
+                        cb.checked = false;
+                    });
+
+                    // Clear search input
+                    const searchInput = document.getElementById('it-search-input');
+                    if (searchInput) searchInput.value = '';
+
+                    // Redirect to clean URL
+                    window.location.href = '{{ route('it.product') }}';
+                });
+            }
         })();
     </script>
 

@@ -4,7 +4,6 @@
     <div class="page-content">
         <div class="container-fluid">
 
-            {{-- Breadcrumb --}}
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -21,7 +20,6 @@
                 </div>
             </div>
 
-            {{-- Form --}}
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -30,28 +28,54 @@
                             @include('widgets.errors')
 
                             <form action="{{ route('backend.products.update') }}" method="POST" enctype="multipart/form-data" class="row g-3">
-
                                 @csrf
-
                                 <input type="hidden" name="product_id" value="{{ $product_info->id }}">
+
+                                {{-- Excess Inventory --}}
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="flashSaleCheck" name="is_flash_sale" value="1" {{ old('is_flash_sale', $product_info->is_flash_sale) ? 'checked' : '' }}>
+                                    <label class="form-check-label">Excess Inventory Product</label>
+                                </div>
+
+                                <div id="flashSaleFields" style="display:none;">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Excess Inventory Quantity</label>
+                                        <input type="number" min="0" name="flash_sale_quantity" class="form-control" value="{{ old('flash_sale_quantity', $product_info->flash_sale_quantity) }}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Excess Inventory PDF</label>
+                                        <input type="file" name="flash_sale_pdf" class="form-control" accept="application/pdf">
+                                    </div>
+                                </div>
+
+                                {{-- IT Product --}}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="itProductCheck" name="is_it_product" value="1" {{ old('is_it_product', $product_info->is_it_product) ? 'checked' : '' }}>
+                                    <label class="form-check-label">IT Product</label>
+                                </div>
+
+                                {{-- IT Category --}}
+                                <div id="itCategoryField" style="display:none;">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">IT Product Category <span class="text-danger">*</span></label>
+                                        <select name="it_category_id" class="form-select" id="itCategorySelect">
+                                            <option value="">-- Select IT Category --</option>
+                                            @foreach ($it_categories as $itCat)
+                                                <option value="{{ $itCat->id }}" {{ old('it_category_id', $product_info->it_category_id) == $itCat->id ? 'selected' : '' }}>
+                                                    {{ $itCat->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
 
                                 {{-- Main Image --}}
                                 <div class="col-md-12">
                                     <label class="form-label">Main Image (583 × 583)</label>
                                     <input type="file" name="product_image" class="form-control" id="image">
-
-                                    @php
-                                        $img = $product_info->product_image ? $product_info->product_image : 'upload/no_image.jpg';
-                                    @endphp
-
+                                    @php $img = $product_info->product_image ?: 'upload/no_image.jpg'; @endphp
                                     <img id="showImage" src="{{ asset($img) }}" class="mt-2 rounded" style="width:120px;height:120px;object-fit:cover;">
                                 </div>
-
-                                {{-- Add New Gallery Images --}}
-                                {{-- <div class="col-md-12">
-                                    <label class="form-label">Add New Gallery Images</label>
-                                    <input type="file" name="product_gallery_images[]" class="form-control" multiple>
-                                </div> --}}
 
                                 {{-- Product Name --}}
                                 <div class="col-md-6">
@@ -65,23 +89,26 @@
                                     <input type="text" name="product_slug" class="form-control" value="{{ old('product_slug', $product_info->product_slug) }}" required>
                                 </div>
 
-                                {{-- Category --}}
-                                <div class="col-md-6">
-                                    <label class="form-label">Category</label>
-                                    <select name="product_category_id" class="form-select" required>
-                                        <option value="" disabled selected>Select Category</option>
-                                        @foreach ($categories as $cat)
-                                            <option value="{{ $cat->id }}" {{ old('product_category_id', $product_info->product_category_id) == $cat->id ? 'selected' : '' }}>
-                                                {{ $cat->product_category_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                {{-- Category & Brand (normal product only) --}}
+                                <div id="normalProductFields">
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label">Category</label>
+                                            <select name="product_category_id" class="form-select" id="categorySelect">
+                                                <option value="" disabled selected>Select Category</option>
+                                                @foreach ($categories as $cat)
+                                                    <option value="{{ $cat->id }}" {{ old('product_category_id', $product_info->product_category_id) == $cat->id ? 'selected' : '' }}>
+                                                        {{ $cat->product_category_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                {{-- Brand --}}
                                 <div class="col-md-6">
                                     <label class="form-label">Brand</label>
-                                    <select name="brand_id" class="form-select" required>
+                                    <select name="brand_id" class="form-select" id="brandSelect">
                                         <option value="" disabled selected>Select Brand</option>
                                         @foreach ($brands as $brand)
                                             <option value="{{ $brand->id }}" {{ old('brand_id', $product_info->brand_id) == $brand->id ? 'selected' : '' }}>
@@ -90,22 +117,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
-
-
-
-
-                                {{-- Price --}}
-                                {{-- <div class="col-md-6">
-                                    <label class="form-label">Price</label>
-                                    <input type="number" step="0.01" min="0" name="product_price" class="form-control" value="{{ old('product_price', $product_info->product_price) }}" required>
-                                </div> --}}
-
-                                {{-- Discount --}}
-                                {{-- <div class="col-md-6">
-                                    <label class="form-label">Discount Price</label>
-                                    <input type="number" step="0.01" min="0" name="discount_price" class="form-control" value="{{ old('discount_price', $product_info->discount_price) }}">
-                                </div> --}}
 
                                 {{-- Part Number --}}
                                 <div class="col-md-6">
@@ -125,14 +136,12 @@
                                     <input type="text" name="date_code" class="form-control" value="{{ old('date_code', $product_info->date_code) }}" required>
                                 </div>
 
-
                                 {{-- Specifications --}}
                                 <div class="col-12">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <label class="form-label">Specifications</label>
                                         <button type="button" id="addSpecBtn" class="btn btn-sm btn-primary">+ Add</button>
                                     </div>
-
                                     <div id="specWrapper" class="mt-2">
                                         @foreach ($product_info->specifications as $spec)
                                             <div class="row specRow mb-2">
@@ -153,34 +162,7 @@
                                 {{-- Description --}}
                                 <div class="col-12">
                                     <label class="form-label">Product Description</label>
-                                    <textarea name="product_description" class="form-control summernote">
-                                        {{ old('product_description', $product_info->product_description) }}
-                                    </textarea>
-                                </div>
-
-                                {{-- Excess Inventory --}}
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" id="flashSaleCheck" name="is_flash_sale" value="1" {{ old('is_flash_sale', $product_info->is_flash_sale ?? false) ? 'checked' : '' }}>
-                                    <label class="form-check-label">Excess Inventory Product</label>
-                                </div>
-
-                                {{-- Excess Inventory Extra Fields --}}
-                                <div id="flashSaleFields" style="display:none;">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Excess Inventory Quantity</label>
-                                        <input type="number" min="0" name="flash_sale_quantity" class="form-control" value="{{ old('flash_sale_quantity', $product_info->flash_sale_quantity ?? '') }}">
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Excess Inventory PDF</label>
-                                        <input type="file" name="flash_sale_pdf" class="form-control" accept="application/pdf">
-                                    </div>
-                                </div>
-
-                                {{-- IT Product --}}
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="is_it_product" value="1" {{ old('is_it_product', $product_info->is_it_product) ? 'checked' : '' }}>
-                                    <label class="form-check-label">IT Product</label>
+                                    <textarea name="product_description" class="form-control summernote">{{ old('product_description', $product_info->product_description) }}</textarea>
                                 </div>
 
                                 {{-- Stock Status --}}
@@ -211,9 +193,7 @@
 
                                 {{-- Submit --}}
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-sm">
-                                        Update Product
-                                    </button>
+                                    <button type="submit" class="btn btn-primary btn-sm">Update Product</button>
                                 </div>
 
                             </form>
@@ -226,7 +206,6 @@
                                     @foreach ($product_info->galleries as $gallery)
                                         <div class="col-md-2 mb-3 text-center">
                                             <img src="{{ asset('upload/product_gallery/' . $gallery->product_gallery_image) }}" class="img-thumbnail mb-2" style="height:120px;object-fit:cover;">
-
                                             <form action="{{ route('backend.product.gallery.delete', $gallery->id) }}" method="POST" onsubmit="return confirm('Delete this image?')">
                                                 @csrf
                                                 @method('DELETE')
@@ -245,53 +224,50 @@
         </div>
     </div>
 
-    {{-- Scripts --}}
     <script>
-        // main image preview
+        // Image preview
         $('#image').change(function(e) {
             let reader = new FileReader();
             reader.onload = e => $('#showImage').attr('src', e.target.result);
             reader.readAsDataURL(e.target.files[0]);
         });
 
-        // add spec
+        // Spec rows
         $('#addSpecBtn').click(function() {
             $('#specWrapper').append(`
-            <div class="row specRow mb-2">
-                <div class="col-md-4">
-                    <input type="text" name="spec_key[]" class="form-control">
+                <div class="row specRow mb-2">
+                    <div class="col-md-4"><input type="text" name="spec_key[]" class="form-control"></div>
+                    <div class="col-md-7"><input type="text" name="spec_value[]" class="form-control"></div>
+                    <div class="col-md-1 d-grid"><button type="button" class="btn btn-danger btn-sm removeSpec">X</button></div>
                 </div>
-                <div class="col-md-7">
-                    <input type="text" name="spec_value[]" class="form-control">
-                </div>
-                <div class="col-md-1 d-grid">
-                    <button type="button" class="btn btn-danger btn-sm removeSpec">X</button>
-                </div>
-            </div>
-        `);
+            `);
         });
-
         $(document).on('click', '.removeSpec', function() {
             $(this).closest('.specRow').remove();
         });
-    </script>
 
-    <script>
+        // Excess Inventory toggle
         function toggleFlashSaleFields() {
-            if ($('#flashSaleCheck').is(':checked')) {
-                $('#flashSaleFields').slideDown();
+            $('#flashSaleCheck').is(':checked') ? $('#flashSaleFields').slideDown() : $('#flashSaleFields').slideUp();
+        }
+        toggleFlashSaleFields();
+        $('#flashSaleCheck').on('change', toggleFlashSaleFields);
+
+        // IT Product toggle
+        function toggleItProductFields() {
+            if ($('#itProductCheck').is(':checked')) {
+                $('#normalProductFields').slideUp(); // category লুকাবে
+                $('#itCategoryField').slideDown();
+                $('#categorySelect').removeAttr('required');
+                // brand একটু নিচে সবসময় দেখা যাচ্ছে, required-ই থাকবে
             } else {
-                $('#flashSaleFields').slideUp();
+                $('#normalProductFields').slideDown();
+                $('#itCategoryField').slideUp();
+                $('#categorySelect').attr('required', true);
             }
         }
-
-        // on page load
-        toggleFlashSaleFields();
-
-        // on checkbox click
-        $('#flashSaleCheck').on('change', function() {
-            toggleFlashSaleFields();
-        });
+        toggleItProductFields();
+        $('#itProductCheck').on('change', toggleItProductFields);
     </script>
 
     @include('admin.layout.custom_scripts')

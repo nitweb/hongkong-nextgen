@@ -341,7 +341,7 @@ class FrontendController extends Controller
     {
         $query = Product::where('is_it_product', true)
             ->where('status', 'active')
-            ->with('category', 'brand', 'galleries');
+            ->with('category', 'brand', 'galleries', 'itCategory');
 
         // Search
         if ($request->filled('search')) {
@@ -359,11 +359,16 @@ class FrontendController extends Controller
             $query->whereIn('brand_id', $request->brands);
         }
 
+        // IT Category filter
+        if ($request->filled('it_categories')) {
+            $query->whereIn('it_category_id', $request->it_categories);
+        }
+
         $product_data = $query->orderBy('created_at', 'desc')->paginate(12)->withQueryString();
 
         if ($request->ajax()) {
             return response()->json([
-                'html' => view('frontend.partials.product-list', compact('product_data'))->render(),
+                'html'         => view('frontend.partials.product-list', compact('product_data'))->render(),
                 'showing_text' => 'Showing ' . ($product_data->firstItem() ?? 0) . '–' . ($product_data->lastItem() ?? 0) . ' of ' . $product_data->total() . ' results',
             ]);
         }
@@ -374,7 +379,13 @@ class FrontendController extends Controller
             ->orderBy('product_brand_name')
             ->get();
 
-        return view('frontend.pages.it_product', compact('product_data', 'product_brand_data'));
+        $it_category_data = \App\Models\ItProductCategory::where('status', 'active')
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')])
+            ->having('products_count', '>', 0)
+            ->orderBy('name')
+            ->get();
+
+        return view('frontend.pages.it_product', compact('product_data', 'product_brand_data', 'it_category_data'));
     }
 
     public function ajaxSearch(Request $request)
