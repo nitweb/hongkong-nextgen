@@ -25,6 +25,11 @@ class Product extends Model
         return $this->belongsTo(ProductCategory::class, 'product_category_id');
     }
 
+    public function itCategory()
+    {
+        return $this->belongsTo(ItProductCategory::class, 'it_category_id');
+    }
+
     public function galleries()
     {
         return $this->hasMany(ProductGallery::class, 'product_id');
