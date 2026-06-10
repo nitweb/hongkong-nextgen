@@ -389,12 +389,13 @@ class FrontendController extends Controller
     public function ajaxSearch(Request $request)
     {
         $query = $request->get('query');
+
         $products = Product::where('status', 'active')
+            ->with('brand')
             ->where(function ($q) use ($query) {
-                $q->where('product_name', 'like', "%{$query}%")
-                    ->orWhere('product_part_number', 'like', "%{$query}%")
-                    ->orWhere('package', 'like', "%{$query}%")
-                    ->orWhere('date_code', 'like', "%{$query}%");
+                $q->where('product_name', 'like', "%{$query}%")->orWhereHas('brand', function ($bq) use ($query) {
+                    $bq->where('product_brand_name', 'like', "%{$query}%");
+                });
             })
             ->limit(8)
             ->get();
@@ -406,20 +407,20 @@ class FrontendController extends Controller
                     '<a href="' .
                     route('product.details', $product->product_slug) .
                     '"
-                   style="display:flex;gap:12px;padding:10px;border-bottom:1px solid #eee;text-decoration:none;">
-                    <img src="' .
+               style="display:flex;gap:12px;padding:10px;border-bottom:1px solid #eee;text-decoration:none;">
+                <img src="' .
                     asset($product->product_image) .
                     '"
-                         style="width:50px;height:50px;border-radius:6px;object-fit:cover;">
-                    <div>
-                        <div style="font-weight:600;color:#222;">' .
+                     style="width:50px;height:50px;border-radius:6px;object-fit:cover;">
+                <div>
+                    <div style="font-weight:600;color:#222;">' .
                     e(Str::limit($product->product_name, 45)) .
                     '</div>
-                        <div style="color:#888;font-size:12px;margin-top:3px;">' .
-                    e($product->product_part_number) .
+                    <div style="color:#888;font-size:12px;margin-top:3px;">' .
+                    e($product->brand->product_brand_name ?? '') .
                     '</div>
-                    </div>
-                </a>';
+                </div>
+            </a>';
             }
         } else {
             $html = '<p style="padding:12px;text-align:center;color:#888;">No products found</p>';
