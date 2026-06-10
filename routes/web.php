@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Backend\AboutCompanyController;
 use App\Http\Controllers\Backend\AgeGroupController;
+use App\Http\Controllers\Backend\BatteryCategoryController;
 use App\Http\Controllers\Backend\BatteryModuleController;
 use App\Http\Controllers\Backend\BlogCategoriesController;
 use App\Http\Controllers\Backend\BlogController;
@@ -123,6 +124,7 @@ Route::middleware('web')->group(function () {
 
     Route::get('/ajax/flash-sale', [ProductController::class, 'ajaxFlashSale'])->name('ajax.flash.sale');
 
+    // Battery Frontend
     Route::get('/battery-management', [BatteryModuleController::class, 'frontend'])->name('frontend.battery');
     Route::get('/battery-management/search', [BatteryModuleController::class, 'ajaxSearch'])->name('frontend.battery.search');
 });
@@ -271,6 +273,14 @@ Route::middleware('admin')->group(function () {
             Route::post('/ad/update', [BatteryModuleController::class, 'BatteryAdUpdate'])->name('ad.update');
             Route::get('/ad/delete/{id}', [BatteryModuleController::class, 'BatteryAdDelete'])->name('ad.delete');
         });
+
+    // Battery Categories
+    Route::get('/backend/battery-category/list', [BatteryCategoryController::class, 'List'])->name('backend.battery_category.list');
+    Route::get('/backend/battery-category/add', [BatteryCategoryController::class, 'Add'])->name('backend.battery_category.add');
+    Route::post('/backend/battery-category/store', [BatteryCategoryController::class, 'Store'])->name('backend.battery_category.store');
+    Route::get('/backend/battery-category/edit/{id}', [BatteryCategoryController::class, 'Edit'])->name('backend.battery_category.edit');
+    Route::post('/backend/battery-category/update', [BatteryCategoryController::class, 'Update'])->name('backend.battery_category.update');
+    Route::get('/backend/battery-category/delete/{id}', [BatteryCategoryController::class, 'Delete'])->name('backend.battery_category.delete');
 
     // Font Awesome
     Route::get('/backend/site-settings/font-awesome', [SiteSettingsController::class, 'FontAwesome'])->name('backend.site_settings.font_awesome');

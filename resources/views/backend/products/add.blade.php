@@ -30,65 +30,96 @@
                             <form action="{{ route('backend.products.store') }}" method="POST" enctype="multipart/form-data" class="row g-3">
                                 @csrf
 
-                                {{-- Excess Inventory --}}
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" id="flashSaleCheck" name="is_flash_sale" value="1" {{ old('is_flash_sale') ? 'checked' : '' }}>
-                                    <label class="form-check-label">Excess Inventory Product</label>
-                                </div>
-
-                                <div id="flashSaleFields" style="display:none;">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Excess Inventory Quantity</label>
-                                        <input type="number" min="0" name="flash_sale_quantity" class="form-control" value="{{ old('flash_sale_quantity') }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Excess Inventory PDF</label>
-                                        <input type="file" name="flash_sale_pdf" class="form-control" accept="application/pdf">
+                                {{-- ===== Excess Inventory ===== --}}
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="flashSaleCheck" name="is_flash_sale" value="1" {{ old('is_flash_sale') ? 'checked' : '' }}>
+                                        <label class="form-check-label">Excess Inventory Product</label>
                                     </div>
                                 </div>
 
-                                {{-- IT Product --}}
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="itProductCheck" name="is_it_product" value="1" {{ old('is_it_product') ? 'checked' : '' }}>
-                                    <label class="form-check-label">IT Product</label>
-                                </div>
-
-                                {{-- IT Category (IT Product checked হলে দেখাবে) --}}
-                                <div id="itCategoryField" style="display:none;">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">IT Product Category <span class="text-danger">*</span></label>
-                                        <select name="it_category_id" class="form-select" id="itCategorySelect">
-                                            <option value="">-- Select IT Category --</option>
-                                            @foreach ($it_categories as $itCat)
-                                                <option value="{{ $itCat->id }}" {{ old('it_category_id') == $itCat->id ? 'selected' : '' }}>
-                                                    {{ $itCat->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                <div id="flashSaleFields" style="display:none;" class="col-12">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Excess Inventory Quantity</label>
+                                            <input type="number" min="0" name="flash_sale_quantity" class="form-control" value="{{ old('flash_sale_quantity') }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Excess Inventory PDF</label>
+                                            <input type="file" name="flash_sale_pdf" class="form-control" accept="application/pdf">
+                                        </div>
                                     </div>
                                 </div>
 
-                                {{-- Main Image --}}
+                                {{-- ===== IT Product ===== --}}
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="itProductCheck" name="is_it_product" value="1" {{ old('is_it_product') ? 'checked' : '' }}>
+                                        <label class="form-check-label">IT Product</label>
+                                    </div>
+                                </div>
+
+                                <div id="itCategoryField" style="display:none;" class="col-12">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">IT Product Category <span class="text-danger">*</span></label>
+                                            <select name="it_category_id" class="form-select" id="itCategorySelect">
+                                                <option value="">-- Select IT Category --</option>
+                                                @foreach ($it_categories as $itCat)
+                                                    <option value="{{ $itCat->id }}" {{ old('it_category_id') == $itCat->id ? 'selected' : '' }}>
+                                                        {{ $itCat->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- ===== Battery Product ===== --}}
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="batteryCheck" name="is_battery" value="1" {{ old('is_battery') ? 'checked' : '' }}>
+                                        <label class="form-check-label">Battery Product</label>
+                                    </div>
+                                </div>
+
+                                <div id="batteryFields" style="display:none;" class="col-12">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Battery Category <span class="text-danger">*</span></label>
+                                            <select name="battery_category_id" class="form-select" id="batteryCategorySelect">
+                                                <option value="">-- Select Battery Category --</option>
+                                                @foreach ($battery_categories as $bCat)
+                                                    <option value="{{ $bCat->id }}" {{ old('battery_category_id') == $bCat->id ? 'selected' : '' }}>
+                                                        {{ $bCat->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- ===== Main Image ===== --}}
                                 <div class="col-md-12">
                                     <label class="form-label">Main Image (583 × 583)</label>
                                     <input type="file" name="product_image" class="form-control" id="image">
                                     <img id="showImage" src="{{ asset('upload/no_image.jpg') }}" class="mt-2 rounded" style="width:120px;height:120px;object-fit:cover;">
                                 </div>
 
-                                {{-- Product Name --}}
+                                {{-- ===== Product Name ===== --}}
                                 <div class="col-md-6">
-                                    <label class="form-label">Product Name</label>
+                                    <label class="form-label">Product Name <span class="text-danger">*</span></label>
                                     <input type="text" name="product_name" class="form-control" value="{{ old('product_name') }}" required>
                                 </div>
 
-                                {{-- Slug --}}
+                                {{-- ===== Slug ===== --}}
                                 <div class="col-md-6">
-                                    <label class="form-label">Product Slug</label>
+                                    <label class="form-label">Product Slug <span class="text-danger">*</span></label>
                                     <input type="text" name="product_slug" id="product_slug" class="form-control" value="{{ old('product_slug') }}" required>
                                 </div>
 
-                                {{-- Category & Brand (normal product only) --}}
-                                <div id="normalProductFields">
+                                {{-- ===== Normal Product Category ===== --}}
+                                <div id="normalProductFields" class="col-12">
                                     <div class="row g-3">
                                         <div class="col-md-12">
                                             <label class="form-label">Category</label>
@@ -104,6 +135,7 @@
                                     </div>
                                 </div>
 
+                                {{-- ===== Brand ===== --}}
                                 <div class="col-md-6">
                                     <label class="form-label">Brand</label>
                                     <select name="brand_id" class="form-select" id="brandSelect">
@@ -116,25 +148,25 @@
                                     </select>
                                 </div>
 
-                                {{-- Part Number --}}
+                                {{-- ===== Part Number ===== --}}
                                 <div class="col-md-6">
                                     <label class="form-label">Product Part Number</label>
-                                    <input type="text" name="product_part_number" class="form-control" value="{{ old('product_part_number') }}" required>
+                                    <input type="text" name="product_part_number" class="form-control" value="{{ old('product_part_number') }}">
                                 </div>
 
-                                {{-- Package --}}
+                                {{-- ===== Package ===== --}}
                                 <div class="col-md-6">
                                     <label class="form-label">Package</label>
-                                    <input type="text" name="package" class="form-control" value="{{ old('package') }}" required>
+                                    <input type="text" name="package" class="form-control" value="{{ old('package') }}">
                                 </div>
 
-                                {{-- Date Code --}}
+                                {{-- ===== Date Code ===== --}}
                                 <div class="col-md-6">
                                     <label class="form-label">Date Code</label>
-                                    <input type="text" name="date_code" class="form-control" value="{{ old('date_code') }}" required>
+                                    <input type="text" name="date_code" class="form-control" value="{{ old('date_code') }}">
                                 </div>
 
-                                {{-- Specifications --}}
+                                {{-- ===== Specifications ===== --}}
                                 <div class="col-12">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <label class="form-label">Specifications</label>
@@ -155,13 +187,13 @@
                                     </div>
                                 </div>
 
-                                {{-- Description --}}
+                                {{-- ===== Description ===== --}}
                                 <div class="col-12">
                                     <label class="form-label">Product Description</label>
                                     <textarea name="product_description" class="form-control summernote">{{ old('product_description') }}</textarea>
                                 </div>
 
-                                {{-- Stock Status --}}
+                                {{-- ===== Stock Status ===== --}}
                                 <div class="col-12">
                                     <label class="form-label d-block">Stock Status</label>
                                     <div class="form-check form-check-inline">
@@ -174,7 +206,7 @@
                                     </div>
                                 </div>
 
-                                {{-- Status --}}
+                                {{-- ===== Status ===== --}}
                                 <div class="col-12">
                                     <label class="form-label d-block">Status</label>
                                     <div class="form-check form-check-inline">
@@ -187,13 +219,12 @@
                                     </div>
                                 </div>
 
-                                {{-- Submit --}}
+                                {{-- ===== Submit ===== --}}
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary btn-sm">Create Product</button>
                                 </div>
 
                             </form>
-
                         </div>
                     </div>
                 </div>
@@ -239,12 +270,12 @@
         toggleFlashSaleFields();
         $('#flashSaleCheck').on('change', toggleFlashSaleFields);
 
+        // IT Product toggle
         function toggleItProductFields() {
             if ($('#itProductCheck').is(':checked')) {
-                $('#normalProductFields').slideUp(); // category লুকাবে
+                $('#normalProductFields').slideUp();
                 $('#itCategoryField').slideDown();
                 $('#categorySelect').removeAttr('required');
-                // brand একটু নিচে সবসময় দেখা যাচ্ছে, required-ই থাকবে
             } else {
                 $('#normalProductFields').slideDown();
                 $('#itCategoryField').slideUp();
@@ -253,6 +284,40 @@
         }
         toggleItProductFields();
         $('#itProductCheck').on('change', toggleItProductFields);
+
+        // Battery Product toggle
+        function toggleBatteryFields() {
+            if ($('#batteryCheck').is(':checked')) {
+                $('#normalProductFields').slideUp();
+                $('#batteryFields').slideDown();
+                $('#categorySelect').removeAttr('required');
+            } else {
+                // IT Product checked না থাকলেই normal fields দেখাবে
+                if (!$('#itProductCheck').is(':checked')) {
+                    $('#normalProductFields').slideDown();
+                    $('#categorySelect').attr('required', true);
+                }
+                $('#batteryFields').slideUp();
+            }
+        }
+        toggleBatteryFields();
+        $('#batteryCheck').on('change', toggleBatteryFields);
+
+        // একসাথে দুটো check না হয় সেটা handle করা
+        $('#itProductCheck').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#batteryCheck').prop('checked', false);
+                $('#batteryFields').slideUp();
+            }
+            toggleItProductFields();
+        });
+        $('#batteryCheck').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#itProductCheck').prop('checked', false);
+                $('#itCategoryField').slideUp();
+            }
+            toggleBatteryFields();
+        });
     </script>
 
     @include('admin.layout.custom_scripts')

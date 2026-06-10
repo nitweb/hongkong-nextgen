@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\BatteryCategory;
 use App\Models\ItProductCategory;
 use App\Models\Product;
 use App\Models\ProductBrand;
@@ -22,7 +23,7 @@ class ProductController extends Controller
     /* ===================== Product List ===================== */
     public function ProductList()
     {
-        $product_list = Product::with(['category', 'brand', 'itCategory'])
+        $product_list = Product::with(['category', 'brand', 'itCategory', 'batteryCategory'])
             ->latest()
             ->get();
 
@@ -35,23 +36,25 @@ class ProductController extends Controller
         $categories = ProductCategory::where('product_category_status', 'active')->get();
         $brands = ProductBrand::where('product_brand_status', 'active')->orderBy('id')->get();
         $it_categories = ItProductCategory::where('status', 'active')->orderBy('name')->get();
+        $battery_categories = BatteryCategory::where('status', 'active')->orderBy('name')->get();
 
-        return view('backend.products.add', compact('categories', 'brands', 'it_categories'));
+        return view('backend.products.add', compact('categories', 'brands', 'it_categories', 'battery_categories'));
     }
 
     /* ===================== Store ===================== */
     public function ProductStore(Request $request)
     {
         $isItProduct = $request->boolean('is_it_product');
+        $isBattery = $request->boolean('is_battery');
 
         $rules = [
             'product_name' => 'required|string|max:255',
             'product_slug' => 'required|string|max:255|unique:products,product_slug',
             'product_price' => 'nullable|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0',
-            'product_part_number' => 'required|string|max:255',
-            'package' => 'required|string|max:255',
-            'date_code' => 'required|string|max:255',
+            'product_part_number' => 'nullable|string|max:255',
+            'package' => 'nullable|string|max:255',
+            'date_code' => 'nullable|string|max:255',
             'product_description' => 'nullable|string',
             'product_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'product_gallery_images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -59,6 +62,7 @@ class ProductController extends Controller
             'status' => 'required|in:active,inactive',
             'is_flash_sale' => 'nullable|boolean',
             'is_it_product' => 'nullable|boolean',
+            'is_battery' => 'nullable|boolean',
             'flash_sale_quantity' => 'nullable|integer|min:1',
             'flash_sale_pdf' => 'nullable|mimes:pdf|max:5120',
             'spec_key.*' => 'nullable|string|max:191',
@@ -67,24 +71,25 @@ class ProductController extends Controller
 
         if ($isItProduct) {
             $rules['it_category_id'] = 'required|exists:it_product_categories,id';
-            $rules['product_category_id'] = 'nullable|exists:product_categories,id';
-            $rules['brand_id'] = 'required|exists:product_brands,id'; // ✅ required রাখো
-        } else {
-            $rules['product_category_id'] = 'required|exists:product_categories,id';
-            $rules['brand_id'] = 'required|exists:product_brands,id';
+            $rules['product_category_id'] = 'nullable';
+            $rules['brand_id'] = 'nullable|exists:product_brands,id';
+            $rules['battery_category_id'] = 'nullable';
+        } elseif ($isBattery) {
+            $rules['battery_category_id'] = 'required|exists:battery_categories,id';
+            $rules['product_category_id'] = 'nullable';
+            $rules['brand_id'] = 'nullable|exists:product_brands,id';
             $rules['it_category_id'] = 'nullable';
+        } else {
+            $rules['product_category_id'] = 'nullable|exists:product_categories,id';
+            $rules['brand_id'] = 'nullable|exists:product_brands,id';
+            $rules['it_category_id'] = 'nullable';
+            $rules['battery_category_id'] = 'nullable';
         }
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
-        }
-
-        if ($request->discount_price && $request->discount_price > $request->product_price) {
-            return back()
-                ->withErrors(['discount_price' => 'Discount price cannot be greater than product price'])
-                ->withInput();
         }
 
         try {
@@ -95,7 +100,7 @@ class ProductController extends Controller
             $product = Product::create([
                 'product_name' => $request->product_name,
                 'product_slug' => Str::slug($request->product_slug),
-                'product_category_id' => $isItProduct ? null : $request->product_category_id,
+                'product_category_id' => $isItProduct || $isBattery ? null : $request->product_category_id,
                 'brand_id' => $request->brand_id,
                 'product_price' => $request->product_price,
                 'discount_price' => $request->discount_price,
@@ -109,6 +114,8 @@ class ProductController extends Controller
                 'flash_sale_quantity' => $request->flash_sale_quantity,
                 'is_it_product' => $isItProduct,
                 'it_category_id' => $isItProduct ? $request->it_category_id : null,
+                'is_battery' => $isBattery,
+                'battery_category_id' => $isBattery ? $request->battery_category_id : null,
             ]);
 
             /* ---- Main Image ---- */
@@ -130,10 +137,14 @@ class ProductController extends Controller
             if ($request->hasFile('product_gallery_images')) {
                 foreach ($request->file('product_gallery_images') as $file) {
                     $name = uniqid('gallery_', true) . '.' . $file->getClientOriginalExtension();
+                    $galleryPath = public_path('upload/product_gallery/');
+                    if (!file_exists($galleryPath)) {
+                        mkdir($galleryPath, 0755, true);
+                    }
                     $manager
                         ->read($file)
                         ->resize(583, 583)
-                        ->save(public_path('upload/product_gallery/' . $name));
+                        ->save($galleryPath . $name);
                     ProductGallery::create(['product_id' => $product->id, 'product_gallery_image' => $name]);
                 }
             }
@@ -147,8 +158,7 @@ class ProductController extends Controller
                 $pdf = $request->file('flash_sale_pdf');
                 $pdfName = uniqid('flash_', true) . '.' . $pdf->getClientOriginalExtension();
                 $pdf->move($pdfDir, $pdfName);
-                $product->flash_sale_pdf = 'upload/flash_sale_pdf/' . $pdfName;
-                $product->save();
+                $product->update(['flash_sale_pdf' => 'upload/flash_sale_pdf/' . $pdfName]);
             }
 
             /* ---- Specifications ---- */
@@ -170,8 +180,10 @@ class ProductController extends Controller
                 ->with(['message' => 'Product created successfully!', 'alert-type' => 'success']);
         } catch (\Throwable $e) {
             DB::rollBack();
-            Log::error($e->getMessage());
-            return back()->with(['message' => 'Product create failed', 'alert-type' => 'error']);
+            Log::error('ProductStore Error: ' . $e->getMessage() . ' | Line: ' . $e->getLine());
+            return back()
+                ->withInput()
+                ->with(['message' => 'Product create failed.', 'alert-type' => 'error']);
         }
     }
 
@@ -182,14 +194,16 @@ class ProductController extends Controller
         $categories = ProductCategory::where('product_category_status', 'active')->get();
         $brands = ProductBrand::where('product_brand_status', 'active')->orderBy('id')->get();
         $it_categories = ItProductCategory::where('status', 'active')->orderBy('name')->get();
+        $battery_categories = BatteryCategory::where('status', 'active')->orderBy('name')->get();
 
-        return view('backend.products.edit', compact('product_info', 'categories', 'brands', 'it_categories'));
+        return view('backend.products.edit', compact('product_info', 'categories', 'brands', 'it_categories', 'battery_categories'));
     }
 
     /* ===================== Update ===================== */
     public function ProductUpdate(Request $request)
     {
         $isItProduct = $request->boolean('is_it_product');
+        $isBattery = $request->boolean('is_battery');
 
         $rules = [
             'product_id' => 'required|exists:products,id',
@@ -197,9 +211,9 @@ class ProductController extends Controller
             'product_slug' => 'required|string|max:255',
             'product_price' => 'nullable|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0',
-            'product_part_number' => 'required|string|max:255',
-            'package' => 'required|string|max:255',
-            'date_code' => 'required|string|max:255',
+            'product_part_number' => 'nullable|string|max:255',
+            'package' => 'nullable|string|max:255',
+            'date_code' => 'nullable|string|max:255',
             'product_description' => 'nullable|string',
             'product_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'product_gallery_images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -207,6 +221,7 @@ class ProductController extends Controller
             'status' => 'required|in:active,inactive',
             'is_flash_sale' => 'nullable|boolean',
             'is_it_product' => 'nullable|boolean',
+            'is_battery' => 'nullable|boolean',
             'flash_sale_quantity' => 'nullable|integer|min:1',
             'flash_sale_pdf' => 'nullable|mimes:pdf|max:5120',
             'spec_key.*' => 'nullable|string|max:191',
@@ -215,16 +230,22 @@ class ProductController extends Controller
 
         if ($isItProduct) {
             $rules['it_category_id'] = 'required|exists:it_product_categories,id';
-            $rules['product_category_id'] = 'nullable|exists:product_categories,id';
-            $rules['brand_id'] = 'required|exists:product_brands,id'; // ✅ required রাখো
-        } else {
-            $rules['product_category_id'] = 'required|exists:product_categories,id';
-            $rules['brand_id'] = 'required|exists:product_brands,id';
+            $rules['product_category_id'] = 'nullable';
+            $rules['brand_id'] = 'nullable|exists:product_brands,id';
+            $rules['battery_category_id'] = 'nullable';
+        } elseif ($isBattery) {
+            $rules['battery_category_id'] = 'required|exists:battery_categories,id';
+            $rules['product_category_id'] = 'nullable';
+            $rules['brand_id'] = 'nullable|exists:product_brands,id';
             $rules['it_category_id'] = 'nullable';
+        } else {
+            $rules['product_category_id'] = 'nullable|exists:product_categories,id';
+            $rules['brand_id'] = 'nullable|exists:product_brands,id';
+            $rules['it_category_id'] = 'nullable';
+            $rules['battery_category_id'] = 'nullable';
         }
 
         $validator = Validator::make($request->all(), $rules);
-
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
@@ -241,12 +262,6 @@ class ProductController extends Controller
                 ->withInput();
         }
 
-        if ($request->discount_price && $request->discount_price > $request->product_price) {
-            return back()
-                ->withErrors(['discount_price' => 'Discount price cannot be greater than product price'])
-                ->withInput();
-        }
-
         try {
             DB::beginTransaction();
 
@@ -255,7 +270,7 @@ class ProductController extends Controller
             $product->update([
                 'product_name' => $request->product_name,
                 'product_slug' => Str::slug($request->product_slug),
-                'product_category_id' => $isItProduct ? null : $request->product_category_id,
+                'product_category_id' => $isItProduct || $isBattery ? null : $request->product_category_id,
                 'brand_id' => $request->brand_id,
                 'product_price' => $request->product_price,
                 'discount_price' => $request->discount_price,
@@ -269,6 +284,8 @@ class ProductController extends Controller
                 'flash_sale_quantity' => $request->flash_sale_quantity,
                 'is_it_product' => $isItProduct,
                 'it_category_id' => $isItProduct ? $request->it_category_id : null,
+                'is_battery' => $isBattery,
+                'battery_category_id' => $isBattery ? $request->battery_category_id : null,
             ]);
 
             /* ---- Main Image ---- */
@@ -317,8 +334,7 @@ class ProductController extends Controller
                 $pdf = $request->file('flash_sale_pdf');
                 $pdfName = uniqid('flash_', true) . '.' . $pdf->getClientOriginalExtension();
                 $pdf->move($pdfDir, $pdfName);
-                $product->flash_sale_pdf = 'upload/flash_sale_pdf/' . $pdfName;
-                $product->save();
+                $product->update(['flash_sale_pdf' => 'upload/flash_sale_pdf/' . $pdfName]);
             }
 
             /* ---- Specifications ---- */
@@ -341,10 +357,10 @@ class ProductController extends Controller
                 ->with(['message' => 'Product updated successfully!', 'alert-type' => 'success']);
         } catch (\Throwable $e) {
             DB::rollBack();
-            Log::error('Product Update Error: ' . $e->getMessage());
+            Log::error('ProductUpdate Error: ' . $e->getMessage() . ' | Line: ' . $e->getLine());
             return back()
-                ->with(['message' => 'Product update failed', 'alert-type' => 'error'])
-                ->withInput();
+                ->withInput()
+                ->with(['message' => 'Product update failed.', 'alert-type' => 'error']);
         }
     }
 
@@ -356,7 +372,6 @@ class ProductController extends Controller
         foreach ($product->galleries as $gallery) {
             @unlink(public_path('upload/product_gallery/' . $gallery->product_gallery_image));
         }
-
         if ($product->product_image) {
             @unlink(public_path($product->product_image));
         }
@@ -366,7 +381,7 @@ class ProductController extends Controller
         return back()->with(['message' => 'Product deleted successfully!', 'alert-type' => 'success']);
     }
 
-    /* ===================== AJAX Methods ===================== */
+    /* ===================== AJAX: Products Page ===================== */
     public function ajaxSearch(Request $request)
     {
         $query = $request->input('query');
@@ -381,7 +396,7 @@ class ProductController extends Controller
         $categories = $request->input('categories', []);
         $brands = $request->input('brands', []);
 
-        $products = Product::query();
+        $products = Product::query()->where('is_battery', false)->where('is_it_product', false);
 
         if ($query) {
             $products->where('product_name', 'LIKE', "%{$query}%");

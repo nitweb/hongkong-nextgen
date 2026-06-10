@@ -11,6 +11,7 @@ class Product extends Model
     protected $casts = [
         'is_flash_sale' => 'boolean',
         'is_it_product' => 'boolean',
+        'is_battery' => 'boolean',
         'product_price' => 'decimal:2',
         'discount_price' => 'decimal:2',
     ];
@@ -28,6 +29,11 @@ class Product extends Model
     public function itCategory()
     {
         return $this->belongsTo(ItProductCategory::class, 'it_category_id');
+    }
+
+    public function batteryCategory()
+    {
+        return $this->belongsTo(BatteryCategory::class, 'battery_category_id');
     }
 
     public function galleries()
@@ -53,6 +59,11 @@ class Product extends Model
     public function scopeItProduct($query)
     {
         return $query->where('is_it_product', true);
+    }
+
+    public function scopeBattery($query)
+    {
+        return $query->where('is_battery', true);
     }
 
     public function scopeInStock($query)

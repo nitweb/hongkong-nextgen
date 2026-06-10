@@ -34,7 +34,7 @@ class FrontendController extends Controller
     {
         $slider_data = Slider::where('slider_status', 'active')->latest()->get();
 
-        $product_data = Product::where('status', 'active')->latest()->take(10)->get();
+        $product_data = Product::where('status', 'active')->where('is_battery', false)->where('is_it_product', false)->where('is_flash_sale', false)->latest()->take(10)->get();
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('id', 'asc')->take(10)->get();
 
@@ -56,19 +56,16 @@ class FrontendController extends Controller
 
     public function Products(Request $request)
     {
-        $query = Product::with(['category', 'brand'])->where('status', 'active');
+        $query = Product::with(['category', 'brand'])
+            ->where('status', 'active')
+            ->where('is_battery', false)
+            ->where('is_it_product', false)
+            ->where('is_flash_sale', false);
 
-        // Price
-        if ($request->filled('min_price') && $request->filled('max_price')) {
-            $query->whereRaw('COALESCE(product_price - discount_price, product_price) BETWEEN ? AND ?', [$request->min_price, $request->max_price]);
-        }
-
-        // Categories (checkbox)
         if ($request->filled('categories')) {
             $query->whereIn('product_category_id', $request->categories);
         }
 
-        // Brands (checkbox)
         if ($request->filled('brands')) {
             $query->whereIn('brand_id', $request->brands);
         }
@@ -83,11 +80,11 @@ class FrontendController extends Controller
         }
 
         $category_data = ProductCategory::where('product_category_status', 'active')
-            ->withCount(['products' => fn($q) => $q->where('status', 'active')])
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')->where('is_battery', false)->where('is_it_product', false)->where('is_flash_sale', false)])
             ->get();
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')
-            ->withCount(['products' => fn($q) => $q->where('status', 'active')])
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')->where('is_battery', false)->where('is_it_product', false)->where('is_flash_sale', false)])
             ->get();
 
         return view('frontend.pages.products', compact('product_data', 'category_data', 'product_brand_data'));

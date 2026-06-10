@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\BatteryAd;
+use App\Models\BatteryCategory;
 use App\Models\BatteryModule;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +33,6 @@ class BatteryModuleController extends Controller
     public function BatteryAdd()
     {
         $categories = BatteryModule::whereNotNull('category')->where('category', '!=', '')->distinct()->pluck('category');
-
         return view('backend.battery.add', compact('categories'));
     }
 
@@ -54,7 +55,6 @@ class BatteryModuleController extends Controller
         try {
             DB::beginTransaction();
 
-            // Excel file save
             $file = $request->file('file_path');
             $fileName = uniqid('battery_', true) . '.' . $file->getClientOriginalExtension();
             $dir = public_path('upload/battery_modules');
@@ -71,7 +71,6 @@ class BatteryModuleController extends Controller
                 'status' => $request->status,
             ]);
 
-            // Thumbnail save
             if ($request->hasFile('thumbnail')) {
                 $manager = new ImageManager(new Driver());
                 $img = $request->file('thumbnail');
@@ -106,9 +105,7 @@ class BatteryModuleController extends Controller
     {
         try {
             $module = BatteryModule::findOrFail($id);
-
             $categories = BatteryModule::whereNotNull('category')->where('category', '!=', '')->distinct()->pluck('category');
-
             return view('backend.battery.edit', compact('module', 'categories'));
         } catch (\Throwable $e) {
             Log::error('BatteryEdit Error: ' . $e->getMessage());
@@ -137,7 +134,6 @@ class BatteryModuleController extends Controller
             DB::beginTransaction();
 
             $module = BatteryModule::findOrFail($request->module_id);
-
             $module->update([
                 'title' => $request->title,
                 'description' => $request->description,
@@ -145,7 +141,6 @@ class BatteryModuleController extends Controller
                 'status' => $request->status,
             ]);
 
-            // New Excel file
             if ($request->hasFile('file_path')) {
                 @unlink(public_path($module->file_path));
                 $file = $request->file('file_path');
@@ -154,7 +149,6 @@ class BatteryModuleController extends Controller
                 $module->update(['file_path' => 'upload/battery_modules/' . $fileName]);
             }
 
-            // New Thumbnail
             if ($request->hasFile('thumbnail')) {
                 if ($module->thumbnail) {
                     @unlink(public_path($module->thumbnail));
@@ -192,7 +186,6 @@ class BatteryModuleController extends Controller
     {
         try {
             DB::beginTransaction();
-
             $module = BatteryModule::findOrFail($id);
             if ($module->file_path) {
                 @unlink(public_path($module->file_path));
@@ -201,9 +194,7 @@ class BatteryModuleController extends Controller
                 @unlink(public_path($module->thumbnail));
             }
             $module->delete();
-
             DB::commit();
-
             return back()->with(['message' => 'Module deleted!', 'alert-type' => 'success']);
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -312,7 +303,6 @@ class BatteryModuleController extends Controller
             DB::beginTransaction();
 
             $ad = BatteryAd::findOrFail($request->ad_id);
-
             $ad->update([
                 'title' => $request->title,
                 'link' => $request->link,
@@ -352,13 +342,10 @@ class BatteryModuleController extends Controller
     {
         try {
             DB::beginTransaction();
-
             $ad = BatteryAd::findOrFail($id);
             @unlink(public_path($ad->image));
             $ad->delete();
-
             DB::commit();
-
             return back()->with(['message' => 'Ad deleted!', 'alert-type' => 'success']);
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -368,12 +355,17 @@ class BatteryModuleController extends Controller
     }
 
     /* ===== Frontend Page ===== */
+    /* এখন battery_modules table এর বদলে products table থেকে is_battery=1 data নেবে */
     public function frontend()
     {
         try {
-            $modules = BatteryModule::where('status', 'active')->latest()->get();
+            $modules = Product::where('is_battery', true)->where('status', 'active')->with('batteryCategory')->latest()->get();
+
+            $battery_categories = BatteryCategory::where('status', 'active')->orderBy('name')->get();
+
             $ads = BatteryAd::where('status', 'active')->orderBy('sort_order')->get();
-            return view('frontend.pages.battery_module', compact('modules', 'ads'));
+
+            return view('frontend.pages.battery_module', compact('modules', 'battery_categories', 'ads'));
         } catch (\Throwable $e) {
             Log::error('Battery Frontend Error: ' . $e->getMessage());
             return back()->with(['message' => 'Something went wrong.', 'alert-type' => 'error']);
@@ -385,15 +377,26 @@ class BatteryModuleController extends Controller
     {
         try {
             $query = $request->input('query');
-            $modules = BatteryModule::where('status', 'active')
-                ->where(function ($q) use ($query) {
-                    $q->where('title', 'LIKE', "%{$query}%")
-                        ->orWhere('category', 'LIKE', "%{$query}%")
-                        ->orWhere('description', 'LIKE', "%{$query}%");
+            $categoryId = $request->input('category_id');
+
+            $modules = Product::where('is_battery', true)
+                ->where('status', 'active')
+                ->with('batteryCategory')
+                ->when($query, function ($q) use ($query) {
+                    $q->where(function ($sq) use ($query) {
+                        $sq->where('product_name', 'LIKE', "%{$query}%")
+                            ->orWhere('product_part_number', 'LIKE', "%{$query}%")
+                            ->orWhere('product_description', 'LIKE', "%{$query}%");
+                    });
+                })
+                ->when($categoryId, function ($q) use ($categoryId) {
+                    $q->where('battery_category_id', $categoryId);
                 })
                 ->get()
                 ->map(function ($m) {
-                    $m->file_url = asset($m->file_path);
+                    $m->file_url = $m->battery_excel_file ? asset($m->battery_excel_file) : null;
+                    $m->thumbnail_url = $m->product_image ? asset($m->product_image) : asset('upload/no_image.jpg');
+                    $m->category_name = $m->batteryCategory->name ?? '';
                     return $m;
                 });
 
