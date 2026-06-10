@@ -34,9 +34,9 @@ class FrontendController extends Controller
     {
         $slider_data = Slider::where('slider_status', 'active')->latest()->get();
 
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('id', 'asc')->take(8)->get();
+        $product_data = Product::where('status', 'active')->latest()->take(10)->get();
 
-        $product_data = Product::where('status', 'active')->latest()->take(12)->get();
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('id', 'asc')->take(10)->get();
 
         // Get all active categories with their latest products
         $categories = ProductCategory::with([
@@ -73,7 +73,7 @@ class FrontendController extends Controller
             $query->whereIn('brand_id', $request->brands);
         }
 
-        $product_data = $query->latest()->paginate(12)->withQueryString();
+        $product_data = $query->latest()->paginate(20)->withQueryString();
 
         if ($request->ajax()) {
             return response()->json([
@@ -178,7 +178,7 @@ class FrontendController extends Controller
             $query->whereRaw('COALESCE(product_price - discount_price, product_price) BETWEEN ? AND ?', [$request->min_price, $request->max_price]);
         }
 
-        $product_data = $query->latest()->paginate(12)->withQueryString();
+        $product_data = $query->latest()->paginate(20)->withQueryString();
 
         // AJAX
         if ($request->ajax()) {
@@ -224,7 +224,7 @@ class FrontendController extends Controller
             $query->whereRaw('COALESCE(product_price - discount_price, product_price) BETWEEN ? AND ?', [$request->min_price, $request->max_price]);
         }
 
-        $product_data = $query->latest()->paginate(12)->withQueryString();
+        $product_data = $query->latest()->paginate(20)->withQueryString();
 
         // AJAX
         if ($request->ajax()) {
@@ -339,9 +339,7 @@ class FrontendController extends Controller
 
     public function ItProduct(Request $request)
     {
-        $query = Product::where('is_it_product', true)
-            ->where('status', 'active')
-            ->with('category', 'brand', 'galleries', 'itCategory');
+        $query = Product::where('is_it_product', true)->where('status', 'active')->with('category', 'brand', 'galleries', 'itCategory');
 
         // Search
         if ($request->filled('search')) {
@@ -364,11 +362,11 @@ class FrontendController extends Controller
             $query->whereIn('it_category_id', $request->it_categories);
         }
 
-        $product_data = $query->orderBy('created_at', 'desc')->paginate(12)->withQueryString();
+        $product_data = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
 
         if ($request->ajax()) {
             return response()->json([
-                'html'         => view('frontend.partials.product-list', compact('product_data'))->render(),
+                'html' => view('frontend.partials.product-list', compact('product_data'))->render(),
                 'showing_text' => 'Showing ' . ($product_data->firstItem() ?? 0) . '–' . ($product_data->lastItem() ?? 0) . ' of ' . $product_data->total() . ' results',
             ]);
         }

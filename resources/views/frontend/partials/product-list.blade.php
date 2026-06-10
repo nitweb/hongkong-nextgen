@@ -1,37 +1,22 @@
 <div class="row" id="product-grid">
     @forelse ($product_data as $item)
-        <div class="col-xl-4 col-lg-4 col-md-6 custom_product_margin">
-            <div class="product__all-single">
-
+        <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 custom_product_margin">
+            <div class="product__all-single h-100 d-flex flex-column">
                 <a href="{{ route('product.details', $item->product_slug) }}">
                     <div class="product__all-img">
                         <img src="{{ asset($item->product_image) }}" alt="">
                     </div>
                 </a>
-
-                <div class="product__all-content">
+                <div class="product__all-content mt-auto">
                     <span class="product__category">
-                        {{ $item->category->product_category_name ?? 'Uncategorized' }}
+                        <a href="{{ route('product.by.category', $item->category->product_category_slug ?? '#') }}">{{ $item->category->product_category_name ?? 'Uncategorized' }}</a>
                     </span>
-
                     <h4 class="product__all-title">
                         <a href="{{ route('product.details', $item->product_slug) }}">
                             {{ Str::limit($item->product_name, 40) }}
                         </a>
                     </h4>
-
-                    <p class="product__all-price mt-2">
-                        <span class="new__price">
-                            ${{ number_format($item->product_price - ($item->discount_price ?? 0), 2) }}
-                        </span>
-                        @if (!empty($item->discount_price) && $item->discount_price > 0)
-                            <span class="old__price">
-                                ${{ number_format($item->product_price, 2) }}
-                            </span>
-                        @endif
-                    </p>
                 </div>
-
             </div>
         </div>
     @empty
