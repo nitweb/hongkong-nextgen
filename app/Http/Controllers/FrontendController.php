@@ -34,9 +34,9 @@ class FrontendController extends Controller
     {
         $slider_data = Slider::where('slider_status', 'active')->latest()->get();
 
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('id', 'asc')->take(8)->get();
+        $product_data = Product::where('status', 'active')->where('is_battery', false)->where('is_it_product', false)->where('is_flash_sale', false)->latest()->take(10)->get();
 
-        $product_data = Product::where('status', 'active')->latest()->take(12)->get();
+        $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('id', 'asc')->take(10)->get();
 
         // Get all active categories with their latest products
         $categories = ProductCategory::with([
@@ -56,24 +56,21 @@ class FrontendController extends Controller
 
     public function Products(Request $request)
     {
-        $query = Product::with(['category', 'brand'])->where('status', 'active');
+        $query = Product::with(['category', 'brand'])
+            ->where('status', 'active')
+            ->where('is_battery', false)
+            ->where('is_it_product', false)
+            ->where('is_flash_sale', false);
 
-        // Price
-        if ($request->filled('min_price') && $request->filled('max_price')) {
-            $query->whereRaw('COALESCE(product_price - discount_price, product_price) BETWEEN ? AND ?', [$request->min_price, $request->max_price]);
-        }
-
-        // Categories (checkbox)
         if ($request->filled('categories')) {
             $query->whereIn('product_category_id', $request->categories);
         }
 
-        // Brands (checkbox)
         if ($request->filled('brands')) {
             $query->whereIn('brand_id', $request->brands);
         }
 
-        $product_data = $query->latest()->paginate(12)->withQueryString();
+        $product_data = $query->latest()->paginate(20)->withQueryString();
 
         if ($request->ajax()) {
             return response()->json([
@@ -83,11 +80,11 @@ class FrontendController extends Controller
         }
 
         $category_data = ProductCategory::where('product_category_status', 'active')
-            ->withCount(['products' => fn($q) => $q->where('status', 'active')])
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')->where('is_battery', false)->where('is_it_product', false)->where('is_flash_sale', false)])
             ->get();
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')
-            ->withCount(['products' => fn($q) => $q->where('status', 'active')])
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')->where('is_battery', false)->where('is_it_product', false)->where('is_flash_sale', false)])
             ->get();
 
         return view('frontend.pages.products', compact('product_data', 'category_data', 'product_brand_data'));
@@ -178,7 +175,7 @@ class FrontendController extends Controller
             $query->whereRaw('COALESCE(product_price - discount_price, product_price) BETWEEN ? AND ?', [$request->min_price, $request->max_price]);
         }
 
-        $product_data = $query->latest()->paginate(12)->withQueryString();
+        $product_data = $query->latest()->paginate(20)->withQueryString();
 
         // AJAX
         if ($request->ajax()) {
@@ -224,7 +221,7 @@ class FrontendController extends Controller
             $query->whereRaw('COALESCE(product_price - discount_price, product_price) BETWEEN ? AND ?', [$request->min_price, $request->max_price]);
         }
 
-        $product_data = $query->latest()->paginate(12)->withQueryString();
+        $product_data = $query->latest()->paginate(20)->withQueryString();
 
         // AJAX
         if ($request->ajax()) {
@@ -339,9 +336,7 @@ class FrontendController extends Controller
 
     public function ItProduct(Request $request)
     {
-        $query = Product::where('is_it_product', true)
-            ->where('status', 'active')
-            ->with('category', 'brand', 'galleries', 'itCategory');
+        $query = Product::where('is_it_product', true)->where('status', 'active')->with('category', 'brand', 'galleries', 'itCategory');
 
         // Search
         if ($request->filled('search')) {
@@ -364,11 +359,11 @@ class FrontendController extends Controller
             $query->whereIn('it_category_id', $request->it_categories);
         }
 
-        $product_data = $query->orderBy('created_at', 'desc')->paginate(12)->withQueryString();
+        $product_data = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
 
         if ($request->ajax()) {
             return response()->json([
-                'html'         => view('frontend.partials.product-list', compact('product_data'))->render(),
+                'html' => view('frontend.partials.product-list', compact('product_data'))->render(),
                 'showing_text' => 'Showing ' . ($product_data->firstItem() ?? 0) . '–' . ($product_data->lastItem() ?? 0) . ' of ' . $product_data->total() . ' results',
             ]);
         }
@@ -391,12 +386,13 @@ class FrontendController extends Controller
     public function ajaxSearch(Request $request)
     {
         $query = $request->get('query');
+
         $products = Product::where('status', 'active')
+            ->with('brand')
             ->where(function ($q) use ($query) {
-                $q->where('product_name', 'like', "%{$query}%")
-                    ->orWhere('product_part_number', 'like', "%{$query}%")
-                    ->orWhere('package', 'like', "%{$query}%")
-                    ->orWhere('date_code', 'like', "%{$query}%");
+                $q->where('product_name', 'like', "%{$query}%")->orWhereHas('brand', function ($bq) use ($query) {
+                    $bq->where('product_brand_name', 'like', "%{$query}%");
+                });
             })
             ->limit(8)
             ->get();
@@ -408,20 +404,20 @@ class FrontendController extends Controller
                     '<a href="' .
                     route('product.details', $product->product_slug) .
                     '"
-                   style="display:flex;gap:12px;padding:10px;border-bottom:1px solid #eee;text-decoration:none;">
-                    <img src="' .
+               style="display:flex;gap:12px;padding:10px;border-bottom:1px solid #eee;text-decoration:none;">
+                <img src="' .
                     asset($product->product_image) .
                     '"
-                         style="width:50px;height:50px;border-radius:6px;object-fit:cover;">
-                    <div>
-                        <div style="font-weight:600;color:#222;">' .
+                     style="width:50px;height:50px;border-radius:6px;object-fit:cover;">
+                <div>
+                    <div style="font-weight:600;color:#222;">' .
                     e(Str::limit($product->product_name, 45)) .
                     '</div>
-                        <div style="color:#888;font-size:12px;margin-top:3px;">' .
-                    e($product->product_part_number) .
+                    <div style="color:#888;font-size:12px;margin-top:3px;">' .
+                    e($product->brand->product_brand_name ?? '') .
                     '</div>
-                    </div>
-                </a>';
+                </div>
+            </a>';
             }
         } else {
             $html = '<p style="padding:12px;text-align:center;color:#888;">No products found</p>';

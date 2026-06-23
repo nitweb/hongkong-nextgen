@@ -17,19 +17,18 @@
         </div>
     </section>
 
-    {{-- Product Area --}}
     <section class="product">
         <div class="container">
             <div class="row">
 
+                {{-- SIDEBAR --}}
                 <div class="col-xl-3 col-lg-3">
                     <div class="product__sidebar">
-
                         <div class="shop-category product__sidebar-single">
                             <h3 class="product__sidebar-title">Brands</h3>
                             <ul class="list-unstyled">
                                 @foreach ($product_brand_data as $item)
-                                    <li class="{{ request()->route('slug') == $item->product_brand_slug ? 'active' : '' }}">
+                                    <li>
                                         <a href="{{ route('product.by.brand', $item->product_brand_slug) }}">
                                             {{ $item->product_brand_name }}
                                             <span>({{ $item->products_count }})</span>
@@ -38,222 +37,140 @@
                                 @endforeach
                             </ul>
                         </div>
-
                     </div>
                 </div>
 
+                {{-- CONTENT --}}
                 <div class="col-xl-9 col-lg-9">
 
-                    {{-- Search Product --}}
+                    {{-- Search --}}
                     <div class="shop-search product__sidebar-single product__price-ranger">
-                        <div class="custom-sidebar-search js-sidebar-search">
-                            <input type="text" id="flash-sale-search-input" class="custom-sidebar-search__input" placeholder="Search products..." autocomplete="off">
+                        <div class="custom-sidebar-search">
+                            <input type="text" id="exSearch" class="custom-sidebar-search__input" placeholder="Search products..." autocomplete="off">
                         </div>
                     </div>
 
                     <div class="product__items">
 
-                        {{-- Showing result --}}
-                        <div class="row">
-                            <div class="col-xl-12">
+                        {{-- Showing --}}
+                        <div class="row mb-2">
+                            <div class="col-12">
                                 <div class="product__showing-result d-flex justify-content-between align-items-center">
-
-                                    {{-- Clear All (left) --}}
-                                    <a href="#!" id="flash-clear-all" style="display: none; color: red; text-decoration: underline;">Clear All</a>
-                                    <div id="flash-clear-placeholder" style="visibility: hidden;">Clear All</div>
-
-                                    {{-- Showing text (right) --}}
+                                    <a href="#!" id="exClearAll" style="display:none;color:red;text-decoration:underline;">Clear All</a>
+                                    <div id="exClearPlaceholder" style="visibility:hidden;">Clear All</div>
                                     <div class="product__showing-text-box">
-                                        <p class="product__showing-text" id="flash-showing-text">
-                                            Showing {{ $product_data->firstItem() ?? 0 }}–{{ $product_data->lastItem() ?? 0 }}
+                                        <p class="product__showing-text">
+                                            Showing <span id="exVisibleCount">{{ $product_data->total() }}</span>
                                             of {{ $product_data->total() }} results
                                         </p>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
 
-                        {{-- Table Wrapper (AJAX replaces this) --}}
-                        <div class="product__all" id="flash-sale-table-wrapper">
-                            <div class="row">
-                                <div class="col-xl-12">
-                                    <div class="table-responsive">
-                                        <table class="table" style="border-collapse: collapse; width: 100%; font-size: 14px;">
-                                            <thead>
-                                                <tr style="background-color: #f0f0f0;">
-                                                    <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">Part No</th>
-                                                    <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">Brand</th>
-                                                    <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">Package</th>
-                                                    <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">Quantity</th>
-                                                    <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">Stock Status</th>
-                                                    <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">PDF</th>
-                                                    <th style="padding: 12px 16px; text-align: center; font-weight: 500; color: #555; border: 1px solid #ddd;">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse ($product_data as $item)
-                                                    <tr style="border-bottom: 1px solid #ddd;">
+                        {{-- TABLE --}}
+                        <div class="ex-table-wrapper">
+                            <div class="table-responsive">
+                                <table class="table ex-table align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>S/N</th>
+                                            <th>Name</th>
+                                            <th width="220">Download</th>
+                                            <th width="100">View</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="exTableBody">
+                                        @forelse ($product_data as $item)
+                                            <tr class="ex-row" data-name="{{ strtolower($item->product_name) }}" data-excel="{{ $item->flash_sale_excel ? asset($item->flash_sale_excel) : '' }}" data-pdf="{{ $item->flash_sale_pdf ? asset($item->flash_sale_pdf) : '' }}" data-title="{{ $item->product_name }}">
 
-                                                        <td style="padding: 14px 16px; text-align: center; border: 1px solid #ddd;">
-                                                            <a href="{{ route('product.details', $item->product_slug) }}" style="color: #4a90d9; text-decoration: none;">
-                                                                {{ $item->product_part_number }}
+                                                <td>
+                                                    {{ $loop->iteration }}
+                                                </td>
+
+                                                <td>
+                                                    <span class="ex-name">{{ $item->product_name }}</span>
+                                                </td>
+
+                                                <td>
+                                                    <div class="d-flex gap-2 flex-wrap">
+                                                        @if ($item->flash_sale_excel)
+                                                            <a href="{{ asset($item->flash_sale_excel) }}" download class="ex-dl-btn ex-dl-excel">
+                                                                <i class="bx bx-spreadsheet"></i> Excel
                                                             </a>
-                                                        </td>
-
-                                                        <td style="padding: 14px 16px; text-align: center; color: #333; border: 1px solid #ddd;">
-                                                            {{ $item->brand->product_brand_name ?? '' }}
-                                                        </td>
-
-                                                        <td style="padding: 14px 16px; text-align: center; color: #333; border: 1px solid #ddd;">
-                                                            {{ $item->package ?? '' }}
-                                                        </td>
-
-                                                        <td style="padding: 14px 16px; text-align: center; color: #333; border: 1px solid #ddd;">
-                                                            {{ $item->flash_sale_quantity ?? '' }}
-                                                        </td>
-
-                                                        {{-- ✅ Stock Status --}}
-                                                        <td style="padding: 14px 16px; text-align: center; border: 1px solid #ddd;">
-                                                            @if ($item->stock_status === 'in_stock')
-                                                                <span style="color: #28a745; font-weight: 600;">&#10003; In Stock</span>
-                                                            @else
-                                                                <span style="color: #dc3545; font-weight: 600;">&#10007; Out of Stock</span>
-                                                            @endif
-                                                        </td>
-
-                                                        <td style="padding: 14px 16px; text-align: center; border: 1px solid #ddd;">
-                                                            @if (!empty($item->flash_sale_pdf) && file_exists(public_path($item->flash_sale_pdf)))
-                                                                <a href="{{ route('product.pdf.download', $item->id) }}" title="Download PDF" style="color: #e74c3c; font-size: 22px; text-decoration: none; display: inline-block;">
-                                                                    <i class="fas fa-file-pdf"></i>
-                                                                </a>
-                                                            @else
-                                                                <span style="color: #ccc;">—</span>
-                                                            @endif
-                                                        </td>
-
-                                                        {{-- ✅ Inquiry Button - disabled if out of stock --}}
-                                                        <td style="padding: 14px 16px; text-align: center; border: 1px solid #ddd;">
-                                                            @if ($item->stock_status === 'in_stock')
-                                                                <button type="button" class="thm-btn inquiry-btn" style="padding: 6px 18px; font-size: 13px;" data-product-id="{{ $item->id }}" data-product-name="{{ $item->product_name }}" data-bs-toggle="modal" data-bs-target="#flashSaleInquiryModal">
-                                                                    Inquiry
-                                                                </button>
-                                                            @else
-                                                                <button type="button" class="thm-btn" disabled style="padding: 6px 8px; font-size: 10px; opacity: 0.5; cursor: not-allowed;" title="This product is currently out of stock">
-                                                                    Out of Stock
-                                                                </button>
-                                                            @endif
-                                                        </td>
-
-                                                    </tr>
-                                                @empty
-                                                    <tr>
-                                                        <td colspan="7" style="padding: 20px; text-align: center; color: #777;">
-                                                            No products found.
-                                                        </td>
-                                                    </tr>
-                                                @endforelse
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    {{-- Pagination --}}
-                                    @if ($product_data->hasPages())
-                                        <div class="row mt-3">
-                                            <div class="col-xl-12">
-                                                <div class="blog-page__pagination">
-                                                    <ul class="pg-pagination list-unstyled">
-
-                                                        @if (!$product_data->onFirstPage())
-                                                            <li class="prev">
-                                                                <a href="{{ $product_data->previousPageUrl() }}" aria-label="Previous">
-                                                                    <i class="fa fa-angle-double-left"></i>
-                                                                </a>
-                                                            </li>
                                                         @endif
-
-                                                        @foreach ($product_data->getUrlRange(1, $product_data->lastPage()) as $page => $url)
-                                                            <li class="count {{ $page == $product_data->currentPage() ? 'active' : '' }}">
-                                                                <a href="{{ $url }}">{{ $page }}</a>
-                                                            </li>
-                                                        @endforeach
-
-                                                        @if ($product_data->hasMorePages())
-                                                            <li class="next">
-                                                                <a href="{{ $product_data->nextPageUrl() }}" aria-label="Next">
-                                                                    <i class="fa fa-angle-double-right"></i>
-                                                                </a>
-                                                            </li>
+                                                        @if ($item->flash_sale_pdf)
+                                                            <a href="{{ route('product.pdf.download', $item->id) }}" class="ex-dl-btn ex-dl-pdf">
+                                                                <i class="bx bxs-file-pdf"></i> PDF
+                                                            </a>
                                                         @endif
+                                                        @if (!$item->flash_sale_excel && !$item->flash_sale_pdf)
+                                                            <span class="text-muted small">—</span>
+                                                        @endif
+                                                    </div>
+                                                </td>
 
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif
+                                                <td>
+                                                    @if ($item->flash_sale_excel || $item->flash_sale_pdf)
+                                                        <button class="ex-view-btn" onclick="openExModal(
+                                                                '{{ addslashes($item->product_name) }}',
+                                                                '{{ $item->flash_sale_excel ? asset($item->flash_sale_excel) : '' }}',
+                                                                '{{ $item->flash_sale_pdf ? asset($item->flash_sale_pdf) : '' }}'
+                                                            )">
+                                                            <i class="bx bx-show-alt"></i> View
+                                                        </button>
+                                                    @else
+                                                        <span class="text-muted small">—</span>
+                                                    @endif
+                                                </td>
 
-                                </div>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="3" class="text-center py-5 text-muted">No products found.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div id="exNoResult" class="text-center py-5 d-none">
+                                <i class="bx bx-search-alt" style="font-size:50px;color:#cfd6e0;"></i>
+                                <p class="text-muted mt-2">No products found</p>
                             </div>
                         </div>
 
-                    </div>
-                </div>
-
-
-                {{-- INQUIRY MODAL --}}
-                <div class="modal fade" id="flashSaleInquiryModal" tabindex="-1" aria-labelledby="flashSaleInquiryModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-                    <div class="modal-dialog modal-md modal-dialog-centered">
-                        <div class="modal-content">
-
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="flashSaleInquiryModalLabel">Order Request</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        {{-- Pagination --}}
+                        @if ($product_data->hasPages())
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="blog-page__pagination">
+                                        <ul class="pg-pagination list-unstyled">
+                                            @if (!$product_data->onFirstPage())
+                                                <li class="prev">
+                                                    <a href="{{ $product_data->previousPageUrl() }}" aria-label="Previous">
+                                                        <i class="fa fa-angle-double-left"></i>
+                                                    </a>
+                                                </li>
+                                            @endif
+                                            @foreach ($product_data->getUrlRange(1, $product_data->lastPage()) as $page => $url)
+                                                <li class="count {{ $page == $product_data->currentPage() ? 'active' : '' }}">
+                                                    <a href="{{ $url }}">{{ $page }}</a>
+                                                </li>
+                                            @endforeach
+                                            @if ($product_data->hasMorePages())
+                                                <li class="next">
+                                                    <a href="{{ $product_data->nextPageUrl() }}" aria-label="Next">
+                                                        <i class="fa fa-angle-double-right"></i>
+                                                    </a>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
+                        @endif
 
-                            <form id="flashSaleInquiryForm" action="{{ route('bulk.order.submit') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="product_id" id="inquiry_product_id" value="">
-
-                                <div class="modal-body">
-
-                                    <div class="mb-3">
-                                        <p style="font-size:13px; color:#555; margin-bottom:4px;">Product:</p>
-                                        <p id="inquiry_product_name" style="font-weight:600; color:#333; margin:0;"></p>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Name</label>
-                                        <input type="text" name="name" class="form-control" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Email</label>
-                                        <input type="email" name="email" class="form-control" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Phone</label>
-                                        <input type="text" name="phone" class="form-control" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Quantity</label>
-                                        <input type="number" name="quantity" min="1" class="form-control" required>
-                                    </div>
-
-                                    <div class="mb-0">
-                                        <label class="form-label">Message</label>
-                                        <textarea name="message" rows="4" class="form-control"></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="thm-btn custom_thn_btn" id="flashSaleSubmitBtn">Submit</button>
-                                </div>
-                            </form>
-
-                        </div>
                     </div>
                 </div>
 
@@ -261,133 +178,376 @@
         </div>
     </section>
 
+    {{-- =========================
+    MODAL
+    ========================= --}}
+    <div class="modal fade" id="exModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
 
-    {{-- SCRIPTS --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+                <div class="modal-header">
+                    <h5 class="modal-title mb-0" id="exModalTitle">-</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
 
+                <div class="modal-body p-0">
+
+                    {{-- Tabs (only shown when both files exist) --}}
+                    <div id="exFileTabs" class="px-3 pt-3" style="display:none;">
+                        <ul class="nav nav-tabs border-bottom-0">
+                            <li class="nav-item">
+                                <button class="nav-link active" id="tabExcelBtn" onclick="switchExTab('excel')">
+                                    <i class="bx bx-spreadsheet"></i> Excel
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" id="tabPdfBtn" onclick="switchExTab('pdf')">
+                                    <i class="bx bxs-file-pdf"></i> PDF
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {{-- Excel View --}}
+                    <div id="excelViewWrap" class="p-3" style="display:none;">
+                        <div id="excelLoading" class="text-center py-5">
+                            <div class="spinner-border text-primary"></div>
+                            <p class="mt-2 text-muted small">Loading file...</p>
+                        </div>
+                        <div id="excelTableContent" class="table-responsive" style="display:none;"></div>
+                    </div>
+
+                    {{-- PDF View --}}
+                    <div id="pdfViewWrap" style="display:none;">
+                        <iframe id="pdfFrame" src="" style="width:100%;height:75vh;border:none;"></iframe>
+                    </div>
+
+                    {{-- No file --}}
+                    <div id="noFileWrap" class="text-center py-5" style="display:none;">
+                        <p class="text-muted">No file available to preview.</p>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <div id="modalDownloadBtns"></div>
+                    <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {{-- =========================
+    STYLES
+    ========================= --}}
+    <style>
+        .ex-table-wrapper {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #edf0f5;
+        }
+
+        .ex-table thead {
+            background: #0C447C;
+        }
+
+        .ex-table thead th {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 16px 20px;
+            border: none;
+            white-space: nowrap;
+        }
+
+        .ex-table tbody td {
+            padding: 14px 20px;
+            vertical-align: middle;
+            border-color: #eef1f5;
+            font-size: 14px;
+        }
+
+        .ex-table tbody tr:hover {
+            background: #f7fbff;
+        }
+
+        .ex-name {
+            color: #0C447C;
+            font-weight: 600;
+        }
+
+        .ex-dl-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: .2s;
+        }
+
+        .ex-dl-excel {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .ex-dl-excel:hover {
+            background: #2e7d32;
+            color: #fff;
+        }
+
+        .ex-dl-pdf {
+            background: #fdecea;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+
+        .ex-dl-pdf:hover {
+            background: #c62828;
+            color: #fff;
+        }
+
+        .ex-view-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 12px;
+            background: #0C447C;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .ex-view-btn:hover {
+            background: #08345f;
+        }
+
+        #excelTableContent table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 13px;
+        }
+
+        #excelTableContent th {
+            background: #f5f7fa;
+            font-weight: 600;
+            padding: 8px 12px;
+            border: 1px solid #e0e4ea;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        #excelTableContent td {
+            padding: 7px 12px;
+            border: 1px solid #e9ecef;
+            white-space: nowrap;
+        }
+
+        #excelTableContent tr:hover td {
+            background: #f0f7ff;
+        }
+
+        /* Tab styling */
+        #exFileTabs .nav-tabs {
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        #exFileTabs .nav-link {
+            color: #6c757d;
+            font-weight: 600;
+            font-size: 13px;
+            border: 1px solid transparent;
+            border-bottom: none;
+            padding: 8px 18px;
+            cursor: pointer;
+            background: none;
+            border-radius: 6px 6px 0 0;
+            transition: .2s;
+        }
+
+        #exFileTabs .nav-link:hover {
+            color: #0C447C;
+            background: #f0f7ff;
+        }
+
+        #exFileTabs .nav-link.active {
+            color: #0C447C;
+            background: #fff;
+            border-color: #dee2e6 #dee2e6 #fff;
+            font-weight: 700;
+        }
+    </style>
+
+    {{-- SheetJS --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    {{-- =========================
+    SCRIPTS
+    ========================= --}}
     <script>
-        $(document).ready(function() {
+        /* ===== GLOBALS ===== */
+        var _exExcelUrl = '';
+        var _exPdfUrl = '';
+        var _pdfLoaded = false;
+        var _excelLoaded = false;
 
-            // ── Toastr options ──────────────────────────────────────────────
-            toastr.options = {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 3500,
-                positionClass: "toast-top-right"
-            };
+        /* ===== TAB SWITCH ===== */
+        function switchExTab(tab) {
+            if (tab === 'excel') {
+                document.getElementById('tabExcelBtn').classList.add('active');
+                document.getElementById('tabPdfBtn').classList.remove('active');
+                document.getElementById('excelViewWrap').style.display = 'block';
+                document.getElementById('pdfViewWrap').style.display = 'none';
 
-            // ── Flash Sale Dynamic Search ───────────────────────────────────
+                // Load excel if not yet loaded
+                if (!_excelLoaded) {
+                    loadExcel(_exExcelUrl);
+                }
 
-            let searchTimer = null;
+            } else {
+                document.getElementById('tabPdfBtn').classList.add('active');
+                document.getElementById('tabExcelBtn').classList.remove('active');
+                document.getElementById('pdfViewWrap').style.display = 'block';
+                document.getElementById('excelViewWrap').style.display = 'none';
 
-            // Check if search has content → show/hide Clear All
-            function checkFlashFilters() {
-                const hasSearch = $('#flash-sale-search-input').val().trim().length >= 1;
-                if (hasSearch) {
-                    $('#flash-clear-all').show();
-                    $('#flash-clear-placeholder').hide();
-                } else {
-                    $('#flash-clear-all').hide();
-                    $('#flash-clear-placeholder').show();
+                // PDF lazy load — set src only once
+                if (!_pdfLoaded && _exPdfUrl) {
+                    document.getElementById('pdfFrame').src = _exPdfUrl;
+                    _pdfLoaded = true;
                 }
             }
+        }
 
-            // AJAX call to fetch filtered flash sale products
-            function applyFlashSearch() {
-                const query = $('#flash-sale-search-input').val().trim();
+        /* ===== OPEN MODAL ===== */
+        function openExModal(title, excelUrl, pdfUrl) {
+            _exExcelUrl = excelUrl;
+            _exPdfUrl = pdfUrl;
+            _pdfLoaded = false;
+            _excelLoaded = false;
 
-                $('#flash-sale-table-wrapper').css('opacity', '0.4');
+            document.getElementById('exModalTitle').textContent = title;
 
-                $.ajax({
-                    url: "{{ route('ajax.flash.sale') }}",
-                    type: 'GET',
-                    data: {
-                        query: query
-                    },
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    success: function(res) {
-                        $('#flash-sale-table-wrapper').html(res.html).css('opacity', '1');
-                        $('#flash-showing-text').text(res.showing_text);
-                        checkFlashFilters();
-                    },
-                    error: function() {
-                        $('#flash-sale-table-wrapper').css('opacity', '1');
-                        toastr.error('Something went wrong. Please try again.');
-                    }
-                });
+            // Reset all panels
+            document.getElementById('excelViewWrap').style.display = 'none';
+            document.getElementById('pdfViewWrap').style.display = 'none';
+            document.getElementById('noFileWrap').style.display = 'none';
+            document.getElementById('exFileTabs').style.display = 'none';
+            document.getElementById('excelTableContent').style.display = 'none';
+            document.getElementById('excelTableContent').innerHTML = '';
+            document.getElementById('excelLoading').style.display = 'block';
+            document.getElementById('pdfFrame').src = '';
+
+            // Reset tabs to default active state
+            document.getElementById('tabExcelBtn').classList.add('active');
+            document.getElementById('tabPdfBtn').classList.remove('active');
+
+            // Download buttons
+            let btns = '';
+            if (excelUrl) btns += `<a href="${excelUrl}" download class="ex-dl-btn ex-dl-excel me-2"><i class="bx bx-spreadsheet"></i> Download Excel</a>`;
+            if (pdfUrl) btns += `<a href="${pdfUrl}" class="ex-dl-btn ex-dl-pdf me-2"><i class="bx bxs-file-pdf"></i> Download PDF</a>`;
+            document.getElementById('modalDownloadBtns').innerHTML = btns;
+
+            new bootstrap.Modal(document.getElementById('exModal')).show();
+
+            const hasBoth = excelUrl && pdfUrl;
+
+            if (hasBoth) {
+                // Show tabs, default to Excel tab
+                document.getElementById('exFileTabs').style.display = 'block';
+                document.getElementById('excelViewWrap').style.display = 'block';
+                loadExcel(excelUrl);
+
+            } else if (excelUrl) {
+                // Only Excel — no tabs
+                document.getElementById('excelViewWrap').style.display = 'block';
+                loadExcel(excelUrl);
+
+            } else if (pdfUrl) {
+                // Only PDF — no tabs
+                document.getElementById('pdfViewWrap').style.display = 'block';
+                document.getElementById('pdfFrame').src = pdfUrl;
+                _pdfLoaded = true;
+
+            } else {
+                document.getElementById('noFileWrap').style.display = 'block';
             }
+        }
 
-            // Search input keyup → debounce 300ms
-            $('#flash-sale-search-input').on('keyup', function() {
-                clearTimeout(searchTimer);
-                searchTimer = setTimeout(applyFlashSearch, 300);
-                checkFlashFilters();
-            });
+        /* ===== LOAD EXCEL ===== */
+        function loadExcel(url) {
+            document.getElementById('excelLoading').style.display = 'block';
+            document.getElementById('excelTableContent').style.display = 'none';
+            document.getElementById('excelTableContent').innerHTML = '';
 
-            // Clear All click
-            $(document).on('click', '#flash-clear-all', function(e) {
-                e.preventDefault();
-                $('#flash-sale-search-input').val('');
-                applyFlashSearch();
-            });
-
-            // ── Inquiry Modal: fill product info ───────────────────────────
-            $(document).on('click', '.inquiry-btn', function() {
-                $('#inquiry_product_id').val($(this).data('product-id'));
-                $('#inquiry_product_name').text($(this).data('product-name'));
-            });
-
-            // Reset modal on close
-            $('#flashSaleInquiryModal').on('hidden.bs.modal', function() {
-                $('#flashSaleInquiryForm')[0].reset();
-                $('#inquiry_product_id').val('');
-                $('#inquiry_product_name').text('');
-            });
-
-            // ── Inquiry Form AJAX Submit ────────────────────────────────────
-            $('#flashSaleInquiryForm').submit(function(e) {
-                e.preventDefault();
-
-                const $form = $(this);
-                const $btn = $('#flashSaleSubmitBtn');
-
-                $btn.prop('disabled', true).text('Submitting...');
-
-                $.ajax({
-                    url: $form.attr('action'),
-                    method: 'POST',
-                    data: $form.serialize(),
-                    success: function(response) {
-                        toastr.success(response.message || 'Your inquiry has been submitted successfully!');
-
-                        const modalEl = document.getElementById('flashSaleInquiryModal');
-                        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-                        modal.hide();
-
-                        $form[0].reset();
-                        $('#inquiry_product_id').val('');
-                        $('#inquiry_product_name').text('');
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 422) {
-                            let errors = xhr.responseJSON.errors;
-                            for (let key in errors) {
-                                toastr.error(errors[key][0]);
-                            }
-                        } else {
-                            toastr.error('Something went wrong. Please try again.');
-                        }
-                    },
-                    complete: function() {
-                        $btn.prop('disabled', false).text('Submit');
-                    }
+            fetch(url)
+                .then(r => r.arrayBuffer())
+                .then(buffer => {
+                    const wb = XLSX.read(buffer, {
+                        type: 'array'
+                    });
+                    const ws = wb.Sheets[wb.SheetNames[0]];
+                    const html = XLSX.utils.sheet_to_html(ws, {
+                        editable: false
+                    });
+                    document.getElementById('excelTableContent').innerHTML = html;
+                    document.getElementById('excelTableContent').style.display = 'block';
+                    document.getElementById('excelLoading').style.display = 'none';
+                    _excelLoaded = true;
+                })
+                .catch(() => {
+                    document.getElementById('excelLoading').innerHTML =
+                        '<p class="text-danger text-center py-3">Failed to load Excel file.</p>';
                 });
+        }
+
+        /* ===== CLIENT-SIDE SEARCH ===== */
+        function applyExSearch() {
+            const search = document.getElementById('exSearch').value.toLowerCase().trim();
+            const rows = document.querySelectorAll('.ex-row');
+            let visible = 0;
+
+            rows.forEach(row => {
+                const name = row.dataset.name || '';
+                if (!search || name.includes(search)) {
+                    row.style.display = '';
+                    visible++;
+                } else {
+                    row.style.display = 'none';
+                }
             });
 
+            document.getElementById('exVisibleCount').textContent = visible;
+            document.getElementById('exNoResult').classList.toggle('d-none', visible > 0);
+            checkExFilters();
+        }
+
+        function checkExFilters() {
+            const hasSearch = document.getElementById('exSearch').value.trim().length > 0;
+            if (hasSearch) {
+                document.getElementById('exClearAll').style.display = 'inline-block';
+                document.getElementById('exClearPlaceholder').style.display = 'none';
+            } else {
+                document.getElementById('exClearAll').style.display = 'none';
+                document.getElementById('exClearPlaceholder').style.display = 'block';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('exSearch').addEventListener('keyup', applyExSearch);
+            document.getElementById('exClearAll').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('exSearch').value = '';
+                applyExSearch();
+            });
         });
     </script>
 

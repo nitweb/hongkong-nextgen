@@ -15,22 +15,23 @@
 
                     <div class="product__all">
 
-                        <div class="row">
+                        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-5 align-items-stretch">
 
                             @foreach ($product_data as $item)
-                                <div class="col-xl-3 col-lg-3 col-md-6 custom_product_margin">
+                                <div class="col custom_product_margin">
 
-                                    <div class="product__all-single">
+                                    <div class="product__all-single h-100 d-flex flex-column">
                                         <a href="{{ route('product.details', $item->product_slug) }}">
                                             <div class="product__all-img">
                                                 <img src="{{ asset($item->product_image) }}" alt="{{ $item->product_name }}">
                                             </div>
                                         </a>
 
-                                        <div class="product__all-content text-center">
-
+                                        <div class="product__all-content text-center mt-auto">
                                             <span class="product__category">
-                                                <a href="{{ route('product.by.category', $item->category->product_category_slug ?? '#') }}">{{ $item->category->product_category_name ?? 'Uncategorized' }}</a>
+                                                <a href="{{ route('product.by.category', $item->category->product_category_slug ?? '#') }}">
+                                                    {{ $item->category->product_category_name ?? 'Uncategorized' }}
+                                                </a>
                                             </span>
 
                                             <h4 class="product__all-title">
@@ -38,9 +39,6 @@
                                                     {{ Str::limit($item->product_name, 40) }}
                                                 </a>
                                             </h4>
-
-
-
                                         </div>
                                     </div>
 

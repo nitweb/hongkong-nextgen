@@ -22,6 +22,7 @@
         <div class="container">
             <div class="row">
 
+                {{-- Image (always show) --}}
                 <div class="col-lg-6 col-xl-6">
                     <div class="product-details__img">
                         <img src="{{ asset($product->product_image) }}" alt="{{ $product->product_name }}" />
@@ -30,6 +31,7 @@
 
                 <div class="col-lg-6 col-xl-6">
 
+                    {{-- Product Name (always show) --}}
                     <div class="product-details__top">
                         <h3 class="product-details__title">
                             {{ $product->product_name }}
@@ -37,71 +39,73 @@
                     </div>
 
                     <div class="product-details__reveiw" style="display: block;">
-                        {{-- <p class="details__brand"><strong>Category:</strong>
-                            <span>
-                                <a href="{{ route('product.by.category', $product->category->product_category_slug ?? '#') }}">
-                                    {{ $product->category->product_category_name ?? 'N/A' }}
-                                </a>
-                            </span>
-                        </p> --}}
-                        <p class="details__brand"><strong>Part Number:</strong>
-                            <span>
-                                <a href="javascript:void(0);">
-                                    {{ $product->product_part_number ?? 'N/A' }}
-                                </a>
-                            </span>
-                        </p>
-                        <p class="details__brand"><strong>Brand:</strong>
-                            <span>
-                                <a href="{{ route('product.by.brand', $product->brand->product_brand_slug) }}">
-                                    {{ $product->brand->product_brand_name ?? 'N/A' }}
-                                </a>
-                            </span>
-                        </p>
-                        <p class="details__brand"><strong>Package:</strong>
-                            <span>
-                                <a href="javascript:void(0);">
-                                    {{ $product->package ?? 'N/A' }}
-                                </a>
-                            </span>
-                        </p>
-                        {{-- ✅ Stock Status --}}
+
+                        {{-- Brand (conditional) --}}
+                        @if (!empty($product->brand))
+                            <p class="details__brand"><strong>Brand:</strong>
+                                <span>
+                                    <a href="{{ route('product.by.brand', $product->brand->product_brand_slug) }}">
+                                        {{ $product->brand->product_brand_name }}
+                                    </a>
+                                </span>
+                            </p>
+                        @endif
+
+                        {{-- Part Number (conditional) --}}
+                        @if (!empty($product->product_part_number))
+                            <p class="details__brand"><strong>Part Number:</strong>
+                                <span>
+                                    <a href="javascript:void(0);">
+                                        {{ $product->product_part_number }}
+                                    </a>
+                                </span>
+                            </p>
+                        @endif
+
+                        {{-- Package (conditional) --}}
+                        @if (!empty($product->package))
+                            <p class="details__brand"><strong>Package:</strong>
+                                <span>
+                                    <a href="javascript:void(0);">
+                                        {{ $product->package }}
+                                    </a>
+                                </span>
+                            </p>
+                        @endif
+
+                        {{-- Date Code (conditional) --}}
+                        @if (!empty($product->date_code))
+                            <p class="details__brand"><strong>Date Code:</strong>
+                                <span>
+                                    <a href="javascript:void(0);">
+                                        {{ $product->date_code }}
+                                    </a>
+                                </span>
+                            </p>
+                        @endif
+
+                        {{-- Stock Status (always show) --}}
                         <p class="details__brand"><strong>Stock Status:</strong>
                             <span>
                                 @if ($product->stock_status === 'in_stock')
-                                    <span style="color: #28a745; font-weight: 600;">
-                                        &#10003; In Stock
-                                    </span>
+                                    <span style="color: #28a745; font-weight: 600;">&#10003; In Stock</span>
                                 @else
-                                    <span style="color: #dc3545; font-weight: 600;">
-                                        &#10007; Out of Stock
-                                    </span>
+                                    <span style="color: #dc3545; font-weight: 600;">&#10007; Out of Stock</span>
                                 @endif
                             </span>
                         </p>
+
                     </div>
 
                     <div class="product-details__content">
 
+                        {{-- Specifications (conditional) --}}
                         @if ($product->specifications && $product->specifications->count() > 0)
                             <div class="product-spec-table" style="margin-top:20px;">
                                 <h4 style="margin-bottom:12px;">Specifications</h4>
-
                                 <div style="border:1px solid #e5e5e5; border-radius:8px; overflow:hidden;">
                                     <table style="width:100%; border-collapse:collapse;">
                                         <tbody>
-                                            <tr>
-                                                <td class="col_one">Product Part Number</td>
-                                                <td class="col_two">{{ $product->product_part_number }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="col_one">Package</td>
-                                                <td class="col_two">{{ $product->package }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="col_one">Date Code</td>
-                                                <td class="col_two">{{ $product->date_code }}</td>
-                                            </tr>
                                             @foreach ($product->specifications as $spec)
                                                 <tr>
                                                     <td class="col_one">{{ $spec->spec_key }}</td>
@@ -116,41 +120,45 @@
 
                     </div>
 
-                    <div class="product-details__buttons">
-                        {{-- ✅ Bulk Order Button (Bootstrap modal open) - disabled if out of stock --}}
-                        <div class="product-details__buttons-2">
-                            @if ($product->stock_status === 'in_stock')
+                    {{-- Inquiry Button (conditional — only if in stock) --}}
+                    @if ($product->stock_status === 'in_stock')
+                        <div class="product-details__buttons">
+                            <div class="product-details__buttons-2">
                                 <button type="button" class="thm-btn" data-bs-toggle="modal" data-bs-target="#bulkOrderModal">
                                     Inquiry
                                 </button>
-                            @else
+                            </div>
+                        </div>
+                    @else
+                        <div class="product-details__buttons">
+                            <div class="product-details__buttons-2">
                                 <button type="button" class="thm-btn" disabled style="opacity: 0.5; cursor: not-allowed;" title="This product is currently out of stock">
                                     Out of Stock
                                 </button>
-                            @endif
+                            </div>
                         </div>
-                    </div>
+                    @endif
 
                 </div>
             </div>
         </div>
     </section>
 
-    {{-- Product Description --}}
-    <section class="product-description">
-        <div class="container">
-            <h3 class="product-description__title">Description</h3>
-            <div class="product-description__text1" style="text-align: justify;">
-                {!! $product->product_description !!}
+    {{-- Product Description (conditional) --}}
+    @if (!empty($product->product_description))
+        <section class="product-description">
+            <div class="container">
+                <h3 class="product-description__title">Description</h3>
+                <div class="product-description__text1" style="text-align: justify;">
+                    {!! $product->product_description !!}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
-    <!--=============== BULK ORDER POPUP (Bootstrap Modal - Medium) ===============-->
+    <!--=============== BULK ORDER POPUP ===============-->
     <div class="modal fade" id="bulkOrderModal" tabindex="-1" aria-labelledby="bulkOrderModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-
         <div class="modal-dialog modal-md modal-dialog-centered">
-
             <div class="modal-content">
 
                 <div class="modal-header">
@@ -167,22 +175,18 @@
                             <label class="form-label">Name</label>
                             <input type="text" name="name" class="form-control" required>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input type="email" name="email" class="form-control" required>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Phone</label>
                             <input type="text" name="phone" class="form-control" required>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Quantity</label>
                             <input type="number" name="quantity" min="1" class="form-control" required>
                         </div>
-
                         <div class="mb-0">
                             <label class="form-label">Message</label>
                             <textarea name="message" rows="4" class="form-control"></textarea>
@@ -199,7 +203,6 @@
         </div>
     </div>
 
-
     <!--=============== SCRIPTS ===============-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -208,7 +211,6 @@
     <script>
         $(document).ready(function() {
 
-            // ✅ Toastr options
             toastr.options = {
                 closeButton: true,
                 progressBar: true,
@@ -216,7 +218,6 @@
                 positionClass: "toast-top-right"
             };
 
-            // ✅ AJAX submit (Bootstrap modal)
             $('#bulkOrderForm').submit(function(e) {
                 e.preventDefault();
 
@@ -230,9 +231,8 @@
                     method: 'POST',
                     data: $form.serialize(),
                     success: function(response) {
-                        toastr.success(response.message || 'Bulk order submitted successfully!');
+                        toastr.success(response.message || 'Order submitted successfully!');
 
-                        // close modal (Bootstrap 5)
                         const modalEl = document.getElementById('bulkOrderModal');
                         const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
                         modal.hide();
