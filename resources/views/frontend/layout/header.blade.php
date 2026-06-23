@@ -2,7 +2,7 @@
 
     <nav class="main-menu main-menu-two">
         <div class="main-menu-two__wrapper">
-            <div class="container-sm">
+            <div class="container">
                 <div class="main-menu-two__wrapper-inner">
 
                     {{-- LEFT : LOGO --}}

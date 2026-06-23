@@ -22,7 +22,7 @@
 
         <div class="container">
 
-            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-5 align-items-stretch">
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 row-cols-xl-6 align-items-stretch">
 
                 @foreach ($product_brand_data as $item)
                     <div class="col custom_product_margin">

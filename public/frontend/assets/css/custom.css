@@ -921,3 +921,16 @@ button.thm-btn.contact-page__btn {
 .thm-btn {
     padding: 11px 43px 10px;
 }
+
+.container {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-right: 40px !important;
+    padding-left: 40px !important;
+}
+
+.image-layer-two {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+}
