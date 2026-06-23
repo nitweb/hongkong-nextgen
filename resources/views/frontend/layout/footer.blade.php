@@ -51,7 +51,7 @@
                 </div>
 
                 {{-- Our Brands --}}
-                <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="300ms">
+                <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp ps-xl-5" data-wow-delay="300ms">
                     <div class="footer-widget__column footer-widget__services">
                         <div class="footer-widget__title-box">
                             <h3 class="footer-widget__title">Our Brands</h3>
