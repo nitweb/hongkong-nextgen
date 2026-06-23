@@ -1,4 +1,3 @@
-bash
 <!DOCTYPE html>
 <html lang="en">
 
@@ -96,7 +95,7 @@ bash
 
     {{-- Floating WhatsApp & WeChat Buttons --}}
     <div class="floating-contact-buttons">
-        <a href="https://wa.me/YOURNUMBER" target="_blank" rel="noopener noreferrer" class="floating-btn whatsapp-btn" title="Chat on WhatsApp">
+        <a href="https://wa.me/8801972910617" target="_blank" rel="noopener noreferrer" class="floating-btn whatsapp-btn" title="Chat on WhatsApp">
             <i class="fab fa-whatsapp"></i>
         </a>
         <a href="weixin://dl/chat?YOURWECHATID" target="_blank" rel="noopener noreferrer" class="floating-btn wechat-btn" title="Chat on WeChat">
