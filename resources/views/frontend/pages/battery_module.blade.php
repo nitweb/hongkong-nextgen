@@ -126,7 +126,7 @@
 
                                                 {{-- Brand Name (like other product pages) --}}
                                                 <span class="product__category">
-                                                    <a href="#">{{ $module->brand->product_brand_name ?? '—' }}</a>
+                                                    <a href="{{ route('product.by.brand', $module->brand->product_brand_slug) }}">{{ $module->brand->product_brand_name ?? '—' }}</a>
                                                 </span>
 
                                                 <h4 class="product__all-title">

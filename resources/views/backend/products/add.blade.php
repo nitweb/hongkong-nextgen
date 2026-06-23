@@ -41,12 +41,14 @@
                                 <div id="flashSaleFields" style="display:none;" class="col-12">
                                     <div class="row g-3">
                                         <div class="col-md-6">
-                                            <label class="form-label">Excess Inventory Quantity</label>
-                                            <input type="number" min="0" name="flash_sale_quantity" class="form-control" value="{{ old('flash_sale_quantity') }}">
+                                            <label class="form-label">Excel File (.xlsx, .xls, .csv)</label>
+                                            <input type="file" name="flash_sale_excel" class="form-control" accept=".xlsx,.xls,.csv">
+                                            <small class="text-muted">Max 10MB</small>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Excess Inventory PDF</label>
+                                            <label class="form-label">PDF File</label>
                                             <input type="file" name="flash_sale_pdf" class="form-control" accept="application/pdf">
+                                            <small class="text-muted">Max 5MB</small>
                                         </div>
                                     </div>
                                 </div>
@@ -64,7 +66,7 @@
                                         <div class="col-md-6">
                                             <label class="form-label">IT Product Category <span class="text-danger">*</span></label>
                                             <select name="it_category_id" class="form-select" id="itCategorySelect">
-                                                <option value="">-- Select IT Category --</option>
+                                                <option value="" disabled selected>-- Select IT Category --</option>
                                                 @foreach ($it_categories as $itCat)
                                                     <option value="{{ $itCat->id }}" {{ old('it_category_id') == $itCat->id ? 'selected' : '' }}>
                                                         {{ $itCat->name }}
@@ -88,7 +90,7 @@
                                         <div class="col-md-6">
                                             <label class="form-label">Battery Category <span class="text-danger">*</span></label>
                                             <select name="battery_category_id" class="form-select" id="batteryCategorySelect">
-                                                <option value="">-- Select Battery Category --</option>
+                                                <option value="" disabled selected>-- Select Battery Category --</option>
                                                 @foreach ($battery_categories as $bCat)
                                                     <option value="{{ $bCat->id }}" {{ old('battery_category_id') == $bCat->id ? 'selected' : '' }}>
                                                         {{ $bCat->name }}
@@ -137,7 +139,7 @@
 
                                 {{-- ===== Brand ===== --}}
                                 <div class="col-md-6">
-                                    <label class="form-label">Brand</label>
+                                    <label class="form-label">Brand <span class="text-danger">*</span></label>
                                     <select name="brand_id" class="form-select" id="brandSelect">
                                         <option value="" disabled selected>Select Brand</option>
                                         @foreach ($brands as $brand)
@@ -234,22 +236,17 @@
     </div>
 
     <script>
-        // Image preview
         $('#image').change(function(e) {
             let reader = new FileReader();
             reader.onload = e => $('#showImage').attr('src', e.target.result);
             reader.readAsDataURL(e.target.files[0]);
         });
 
-        // Slug auto generate
         $('input[name="product_name"]').on('keyup', function() {
-            let slug = $(this).val().toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '');
+            let slug = $(this).val().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
             $('#product_slug').val(slug);
         });
 
-        // Spec rows
         $('#addSpecBtn').click(function() {
             $('#specWrapper').append(`
                 <div class="row specRow mb-2">
@@ -263,36 +260,33 @@
             $(this).closest('.specRow').remove();
         });
 
-        // Excess Inventory toggle
         function toggleFlashSaleFields() {
             $('#flashSaleCheck').is(':checked') ? $('#flashSaleFields').slideDown() : $('#flashSaleFields').slideUp();
         }
         toggleFlashSaleFields();
         $('#flashSaleCheck').on('change', toggleFlashSaleFields);
 
-        // IT Product toggle
         function toggleItProductFields() {
             if ($('#itProductCheck').is(':checked')) {
                 $('#normalProductFields').slideUp();
                 $('#itCategoryField').slideDown();
                 $('#categorySelect').removeAttr('required');
             } else {
-                $('#normalProductFields').slideDown();
+                if (!$('#batteryCheck').is(':checked')) {
+                    $('#normalProductFields').slideDown();
+                    $('#categorySelect').attr('required', true);
+                }
                 $('#itCategoryField').slideUp();
-                $('#categorySelect').attr('required', true);
             }
         }
         toggleItProductFields();
-        $('#itProductCheck').on('change', toggleItProductFields);
 
-        // Battery Product toggle
         function toggleBatteryFields() {
             if ($('#batteryCheck').is(':checked')) {
                 $('#normalProductFields').slideUp();
                 $('#batteryFields').slideDown();
                 $('#categorySelect').removeAttr('required');
             } else {
-                // IT Product checked না থাকলেই normal fields দেখাবে
                 if (!$('#itProductCheck').is(':checked')) {
                     $('#normalProductFields').slideDown();
                     $('#categorySelect').attr('required', true);
@@ -301,9 +295,7 @@
             }
         }
         toggleBatteryFields();
-        $('#batteryCheck').on('change', toggleBatteryFields);
 
-        // একসাথে দুটো check না হয় সেটা handle করা
         $('#itProductCheck').on('change', function() {
             if ($(this).is(':checked')) {
                 $('#batteryCheck').prop('checked', false);

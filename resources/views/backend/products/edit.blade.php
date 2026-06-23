@@ -42,14 +42,23 @@
                                 <div id="flashSaleFields" style="display:none;" class="col-12">
                                     <div class="row g-3">
                                         <div class="col-md-6">
-                                            <label class="form-label">Excess Inventory Quantity</label>
-                                            <input type="number" min="0" name="flash_sale_quantity" class="form-control" value="{{ old('flash_sale_quantity', $product_info->flash_sale_quantity) }}">
+                                            <label class="form-label">Excel File (.xlsx, .xls, .csv)</label>
+                                            <input type="file" name="flash_sale_excel" class="form-control" accept=".xlsx,.xls,.csv">
+                                            @if ($product_info->flash_sale_excel)
+                                                <small class="text-muted">
+                                                    Current: {{ basename($product_info->flash_sale_excel) }}
+                                                    <a href="{{ asset($product_info->flash_sale_excel) }}" download class="ms-2 text-success">Download</a>
+                                                </small>
+                                            @endif
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Excess Inventory PDF</label>
+                                            <label class="form-label">PDF File</label>
                                             <input type="file" name="flash_sale_pdf" class="form-control" accept="application/pdf">
                                             @if ($product_info->flash_sale_pdf)
-                                                <small class="text-muted">Current: {{ basename($product_info->flash_sale_pdf) }}</small>
+                                                <small class="text-muted">
+                                                    Current: {{ basename($product_info->flash_sale_pdf) }}
+                                                    <a href="{{ route('product.pdf.download', $product_info->id) }}" class="ms-2 text-danger">Download</a>
+                                                </small>
                                             @endif
                                         </div>
                                     </div>
@@ -68,7 +77,7 @@
                                         <div class="col-md-6">
                                             <label class="form-label">IT Product Category <span class="text-danger">*</span></label>
                                             <select name="it_category_id" class="form-select" id="itCategorySelect">
-                                                <option value="">-- Select IT Category --</option>
+                                                <option value="" disabled selected>-- Select IT Category --</option>
                                                 @foreach ($it_categories as $itCat)
                                                     <option value="{{ $itCat->id }}" {{ old('it_category_id', $product_info->it_category_id) == $itCat->id ? 'selected' : '' }}>
                                                         {{ $itCat->name }}
@@ -92,7 +101,7 @@
                                         <div class="col-md-6">
                                             <label class="form-label">Battery Category <span class="text-danger">*</span></label>
                                             <select name="battery_category_id" class="form-select" id="batteryCategorySelect">
-                                                <option value="">-- Select Battery Category --</option>
+                                                <option value="" disabled selected>-- Select Battery Category --</option>
                                                 @foreach ($battery_categories as $bCat)
                                                     <option value="{{ $bCat->id }}" {{ old('battery_category_id', $product_info->battery_category_id) == $bCat->id ? 'selected' : '' }}>
                                                         {{ $bCat->name }}
@@ -142,7 +151,7 @@
 
                                 {{-- ===== Brand ===== --}}
                                 <div class="col-md-6">
-                                    <label class="form-label">Brand</label>
+                                    <label class="form-label">Brand <span class="text-danger">*</span></label>
                                     <select name="brand_id" class="form-select" id="brandSelect">
                                         <option value="" disabled selected>Select Brand</option>
                                         @foreach ($brands as $brand)
@@ -233,7 +242,7 @@
 
                             </form>
 
-                            {{-- ===== Gallery ===== --}}
+                            {{-- Gallery --}}
                             @if ($product_info->galleries->count() > 0)
                                 <hr>
                                 <h5>Gallery Images</h5>
@@ -260,14 +269,12 @@
     </div>
 
     <script>
-        // Image preview
         $('#image').change(function(e) {
             let reader = new FileReader();
             reader.onload = e => $('#showImage').attr('src', e.target.result);
             reader.readAsDataURL(e.target.files[0]);
         });
 
-        // Spec rows
         $('#addSpecBtn').click(function() {
             $('#specWrapper').append(`
                 <div class="row specRow mb-2">
@@ -281,14 +288,12 @@
             $(this).closest('.specRow').remove();
         });
 
-        // Excess Inventory toggle
         function toggleFlashSaleFields() {
             $('#flashSaleCheck').is(':checked') ? $('#flashSaleFields').slideDown() : $('#flashSaleFields').slideUp();
         }
         toggleFlashSaleFields();
         $('#flashSaleCheck').on('change', toggleFlashSaleFields);
 
-        // IT Product toggle
         function toggleItProductFields() {
             if ($('#itProductCheck').is(':checked')) {
                 $('#normalProductFields').slideUp();
@@ -304,7 +309,6 @@
         }
         toggleItProductFields();
 
-        // Battery Product toggle
         function toggleBatteryFields() {
             if ($('#batteryCheck').is(':checked')) {
                 $('#normalProductFields').slideUp();
@@ -320,7 +324,6 @@
         }
         toggleBatteryFields();
 
-        // Mutual exclusion: IT & Battery
         $('#itProductCheck').on('change', function() {
             if ($(this).is(':checked')) {
                 $('#batteryCheck').prop('checked', false);
