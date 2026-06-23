@@ -1,3 +1,4 @@
+bash
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,18 +8,37 @@
 
     <title>@yield('frontend_title') || Hongkong NextGen</title>
 
+    {{-- ===================== OG / SEO META TAGS ===================== --}}
+    {{-- Page title --}}
+    <meta property="og:title" content="@yield('og_title', config('app.name', 'Hongkong NextGen'))" />
+    <meta name="twitter:title" content="@yield('og_title', config('app.name', 'Hongkong NextGen'))" />
+
+    {{-- Description --}}
+    <meta name="description" content="@yield('og_description', 'Hongkong NextGen International Trading Co., Limited — Quality electronic components & IT products.')" />
+    <meta property="og:description" content="@yield('og_description', 'Hongkong NextGen International Trading Co., Limited — Quality electronic components & IT products.')" />
+    <meta name="twitter:description" content="@yield('og_description', 'Hongkong NextGen International Trading Co., Limited — Quality electronic components & IT products.')" />
+
+    {{-- OG Image --}}
+    <meta property="og:image" content="{{ asset('frontend/assets/images/favicons/og_image.webp') }}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:image" content="{{ asset('frontend/assets/images/favicons/og_image.webp') }}" />
+
+    {{-- URL --}}
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:type" content="@yield('og_type', 'website')" />
+    <meta property="og:site_name" content="Hongkong NextGen" />
+    {{-- ============================================================== --}}
+
     <!-- favicons Icons -->
     <link rel="icon" type="image/png" href="{{ asset('frontend/assets/images/favicons/favicon.png') }}" />
     <link rel="manifest" href="{{ asset('frontend/assets/images/favicons/site.webmanifest') }}" />
-    <meta name="description" content="Hongkong NextGen" />
 
     <!-- fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
     <link href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('frontend/assets/vendors/bootstrap/css/bootstrap.min.css') }}" />
