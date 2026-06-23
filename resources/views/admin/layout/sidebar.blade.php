@@ -74,8 +74,8 @@
                         <span>Battery Management</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('backend.battery_category.list') }}"><span>Battery Category List</span></a></li>
                         <li><a href="{{ route('backend.battery.ad.list') }}"><span>Battery Ad List</span></a></li>
-                        <li><a href="{{ route('backend.battery.list') }}"><span>Battery List</span></a></li>
                     </ul>
                 </li>
 

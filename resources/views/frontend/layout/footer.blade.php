@@ -194,7 +194,7 @@
         <div class="container">
             <div class="site-footer__bottom-inner">
                 <p class="site-footer__bottom-text">
-                    {!! GlobalSiteSettings()->site_copyright !!} Developed by <a href="https://web.nebulaitbd.com/" target="_blank">Nebula IT</a>.
+                    {!! GlobalSiteSettings()->site_copyright !!}
                 </p>
             </div>
         </div>

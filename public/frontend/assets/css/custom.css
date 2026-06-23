@@ -431,7 +431,8 @@ button.thm-btn.contact-page__btn {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    padding: 10px 15px;
 }
 
 .product__all-content span {
@@ -568,10 +569,6 @@ button.thm-btn.contact-page__btn {
 
 .product__all-single:hover .product__all-img img {
     transform: scale(1.08);
-}
-
-.product__all-content {
-    padding: 25px 16px 22px;
 }
 
 .product__category {
