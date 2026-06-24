@@ -64,4 +64,9 @@ class Product extends Model
     {
         return $query->where('stock_status', 'in_stock');
     }
+
+    public function relatedProducts()
+    {
+        return $this->belongsToMany(Product::class, 'product_related', 'product_id', 'related_product_id')->where('status', 'active')->withTimestamps();
+    }
 }

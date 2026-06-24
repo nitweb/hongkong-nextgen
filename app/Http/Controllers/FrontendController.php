@@ -106,6 +106,7 @@ class FrontendController extends Controller
             'brand',
             'galleries',
             'specifications',
+            'relatedProducts.brand',
             'reviews' => function ($query) {
                 $query->where('status', 'accept')->latest();
             },
@@ -114,16 +115,7 @@ class FrontendController extends Controller
             ->where('status', 'active')
             ->firstOrFail();
 
-        $related_products = Product::with(['brand'])
-            ->where('product_category_id', $product->product_category_id)
-            ->where('id', '!=', $product->id)
-            ->where('status', 'active')
-            ->where('stock_status', 'in_stock')
-            ->latest()
-            ->take(10)
-            ->get();
-
-        return view('frontend.details.product_details', compact('product', 'related_products'));
+        return view('frontend.details.product_details', compact('product'));
     }
 
     public function bulkOrderSubmit(Request $request)

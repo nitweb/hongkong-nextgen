@@ -33,12 +33,13 @@ class ProductController extends Controller
     /* ===================== Add Form ===================== */
     public function ProductAdd()
     {
-        $categories = ProductCategory::where('product_category_status', 'active')->get();
-        $brands = ProductBrand::where('product_brand_status', 'active')->orderBy('id')->get();
-        $it_categories = ItProductCategory::where('status', 'active')->orderBy('name')->get();
+        $categories         = ProductCategory::where('product_category_status', 'active')->get();
+        $brands             = ProductBrand::where('product_brand_status', 'active')->orderBy('id')->get();
+        $it_categories      = ItProductCategory::where('status', 'active')->orderBy('name')->get();
         $battery_categories = BatteryCategory::where('status', 'active')->orderBy('name')->get();
+        $all_products       = Product::where('status', 'active')->orderBy('product_name')->get();
 
-        return view('backend.products.add', compact('categories', 'brands', 'it_categories', 'battery_categories'));
+        return view('backend.products.add', compact('categories', 'brands', 'it_categories', 'battery_categories', 'all_products'));
     }
 
     /* ===================== Store ===================== */
@@ -150,6 +151,11 @@ class ProductController extends Controller
                 }
             }
 
+            // Related Products
+            if ($request->filled('related_products')) {
+                $product->relatedProducts()->sync($request->related_products);
+            }
+
             DB::commit();
 
             return redirect()
@@ -167,13 +173,14 @@ class ProductController extends Controller
     /* ===================== Edit ===================== */
     public function ProductEdit($id)
     {
-        $product_info = Product::with(['galleries', 'specifications'])->findOrFail($id);
-        $categories = ProductCategory::where('product_category_status', 'active')->get();
-        $brands = ProductBrand::where('product_brand_status', 'active')->orderBy('id')->get();
-        $it_categories = ItProductCategory::where('status', 'active')->orderBy('name')->get();
+        $product_info       = Product::with(['galleries', 'specifications', 'relatedProducts'])->findOrFail($id);
+        $categories         = ProductCategory::where('product_category_status', 'active')->get();
+        $brands             = ProductBrand::where('product_brand_status', 'active')->orderBy('id')->get();
+        $it_categories      = ItProductCategory::where('status', 'active')->orderBy('name')->get();
         $battery_categories = BatteryCategory::where('status', 'active')->orderBy('name')->get();
+        $all_products       = Product::where('status', 'active')->where('id', '!=', $id)->orderBy('product_name')->get();
 
-        return view('backend.products.edit', compact('product_info', 'categories', 'brands', 'it_categories', 'battery_categories'));
+        return view('backend.products.edit', compact('product_info', 'categories', 'brands', 'it_categories', 'battery_categories', 'all_products'));
     }
 
     /* ===================== Update ===================== */
@@ -300,6 +307,9 @@ class ProductController extends Controller
                     ]);
                 }
             }
+
+            // Related Products
+            $product->relatedProducts()->sync($request->related_products ?? []);
 
             DB::commit();
 
