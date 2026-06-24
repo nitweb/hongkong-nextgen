@@ -31,39 +31,6 @@
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product_info->id }}">
 
-                                {{-- ===== Excess Inventory ===== --}}
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="flashSaleCheck" name="is_flash_sale" value="1" {{ old('is_flash_sale', $product_info->is_flash_sale) ? 'checked' : '' }}>
-                                        <label class="form-check-label">Excess Inventory Product</label>
-                                    </div>
-                                </div>
-
-                                <div id="flashSaleFields" style="display:none;" class="col-12">
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Excel File (.xlsx, .xls, .csv)</label>
-                                            <input type="file" name="flash_sale_excel" class="form-control" accept=".xlsx,.xls,.csv">
-                                            @if ($product_info->flash_sale_excel)
-                                                <small class="text-muted">
-                                                    Current: {{ basename($product_info->flash_sale_excel) }}
-                                                    <a href="{{ asset($product_info->flash_sale_excel) }}" download class="ms-2 text-success">Download</a>
-                                                </small>
-                                            @endif
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">PDF File</label>
-                                            <input type="file" name="flash_sale_pdf" class="form-control" accept="application/pdf">
-                                            @if ($product_info->flash_sale_pdf)
-                                                <small class="text-muted">
-                                                    Current: {{ basename($product_info->flash_sale_pdf) }}
-                                                    <a href="{{ route('product.pdf.download', $product_info->id) }}" class="ms-2 text-danger">Download</a>
-                                                </small>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-
                                 {{-- ===== IT Product ===== --}}
                                 <div class="col-12">
                                     <div class="form-check">
@@ -151,7 +118,7 @@
 
                                 {{-- ===== Brand ===== --}}
                                 <div class="col-md-6">
-                                    <label class="form-label">Brand <span class="text-danger">*</span></label>
+                                    <label class="form-label">Brand</label>
                                     <select name="brand_id" class="form-select" id="brandSelect">
                                         <option value="" disabled selected>Select Brand</option>
                                         @foreach ($brands as $brand)
@@ -287,12 +254,6 @@
         $(document).on('click', '.removeSpec', function() {
             $(this).closest('.specRow').remove();
         });
-
-        function toggleFlashSaleFields() {
-            $('#flashSaleCheck').is(':checked') ? $('#flashSaleFields').slideDown() : $('#flashSaleFields').slideUp();
-        }
-        toggleFlashSaleFields();
-        $('#flashSaleCheck').on('change', toggleFlashSaleFields);
 
         function toggleItProductFields() {
             if ($('#itProductCheck').is(':checked')) {

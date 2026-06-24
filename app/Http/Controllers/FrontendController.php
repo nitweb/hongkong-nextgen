@@ -13,6 +13,7 @@ use App\Models\HeroSection;
 use App\Models\MissionVision;
 use App\Models\CareerForm;
 use App\Models\Certificate;
+use App\Models\ExcessInventory;
 use App\Models\Product;
 use App\Models\ProductBrand;
 use App\Models\ProductCategory;
@@ -34,14 +35,13 @@ class FrontendController extends Controller
     {
         $slider_data = Slider::where('slider_status', 'active')->latest()->get();
 
-        $product_data = Product::where('status', 'active')->where('is_battery', false)->where('is_it_product', false)->where('is_flash_sale', false)->latest()->take(10)->get();
+        $product_data = Product::where('status', 'active')->where('is_battery', false)->where('is_it_product', false)->latest()->take(10)->get();
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')->orderBy('id', 'asc')->take(12)->get();
 
-        // Get all active categories with their latest products
         $categories = ProductCategory::with([
             'products' => function ($query) {
-                $query->where('status', 'active')->latest()->take(8); // adjust limit as needed
+                $query->where('status', 'active')->latest()->take(8);
             },
         ])
             ->orderBy('product_category_name', 'asc')
@@ -59,8 +59,7 @@ class FrontendController extends Controller
         $query = Product::with(['category', 'brand'])
             ->where('status', 'active')
             ->where('is_battery', false)
-            ->where('is_it_product', false)
-            ->where('is_flash_sale', false);
+            ->where('is_it_product', false);
 
         if ($request->filled('categories')) {
             $query->whereIn('product_category_id', $request->categories);
@@ -80,11 +79,11 @@ class FrontendController extends Controller
         }
 
         $category_data = ProductCategory::where('product_category_status', 'active')
-            ->withCount(['products' => fn($q) => $q->where('status', 'active')->where('is_battery', false)->where('is_it_product', false)->where('is_flash_sale', false)])
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')->where('is_battery', false)->where('is_it_product', false)])
             ->get();
 
         $product_brand_data = ProductBrand::where('product_brand_status', 'active')
-            ->withCount(['products' => fn($q) => $q->where('status', 'active')->where('is_battery', false)->where('is_it_product', false)->where('is_flash_sale', false)])
+            ->withCount(['products' => fn($q) => $q->where('status', 'active')->where('is_battery', false)->where('is_it_product', false)])
             ->get();
 
         return view('frontend.pages.products', compact('product_data', 'category_data', 'product_brand_data'));
@@ -318,20 +317,9 @@ class FrontendController extends Controller
 
     public function FlashSale()
     {
-        $product_data = Product::where('is_flash_sale', true)->where('status', 'active')->with('category', 'brand', 'galleries')->orderBy('created_at', 'desc')->paginate(12);
+        $product_data = ExcessInventory::where('status', 'active')->latest()->get();
 
-        $product_brand_data = ProductBrand::where('product_brand_status', 'active')
-            ->orderBy('product_brand_name')
-            ->withCount([
-                'products' => function ($query) {
-                    $query->where('is_flash_sale', true)->where('status', 'active');
-                },
-            ])
-            ->get();
-
-        $category_data = ProductCategory::where('product_category_status', 'active')->orderBy('product_category_name')->get();
-
-        return view('frontend.pages.flash_sale', compact('product_data', 'product_brand_data', 'category_data'));
+        return view('frontend.pages.flash_sale', compact('product_data'));
     }
 
     public function ItProduct(Request $request)

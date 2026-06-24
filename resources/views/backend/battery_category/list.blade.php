@@ -38,7 +38,7 @@
                                         @foreach ($categories as $cat)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $cat->name }}</td>
+                                                <td>{{ $cat->name }} <span class="badge text-bg-secondary">{{ $cat->products_count }}</span></td>
                                                 <td><code>{{ $cat->slug }}</code></td>
                                                 <td>
                                                     <span class="badge {{ $cat->status === 'active' ? 'text-bg-success' : 'text-bg-danger' }}">

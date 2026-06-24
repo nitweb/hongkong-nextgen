@@ -50,7 +50,7 @@
                                                 {{-- <td>
                                                     <img src="{{ !empty($item->product_category_image) ? url('upload/product_category_image/' . $item->product_category_image) : url('upload/no_image.jpg') }}" alt="Product Category Image" class="img-fluid d-block" style="width: 80px;">
                                                 </td> --}}
-                                                <td>{{ $item->product_category_name }}</td>
+                                                <td>{{ $item->product_category_name }} <span class="badge text-bg-secondary">{{ $item->products_count }}</span></td>
                                                 <td>
                                                     <span class="badge custom_status_badge {{ $item->product_category_status == 'active' ? 'text-bg-success' : 'text-bg-danger' }}" data-id="{{ $item->id }}" data-model="{{ \App\Models\ProductCategory::class }}">
                                                         {{ ucfirst($item->product_category_status) }}

@@ -17,11 +17,9 @@ class ProductBrandController extends Controller
     public function ProductBrandList()
     {
         $title = 'Product Brand';
-
-        $product_brand_list = ProductBrand::orderBy('id', 'asc')->get();
-
-        return view('backend.product_brand.list', compact('title', 'product_brand_list'));
-    } // End Method
+        $product_brand_list = ProductBrand::withCount('products')->latest()->get();
+        return view('backend.product_brand.list', compact('product_brand_list', 'title'));
+    }
 
     public function ProductBrandAdd()
     {

@@ -29,9 +29,7 @@
 
                                         <div class="product__all-content text-center mt-auto">
                                             <span class="product__category">
-                                                <a href="{{ route('product.by.category', $item->category->product_category_slug ?? '#') }}">
-                                                    {{ $item->category->product_category_name ?? 'Uncategorized' }}
-                                                </a>
+                                                <a href="{{ route('product.by.brand', $item->brand->product_brand_slug ?? '#!') }}">{{ $item->brand->product_brand_name ?? 'Uncategorized' }}</a>
                                             </span>
 
                                             <h4 class="product__all-title">

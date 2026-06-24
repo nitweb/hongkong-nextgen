@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\BulkOrderController;
 use App\Http\Controllers\Backend\CertificateController;
 use App\Http\Controllers\Backend\ContactFormController;
+use App\Http\Controllers\Backend\ExcessInventoryController;
 use App\Http\Controllers\Backend\ItProductCategoryController;
 use App\Http\Controllers\Backend\MissionVisionController;
 use App\Http\Controllers\Backend\ProductBrandController;
@@ -121,8 +122,6 @@ Route::middleware('web')->group(function () {
 
     // AJAX Default Products Route
     Route::get('/ajax/products', [ProductController::class, 'ajaxProducts'])->name('ajax.products');
-
-    Route::get('/ajax/flash-sale', [ProductController::class, 'ajaxFlashSale'])->name('ajax.flash.sale');
 
     // Battery Frontend
     Route::get('/battery-management', [BatteryModuleController::class, 'frontend'])->name('frontend.battery');
@@ -281,6 +280,14 @@ Route::middleware('admin')->group(function () {
     Route::get('/backend/battery-category/edit/{id}', [BatteryCategoryController::class, 'Edit'])->name('backend.battery_category.edit');
     Route::post('/backend/battery-category/update', [BatteryCategoryController::class, 'Update'])->name('backend.battery_category.update');
     Route::get('/backend/battery-category/delete/{id}', [BatteryCategoryController::class, 'Delete'])->name('backend.battery_category.delete');
+
+    // Excess Inventory
+    Route::get('/backend/excess-inventory/list', [ExcessInventoryController::class, 'List'])->name('backend.excess_inventory.list');
+    Route::get('/backend/excess-inventory/add', [ExcessInventoryController::class, 'Add'])->name('backend.excess_inventory.add');
+    Route::post('/backend/excess-inventory/store', [ExcessInventoryController::class, 'Store'])->name('backend.excess_inventory.store');
+    Route::get('/backend/excess-inventory/edit/{id}', [ExcessInventoryController::class, 'Edit'])->name('backend.excess_inventory.edit');
+    Route::post('/backend/excess-inventory/update', [ExcessInventoryController::class, 'Update'])->name('backend.excess_inventory.update');
+    Route::get('/backend/excess-inventory/delete/{id}', [ExcessInventoryController::class, 'Delete'])->name('backend.excess_inventory.delete');
 
     // Font Awesome
     Route::get('/backend/site-settings/font-awesome', [SiteSettingsController::class, 'FontAwesome'])->name('backend.site_settings.font_awesome');

@@ -81,6 +81,16 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="archive"></i>
+                        <span>Excess Inventory</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('backend.excess_inventory.list') }}"><span>List</span></a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="shopping-cart"></i>
                         <span>Order Manage</span>
                     </a>
