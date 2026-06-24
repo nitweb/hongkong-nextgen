@@ -117,7 +117,7 @@
 
                                 {{-- ===== Brand ===== --}}
                                 <div class="col-md-6">
-                                    <label class="form-label">Brand</label>
+                                    <label class="form-label">Brand <span class="text-danger">*</span></label>
                                     <select name="brand_id" class="form-select" id="brandSelect">
                                         <option value="" disabled selected>Select Brand</option>
                                         @foreach ($brands as $brand)
