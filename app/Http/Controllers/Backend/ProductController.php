@@ -63,7 +63,7 @@ class ProductController extends Controller
             'status' => 'required|in:active,inactive',
             'is_it_product' => 'nullable|boolean',
             'is_battery' => 'nullable|boolean',
-            'brand_id' => 'nullable|exists:product_brands,id',
+            'brand_id' => 'required|exists:product_brands,id',
             'spec_key.*' => 'nullable|string|max:191',
             'spec_value.*' => 'nullable|string|max:2000',
         ];
@@ -205,7 +205,7 @@ class ProductController extends Controller
             'status' => 'required|in:active,inactive',
             'is_it_product' => 'nullable|boolean',
             'is_battery' => 'nullable|boolean',
-            'brand_id' => 'nullable|exists:product_brands,id',
+            'brand_id' => 'required|exists:product_brands,id',
             'spec_key.*' => 'nullable|string|max:191',
             'spec_value.*' => 'nullable|string|max:2000',
         ];
