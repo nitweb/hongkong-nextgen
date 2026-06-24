@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\BulkOrderController;
 use App\Http\Controllers\Backend\CertificateController;
 use App\Http\Controllers\Backend\ContactFormController;
+use App\Http\Controllers\Backend\ExcessInventoryController;
 use App\Http\Controllers\Backend\ItProductCategoryController;
 use App\Http\Controllers\Backend\MissionVisionController;
 use App\Http\Controllers\Backend\ProductBrandController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Backend\ProductReviewController;
 use App\Http\Controllers\Backend\ProductSubCategoryController;
 use App\Http\Controllers\Backend\SiteSettingsController;
 use App\Http\Controllers\Backend\SliderController;
+use App\Http\Controllers\Backend\YoutubeVideoController;
 use App\Http\Controllers\CustomerAuthController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\GlobalController;
@@ -121,8 +123,6 @@ Route::middleware('web')->group(function () {
 
     // AJAX Default Products Route
     Route::get('/ajax/products', [ProductController::class, 'ajaxProducts'])->name('ajax.products');
-
-    Route::get('/ajax/flash-sale', [ProductController::class, 'ajaxFlashSale'])->name('ajax.flash.sale');
 
     // Battery Frontend
     Route::get('/battery-management', [BatteryModuleController::class, 'frontend'])->name('frontend.battery');
@@ -281,6 +281,22 @@ Route::middleware('admin')->group(function () {
     Route::get('/backend/battery-category/edit/{id}', [BatteryCategoryController::class, 'Edit'])->name('backend.battery_category.edit');
     Route::post('/backend/battery-category/update', [BatteryCategoryController::class, 'Update'])->name('backend.battery_category.update');
     Route::get('/backend/battery-category/delete/{id}', [BatteryCategoryController::class, 'Delete'])->name('backend.battery_category.delete');
+
+    // Excess Inventory
+    Route::get('/backend/excess-inventory/list', [ExcessInventoryController::class, 'List'])->name('backend.excess_inventory.list');
+    Route::get('/backend/excess-inventory/add', [ExcessInventoryController::class, 'Add'])->name('backend.excess_inventory.add');
+    Route::post('/backend/excess-inventory/store', [ExcessInventoryController::class, 'Store'])->name('backend.excess_inventory.store');
+    Route::get('/backend/excess-inventory/edit/{id}', [ExcessInventoryController::class, 'Edit'])->name('backend.excess_inventory.edit');
+    Route::post('/backend/excess-inventory/update', [ExcessInventoryController::class, 'Update'])->name('backend.excess_inventory.update');
+    Route::get('/backend/excess-inventory/delete/{id}', [ExcessInventoryController::class, 'Delete'])->name('backend.excess_inventory.delete');
+
+    // YouTube Videos
+    Route::get('/backend/youtube-video/list', [YoutubeVideoController::class, 'List'])->name('backend.youtube_video.list');
+    Route::get('/backend/youtube-video/add', [YoutubeVideoController::class, 'Add'])->name('backend.youtube_video.add');
+    Route::post('/backend/youtube-video/store', [YoutubeVideoController::class, 'Store'])->name('backend.youtube_video.store');
+    Route::get('/backend/youtube-video/edit/{id}', [YoutubeVideoController::class, 'Edit'])->name('backend.youtube_video.edit');
+    Route::post('/backend/youtube-video/update', [YoutubeVideoController::class, 'Update'])->name('backend.youtube_video.update');
+    Route::get('/backend/youtube-video/delete/{id}', [YoutubeVideoController::class, 'Delete'])->name('backend.youtube_video.delete');
 
     // Font Awesome
     Route::get('/backend/site-settings/font-awesome', [SiteSettingsController::class, 'FontAwesome'])->name('backend.site_settings.font_awesome');

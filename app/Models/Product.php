@@ -9,7 +9,6 @@ class Product extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'is_flash_sale' => 'boolean',
         'is_it_product' => 'boolean',
         'is_battery' => 'boolean',
         'product_price' => 'decimal:2',
@@ -51,11 +50,6 @@ class Product extends Model
         return $this->hasMany(ProductSpecification::class, 'product_id')->orderBy('sort_order');
     }
 
-    public function scopeFlashSale($query)
-    {
-        return $query->where('is_flash_sale', true);
-    }
-
     public function scopeItProduct($query)
     {
         return $query->where('is_it_product', true);
@@ -69,5 +63,10 @@ class Product extends Model
     public function scopeInStock($query)
     {
         return $query->where('stock_status', 'in_stock');
+    }
+
+    public function relatedProducts()
+    {
+        return $this->belongsToMany(Product::class, 'product_related', 'product_id', 'related_product_id')->where('status', 'active')->withTimestamps();
     }
 }

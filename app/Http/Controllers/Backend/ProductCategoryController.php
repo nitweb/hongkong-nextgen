@@ -16,9 +16,9 @@ class ProductCategoryController extends Controller
 {
     public function ProductCategoriesList()
     {
-        $product_categories_list = ProductCategory::latest()->get();
+        $product_categories_list = ProductCategory::withCount('products')->latest()->get();
         return view('backend.product_categories.list', compact('product_categories_list'));
-    } // End Method
+    }
 
     public function ProductCategoriesAdd()
     {

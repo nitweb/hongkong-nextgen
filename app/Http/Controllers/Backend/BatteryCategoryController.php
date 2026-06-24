@@ -14,7 +14,7 @@ class BatteryCategoryController extends Controller
     public function List()
     {
         try {
-            $categories = BatteryCategory::latest()->get();
+            $categories = BatteryCategory::withCount('products')->latest()->get();
             return view('backend.battery_category.list', compact('categories'));
         } catch (\Throwable $e) {
             Log::error('BatteryCategoryList Error: ' . $e->getMessage());

@@ -23,13 +23,13 @@
             <div class="row">
 
                 {{-- Image (always show) --}}
-                <div class="col-lg-6 col-xl-6">
+                <div class="col-lg-4 col-xl-4">
                     <div class="product-details__img">
                         <img src="{{ asset($product->product_image) }}" alt="{{ $product->product_name }}" />
                     </div>
                 </div>
 
-                <div class="col-lg-6 col-xl-6">
+                <div class="col-lg-8 col-xl-8">
 
                     {{-- Product Name (always show) --}}
                     <div class="product-details__top">
@@ -139,22 +139,68 @@
                         </div>
                     @endif
 
+                    {{-- Product Description (conditional) --}}
+                    @if (!empty($product->product_description))
+                        <section class="product-description">
+                            <h3 class="product-description__title" style="text-decoration: underline; margin-bottom: 15px;">Description</h3>
+                            <div class="product-description__text1" style="text-align: justify;">
+                                {!! $product->product_description !!}
+                            </div>
+                        </section>
+                    @endif
+
                 </div>
+
             </div>
         </div>
     </section>
 
-    {{-- Product Description (conditional) --}}
-    @if (!empty($product->product_description))
-        <section class="product-description">
+    {{-- Related Products --}}
+    @if ($product->relatedProducts && $product->relatedProducts->count() > 0)
+        <section class="services-two product">
             <div class="container">
-                <h3 class="product-description__title">Description</h3>
-                <div class="product-description__text1" style="text-align: justify;">
-                    {!! $product->product_description !!}
+
+                <div class="section-title section-title--two text-center">
+                    <span class="section-title__tagline">Related Products</span>
+                    {{-- <h2 class="section-title__title">Related Products</h2> --}}
                 </div>
+
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="product__items">
+                            <div class="product__all">
+                                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-5 align-items-stretch">
+                                    @foreach ($product->relatedProducts->take(5) as $item)
+                                        <div class="col custom_product_margin">
+                                            <div class="product__all-single h-100 d-flex flex-column">
+                                                <a href="{{ route('product.details', $item->product_slug) }}">
+                                                    <div class="product__all-img">
+                                                        <img src="{{ asset($item->product_image) }}" alt="{{ $item->product_name }}">
+                                                    </div>
+                                                </a>
+                                                <div class="product__all-content text-center mt-auto">
+                                                    <span class="product__category">
+                                                        <a href="{{ route('product.by.brand', $item->brand->product_brand_slug ?? '#!') }}">{{ $item->brand->product_brand_name ?? '' }}</a>
+                                                    </span>
+                                                    <h4 class="product__all-title">
+                                                        <a href="{{ route('product.details', $item->product_slug) }}">
+                                                            {{ Str::limit($item->product_name, 40) }}
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
     @endif
+
 
     <!--=============== BULK ORDER POPUP ===============-->
     <div class="modal fade" id="bulkOrderModal" tabindex="-1" aria-labelledby="bulkOrderModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">

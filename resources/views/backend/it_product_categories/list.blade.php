@@ -35,7 +35,7 @@
                                         @foreach ($list as $item)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $item->name }}</td>
+                                                <td>{{ $item->name }} <span class="badge text-bg-secondary">{{ $item->products_count }}</span></td>
                                                 <td>{{ $item->slug }}</td>
                                                 <td>
                                                     <span class="badge {{ $item->status === 'active' ? 'text-bg-success' : 'text-bg-danger' }}">

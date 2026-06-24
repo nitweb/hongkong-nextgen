@@ -21,32 +21,14 @@
         <div class="container">
             <div class="row">
 
-                {{-- SIDEBAR --}}
-                <div class="col-xl-3 col-lg-3">
-                    <div class="product__sidebar">
-                        <div class="shop-category product__sidebar-single">
-                            <h3 class="product__sidebar-title">Brands</h3>
-                            <ul class="list-unstyled">
-                                @foreach ($product_brand_data as $item)
-                                    <li>
-                                        <a href="{{ route('product.by.brand', $item->product_brand_slug) }}">
-                                            {{ $item->product_brand_name }}
-                                            <span>({{ $item->products_count }})</span>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                </div>
 
                 {{-- CONTENT --}}
-                <div class="col-xl-9 col-lg-9">
+                <div class="col-xl-12 col-lg-12">
 
                     {{-- Search --}}
                     <div class="shop-search product__sidebar-single product__price-ranger">
                         <div class="custom-sidebar-search">
-                            <input type="text" id="exSearch" class="custom-sidebar-search__input" placeholder="Search products..." autocomplete="off">
+                            <input type="text" id="exSearch" class="custom-sidebar-search__input" placeholder="Search particulars..." autocomplete="off">
                         </div>
                     </div>
 
@@ -60,8 +42,8 @@
                                     <div id="exClearPlaceholder" style="visibility:hidden;">Clear All</div>
                                     <div class="product__showing-text-box">
                                         <p class="product__showing-text">
-                                            Showing <span id="exVisibleCount">{{ $product_data->total() }}</span>
-                                            of {{ $product_data->total() }} results
+                                            Showing <span id="exVisibleCount">{{ $product_data->count() }}</span>
+                                            of {{ $product_data->count() }} results
                                         </p>
                                     </div>
                                 </div>
@@ -75,48 +57,46 @@
                                     <thead>
                                         <tr>
                                             <th>S/N</th>
-                                            <th>Name</th>
+                                            <th>Particulars</th>
                                             <th width="220">Download</th>
                                             <th width="100">View</th>
                                         </tr>
                                     </thead>
                                     <tbody id="exTableBody">
                                         @forelse ($product_data as $item)
-                                            <tr class="ex-row" data-name="{{ strtolower($item->product_name) }}" data-excel="{{ $item->flash_sale_excel ? asset($item->flash_sale_excel) : '' }}" data-pdf="{{ $item->flash_sale_pdf ? asset($item->flash_sale_pdf) : '' }}" data-title="{{ $item->product_name }}">
+                                            <tr class="ex-row" data-name="{{ strtolower($item->particulars) }}" data-excel="{{ $item->excel_file ? asset($item->excel_file) : '' }}" data-pdf="{{ $item->pdf_file ? asset($item->pdf_file) : '' }}" data-title="{{ $item->particulars }}">
+
+                                                <td>{{ $loop->iteration }}</td>
 
                                                 <td>
-                                                    {{ $loop->iteration }}
-                                                </td>
-
-                                                <td>
-                                                    <span class="ex-name">{{ $item->product_name }}</span>
+                                                    <span class="ex-name">{{ $item->particulars }}</span>
                                                 </td>
 
                                                 <td>
                                                     <div class="d-flex gap-2 flex-wrap">
-                                                        @if ($item->flash_sale_excel)
-                                                            <a href="{{ asset($item->flash_sale_excel) }}" download class="ex-dl-btn ex-dl-excel">
+                                                        @if ($item->excel_file)
+                                                            <a href="{{ asset($item->excel_file) }}" download class="ex-dl-btn ex-dl-excel">
                                                                 <i class="bx bx-spreadsheet"></i> Excel
                                                             </a>
                                                         @endif
-                                                        @if ($item->flash_sale_pdf)
-                                                            <a href="{{ route('product.pdf.download', $item->id) }}" class="ex-dl-btn ex-dl-pdf">
+                                                        @if ($item->pdf_file)
+                                                            <a href="{{ asset($item->pdf_file) }}" download class="ex-dl-btn ex-dl-pdf">
                                                                 <i class="bx bxs-file-pdf"></i> PDF
                                                             </a>
                                                         @endif
-                                                        @if (!$item->flash_sale_excel && !$item->flash_sale_pdf)
+                                                        @if (!$item->excel_file && !$item->pdf_file)
                                                             <span class="text-muted small">—</span>
                                                         @endif
                                                     </div>
                                                 </td>
 
                                                 <td>
-                                                    @if ($item->flash_sale_excel || $item->flash_sale_pdf)
+                                                    @if ($item->excel_file || $item->pdf_file)
                                                         <button class="ex-view-btn" onclick="openExModal(
-                                                                '{{ addslashes($item->product_name) }}',
-                                                                '{{ $item->flash_sale_excel ? asset($item->flash_sale_excel) : '' }}',
-                                                                '{{ $item->flash_sale_pdf ? asset($item->flash_sale_pdf) : '' }}'
-                                                            )">
+                                                            '{{ addslashes($item->particulars) }}',
+                                                            '{{ $item->excel_file ? asset($item->excel_file) : '' }}',
+                                                            '{{ $item->pdf_file ? asset($item->pdf_file) : '' }}'
+                                                        )">
                                                             <i class="bx bx-show-alt"></i> View
                                                         </button>
                                                     @else
@@ -139,37 +119,6 @@
                                 <p class="text-muted mt-2">No products found</p>
                             </div>
                         </div>
-
-                        {{-- Pagination --}}
-                        @if ($product_data->hasPages())
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <div class="blog-page__pagination">
-                                        <ul class="pg-pagination list-unstyled">
-                                            @if (!$product_data->onFirstPage())
-                                                <li class="prev">
-                                                    <a href="{{ $product_data->previousPageUrl() }}" aria-label="Previous">
-                                                        <i class="fa fa-angle-double-left"></i>
-                                                    </a>
-                                                </li>
-                                            @endif
-                                            @foreach ($product_data->getUrlRange(1, $product_data->lastPage()) as $page => $url)
-                                                <li class="count {{ $page == $product_data->currentPage() ? 'active' : '' }}">
-                                                    <a href="{{ $url }}">{{ $page }}</a>
-                                                </li>
-                                            @endforeach
-                                            @if ($product_data->hasMorePages())
-                                                <li class="next">
-                                                    <a href="{{ $product_data->nextPageUrl() }}" aria-label="Next">
-                                                        <i class="fa fa-angle-double-right"></i>
-                                                    </a>
-                                                </li>
-                                            @endif
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
 
                     </div>
                 </div>

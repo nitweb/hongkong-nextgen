@@ -14,7 +14,7 @@ class ItProductCategoryController extends Controller
 {
     public function List()
     {
-        $list = ItProductCategory::latest()->get();
+        $list = ItProductCategory::withCount('products')->latest()->get();
         return view('backend.it_product_categories.list', compact('list'));
     }
 
@@ -39,8 +39,8 @@ class ItProductCategoryController extends Controller
             DB::beginTransaction();
 
             ItProductCategory::create([
-                'name'   => $request->name,
-                'slug'   => Str::slug($request->slug),
+                'name' => $request->name,
+                'slug' => Str::slug($request->slug),
                 'status' => $request->status,
             ]);
 
@@ -52,7 +52,9 @@ class ItProductCategoryController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
             Log::error('IT Category Store Error: ' . $e->getMessage());
-            return back()->with(['message' => 'Failed to create IT Category.', 'alert-type' => 'error'])->withInput();
+            return back()
+                ->with(['message' => 'Failed to create IT Category.', 'alert-type' => 'error'])
+                ->withInput();
         }
     }
 
@@ -65,9 +67,9 @@ class ItProductCategoryController extends Controller
     public function Update(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id'     => 'required|exists:it_product_categories,id',
-            'name'   => 'required|string|max:255',
-            'slug'   => 'required|string|max:255',
+            'id' => 'required|exists:it_product_categories,id',
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
         ]);
 
@@ -82,15 +84,17 @@ class ItProductCategoryController extends Controller
             ->exists();
 
         if ($slugExists) {
-            return back()->withErrors(['slug' => 'This slug is already taken.'])->withInput();
+            return back()
+                ->withErrors(['slug' => 'This slug is already taken.'])
+                ->withInput();
         }
 
         try {
             DB::beginTransaction();
 
             $category->update([
-                'name'   => $request->name,
-                'slug'   => Str::slug($request->slug),
+                'name' => $request->name,
+                'slug' => Str::slug($request->slug),
                 'status' => $request->status,
             ]);
 
@@ -102,7 +106,9 @@ class ItProductCategoryController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
             Log::error('IT Category Update Error: ' . $e->getMessage());
-            return back()->with(['message' => 'Failed to update IT Category.', 'alert-type' => 'error'])->withInput();
+            return back()
+                ->with(['message' => 'Failed to update IT Category.', 'alert-type' => 'error'])
+                ->withInput();
         }
     }
 
