@@ -20,6 +20,7 @@ use App\Http\Controllers\Backend\ProductReviewController;
 use App\Http\Controllers\Backend\ProductSubCategoryController;
 use App\Http\Controllers\Backend\SiteSettingsController;
 use App\Http\Controllers\Backend\SliderController;
+use App\Http\Controllers\Backend\YoutubeVideoController;
 use App\Http\Controllers\CustomerAuthController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\GlobalController;
@@ -288,6 +289,14 @@ Route::middleware('admin')->group(function () {
     Route::get('/backend/excess-inventory/edit/{id}', [ExcessInventoryController::class, 'Edit'])->name('backend.excess_inventory.edit');
     Route::post('/backend/excess-inventory/update', [ExcessInventoryController::class, 'Update'])->name('backend.excess_inventory.update');
     Route::get('/backend/excess-inventory/delete/{id}', [ExcessInventoryController::class, 'Delete'])->name('backend.excess_inventory.delete');
+
+    // YouTube Videos
+    Route::get('/backend/youtube-video/list', [YoutubeVideoController::class, 'List'])->name('backend.youtube_video.list');
+    Route::get('/backend/youtube-video/add', [YoutubeVideoController::class, 'Add'])->name('backend.youtube_video.add');
+    Route::post('/backend/youtube-video/store', [YoutubeVideoController::class, 'Store'])->name('backend.youtube_video.store');
+    Route::get('/backend/youtube-video/edit/{id}', [YoutubeVideoController::class, 'Edit'])->name('backend.youtube_video.edit');
+    Route::post('/backend/youtube-video/update', [YoutubeVideoController::class, 'Update'])->name('backend.youtube_video.update');
+    Route::get('/backend/youtube-video/delete/{id}', [YoutubeVideoController::class, 'Delete'])->name('backend.youtube_video.delete');
 
     // Font Awesome
     Route::get('/backend/site-settings/font-awesome', [SiteSettingsController::class, 'FontAwesome'])->name('backend.site_settings.font_awesome');

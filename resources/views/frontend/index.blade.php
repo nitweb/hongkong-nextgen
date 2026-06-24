@@ -11,10 +11,13 @@
     {{-- Brand Area --}}
     @include('frontend.home.03_brand')
 
+    {{-- YouTube Videos --}}
+    @include('frontend.home.04_youtube_videos')
+
     {{-- Industries We Serve Area --}}
-    @include('frontend.home.04_industries_we_serve')
+    @include('frontend.home.05_industries_we_serve')
 
     {{-- Certificate Area --}}
-    @include('frontend.home.05_certificate')
+    @include('frontend.home.06_certificate')
 
 @endsection

@@ -57,6 +57,16 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="youtube"></i>
+                        <span>YouTube Videos</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('backend.youtube_video.list') }}"><span>List</span></a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="box"></i>
                         <span>Product Manage</span>
                     </a>

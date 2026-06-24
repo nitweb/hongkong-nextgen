@@ -403,9 +403,11 @@ button.thm-btn.contact-page__btn {
     padding: 0;
 }
 
-.main-menu-two__logo a img {
-    width: 250px !important;
+.main-menu-two__logo a img,
+.footer-widget__logo a img {
+    width: 280px !important;
 }
+
 
 .product__all-single {
     /* height: 100%; */
@@ -870,7 +872,7 @@ button.thm-btn.contact-page__btn {
 }
 
 .footer-contact__label {
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -878,7 +880,7 @@ button.thm-btn.contact-page__btn {
 }
 
 .footer-contact__value {
-    font-size: 13.5px;
+    font-size: 16px;
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.5;
     margin: 0;
@@ -903,7 +905,7 @@ button.thm-btn.contact-page__btn {
 }
 
 .footer-widget__about-text {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.8;
     color: rgba(255, 255, 255, 0.75);
     margin: 0;
@@ -933,4 +935,13 @@ button.thm-btn.contact-page__btn {
     animation: none !important;
     transform: none !important;
     transition: none !important;
+}
+
+.site-footer__bottom-text {
+    font-size: 18px;
+}
+
+.google-map {
+    padding-bottom: 0px;
+    margin-bottom: -8px;
 }

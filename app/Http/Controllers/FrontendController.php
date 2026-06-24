@@ -23,6 +23,7 @@ use App\Models\Services;
 use App\Models\Slider;
 use App\Models\Team;
 use App\Models\Testimonial;
+use App\Models\YoutubeVideo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -51,7 +52,9 @@ class FrontendController extends Controller
 
         $certificate_data = Certificate::where('certificate_status', 'active')->latest()->get();
 
-        return view('frontend.index', compact('slider_data', 'product_brand_data', 'product_data', 'categories', 'certificate_data'));
+        $youtube_videos = YoutubeVideo::where('status', 'active')->latest()->get();
+
+        return view('frontend.index', compact('slider_data', 'product_brand_data', 'product_data', 'categories', 'certificate_data', 'youtube_videos'));
     }
 
     public function Products(Request $request)
