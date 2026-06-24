@@ -33,7 +33,7 @@
                                 @foreach ($it_category_data as $itCat)
                                     <label class="filter-check">
                                         <input type="checkbox" class="js-filter-it-category" value="{{ $itCat->id }}" {{ in_array($itCat->id, (array) request('it_categories')) ? 'checked' : '' }}>
-                                        {{ $itCat->name }} ({{ $itCat->products_count }})
+                                        {{ $itCat->name }}
                                     </label>
                                 @endforeach
                             </div>
@@ -45,7 +45,7 @@
                             @foreach ($product_brand_data as $brand)
                                 <label class="filter-check">
                                     <input type="checkbox" class="js-filter-brand" value="{{ $brand->id }}" {{ in_array($brand->id, (array) request('brands')) ? 'checked' : '' }}>
-                                    {{ $brand->product_brand_name }} ({{ $brand->products_count }})
+                                    {{ $brand->product_brand_name }}
                                 </label>
                             @endforeach
                         </div>

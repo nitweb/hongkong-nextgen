@@ -30,28 +30,6 @@
                             <form action="{{ route('backend.products.store') }}" method="POST" enctype="multipart/form-data" class="row g-3">
                                 @csrf
 
-                                {{-- ===== Excess Inventory ===== --}}
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="flashSaleCheck" name="is_flash_sale" value="1" {{ old('is_flash_sale') ? 'checked' : '' }}>
-                                        <label class="form-check-label">Excess Inventory Product</label>
-                                    </div>
-                                </div>
-
-                                <div id="flashSaleFields" style="display:none;" class="col-12">
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Excel File (.xlsx, .xls, .csv)</label>
-                                            <input type="file" name="flash_sale_excel" class="form-control" accept=".xlsx,.xls,.csv">
-                                            <small class="text-muted">Max 10MB</small>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">PDF File</label>
-                                            <input type="file" name="flash_sale_pdf" class="form-control" accept="application/pdf">
-                                            <small class="text-muted">Max 5MB</small>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 {{-- ===== IT Product ===== --}}
                                 <div class="col-12">
@@ -139,7 +117,7 @@
 
                                 {{-- ===== Brand ===== --}}
                                 <div class="col-md-6">
-                                    <label class="form-label">Brand <span class="text-danger">*</span></label>
+                                    <label class="form-label">Brand</label>
                                     <select name="brand_id" class="form-select" id="brandSelect">
                                         <option value="" disabled selected>Select Brand</option>
                                         @foreach ($brands as $brand)
@@ -221,6 +199,19 @@
                                     </div>
                                 </div>
 
+                                {{-- ===== Related Products ===== --}}
+                                <div class="col-12">
+                                    <label class="form-label">Related Products</label>
+                                    <select name="related_products[]" class="form-select" id="relatedProductSelect" multiple>
+                                        @foreach ($all_products as $p)
+                                            <option value="{{ $p->id }}" {{ isset($product_info) && $product_info->relatedProducts->contains($p->id) ? 'selected' : '' }}>
+                                                {{ $p->product_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted">You can select multiple</small>
+                                </div>
+
                                 {{-- ===== Submit ===== --}}
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary btn-sm">Create Product</button>
@@ -259,12 +250,6 @@
         $(document).on('click', '.removeSpec', function() {
             $(this).closest('.specRow').remove();
         });
-
-        function toggleFlashSaleFields() {
-            $('#flashSaleCheck').is(':checked') ? $('#flashSaleFields').slideDown() : $('#flashSaleFields').slideUp();
-        }
-        toggleFlashSaleFields();
-        $('#flashSaleCheck').on('change', toggleFlashSaleFields);
 
         function toggleItProductFields() {
             if ($('#itProductCheck').is(':checked')) {
@@ -309,6 +294,16 @@
                 $('#itCategoryField').slideUp();
             }
             toggleBatteryFields();
+        });
+    </script>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $('#relatedProductSelect').select2({
+            placeholder: 'Select related products...',
+            allowClear: true,
+            width: '100%'
         });
     </script>
 

@@ -20,7 +20,10 @@
                         {{-- SEARCH (top row) --}}
                         <div class="main-menu-two__search-cart-btn-box">
                             <div class="custom-header-search">
-                                <input type="text" class="custom-header-search__input js-ajax-search-input" placeholder="Search products..." autocomplete="off">
+                                <div class="custom-header-search__wrap">
+                                    <i class="custom-header-search__icon fa fa-search"></i>
+                                    <input type="text" class="custom-header-search__input js-ajax-search-input" placeholder="Search products..." autocomplete="off">
+                                </div>
                                 <div class="custom-header-search__result js-ajax-search-result"></div>
                             </div>
                         </div>
@@ -82,9 +85,8 @@
     /* ── Two-row right column ── */
     .main-menu-two__wrapper-inner {
         display: flex;
-        align-items: flex-start;
-        /* logo top-align korbe */
-        gap: 24px;
+        align-items: center;
+        gap: 40px;
     }
 
     .main-menu-two__left {
@@ -98,14 +100,14 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        /* search upore, menu niche */
         gap: 0;
     }
 
-    /* ── Search full width ── */
+    /* ── Search ── */
     .main-menu-two__search-cart-btn-box {
         width: 100%;
-        padding: 10px 0 6px;
+        padding: 22.5px 0;
+        margin-left: 0;
     }
 
     .custom-header-search {
@@ -113,22 +115,43 @@
         width: 100%;
     }
 
+    .custom-header-search__wrap {
+        position: relative;
+        width: 70%;
+    }
+
+    .custom-header-search__icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        font-size: 14px;
+        pointer-events: none;
+        transition: color 0.2s;
+    }
+
     .custom-header-search__input {
         width: 100%;
-        padding: 9px 16px 9px 16px;
+        padding: 10px 16px 10px 40px;
         border: 1.5px solid #d1d5db;
-        border-radius: 6px;
+        border-radius: 25px;
         background: #f9fafb;
         font-size: 14px;
         color: #111;
         outline: none;
-        transition: border-color 0.2s, background 0.2s;
+        transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
         box-sizing: border-box;
     }
 
     .custom-header-search__input:focus {
-        border-color: #2563eb;
+        border-color: #0C447C;
         background: #fff;
+        box-shadow: 0 0 0 3px rgba(12, 68, 124, 0.1);
+    }
+
+    .custom-header-search__wrap:focus-within .custom-header-search__icon {
+        color: #0C447C;
     }
 
     .custom-header-search__input::placeholder {
@@ -136,15 +159,16 @@
     }
 
     .custom-header-search__result {
+        width: 70%;
         position: absolute;
-        top: calc(100% + 4px);
+        top: calc(100% + 6px);
         left: 0;
-        right: 0;
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 8px;
+        border-radius: 12px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
         z-index: 1050;
+        overflow: hidden;
     }
 
     /* ── Menu row ── */
@@ -207,14 +231,5 @@
         padding-top: 0;
         padding-bottom: 15px;
         position: relative;
-    }
-
-    .main-menu-two__search-cart-btn-box {
-        padding: 22.5px 0;
-        margin-left: 0;
-    }
-
-    .main-menu-two__wrapper-inner {
-        align-items: center;
     }
 </style>

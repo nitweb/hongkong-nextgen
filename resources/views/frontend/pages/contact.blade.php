@@ -213,9 +213,9 @@
 
     {{-- Google Map --}}
     <section class="google-map">
-        <div class="container">
+       
             {!! GlobalSiteSettings()->site_google_map !!}
-        </div>
+       
     </section>
 
 @endsection
