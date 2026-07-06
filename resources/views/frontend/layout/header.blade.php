@@ -86,7 +86,7 @@
     .main-menu-two__wrapper-inner {
         display: flex;
         align-items: center;
-        gap: 40px;
+        gap: 80px;
     }
 
     .main-menu-two__left {
@@ -117,7 +117,7 @@
 
     .custom-header-search__wrap {
         position: relative;
-        width: 70%;
+        width: 45%;
     }
 
     .custom-header-search__icon {
@@ -159,7 +159,7 @@
     }
 
     .custom-header-search__result {
-        width: 70%;
+        width: 45%;
         position: absolute;
         top: calc(100% + 6px);
         left: 0;
