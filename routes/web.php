@@ -127,6 +127,9 @@ Route::middleware('web')->group(function () {
     // Battery Frontend
     Route::get('/battery-management', [BatteryModuleController::class, 'frontend'])->name('frontend.battery');
     Route::get('/battery-management/search', [BatteryModuleController::class, 'ajaxSearch'])->name('frontend.battery.search');
+
+    // Qualification Certificate
+    Route::get('/qualification-certificate', [FrontendController::class, 'Certificate'])->name('certificate');
 });
 
 // #################### End: Frontend Controller ####################

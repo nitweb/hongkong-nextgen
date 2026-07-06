@@ -18,6 +18,6 @@
     @include('frontend.home.05_industries_we_serve')
 
     {{-- Certificate Area --}}
-    @include('frontend.home.06_certificate')
+    {{-- @include('frontend.home.06_certificate') --}}
 
 @endsection

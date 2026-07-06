@@ -38,10 +38,10 @@
                             <h3 class="footer-widget__title">Quick Links</h3>
                         </div>
                         <ul class="footer-widget__Explore-list list-unstyled">
-                            <li><a href="{{ route('index') }}">Home</a></li>
                             <li><a href="{{ route('about') }}">About Us</a></li>
                             <li><a href="{{ route('products') }}">Products</a></li>
                             <li><a href="{{ route('flash.sale') }}">Excess Inventory</a></li>
+                            <li><a href="{{ route('certificate') }}">Qualification Certificate</a></li>
                             <li><a href="{{ route('blog') }}">Blog</a></li>
                             <li><a href="{{ route('contact') }}">Contact Us</a></li>
                             <li><a href="{{ route('privacy.policy') }}">Privacy Policy</a></li>

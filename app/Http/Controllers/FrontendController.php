@@ -415,4 +415,11 @@ class FrontendController extends Controller
 
         return view('frontend.pages.brands', compact('product_brand_data'));
     }
+
+    public function Certificate()
+    {
+        $certificate_data = Certificate::where('certificate_status', 'active')->latest()->get();
+
+        return view('frontend.pages.certificate', compact('certificate_data'));
+    }
 }
