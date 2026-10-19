@@ -95,12 +95,15 @@
 
     {{-- Floating WhatsApp & WeChat Buttons --}}
     <div class="floating-contact-buttons">
-        <a href="https://wa.me/8801972910617" target="_blank" rel="noopener noreferrer" class="floating-btn whatsapp-btn" title="Chat on WhatsApp">
+        <a href="https://wa.me/8618605698703" target="_blank" rel="noopener noreferrer" class="floating-btn whatsapp-btn" title="Chat on WhatsApp">
             <i class="fab fa-whatsapp"></i>
         </a>
-        <a href="weixin://dl/chat?YOURWECHATID" target="_blank" rel="noopener noreferrer" class="floating-btn wechat-btn" title="Chat on WeChat">
+
+        {{-- WeChat hidden: client-er WeChat ID pele uncomment kore ID boshaben --}}
+        {{-- <a href="weixin://dl/chat?CLIENT_WECHAT_ID" target="_blank" rel="noopener noreferrer" class="floating-btn wechat-btn" title="Chat on WeChat">
             <i class="fab fa-weixin"></i>
-        </a>
+        </a> --}}
+
     </div>
 
     <script src="{{ asset('frontend/assets/vendors/jquery/jquery-3.6.0.min.js') }}"></script>
