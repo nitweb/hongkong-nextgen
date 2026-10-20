@@ -98,9 +98,23 @@
         <a href="https://wa.me/8618605698703" target="_blank" rel="noopener noreferrer" class="floating-btn whatsapp-btn" title="Chat on WhatsApp">
             <i class="fab fa-whatsapp"></i>
         </a>
-        <a href="https://u.wechat.com/kFn3mkQIv1h1qA6o9cOIRWI" target="_blank" rel="noopener noreferrer" class="floating-btn wechat-btn" title="Chat on WeChat">
+        <a href="#" class="floating-btn wechat-btn" title="Chat on WeChat" data-bs-toggle="modal" data-bs-target="#wechatModal">
             <i class="fab fa-weixin"></i>
         </a>
+    </div>
+
+    {{-- WeChat Modal --}}
+    <div class="modal fade" id="wechatModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content text-center p-3">
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="mb-2">Chat with us on WeChat</h5>
+                <img src="{{ asset('frontend/assets/images/wechat_qr.png') }}" alt="WeChat QR Code" class="img-fluid mb-2">
+                <p class="small text-muted mb-2">Scan this QR with WeChat to add us.</p>
+                <a href="weixin://" class="btn btn-success d-md-none">Open WeChat App</a>
+                <p class="small text-muted mt-2 mb-0 d-md-none">Then tap + → Scan → choose this QR from your photos.</p>
+            </div>
+        </div>
     </div>
 
     <script src="{{ asset('frontend/assets/vendors/jquery/jquery-3.6.0.min.js') }}"></script>
